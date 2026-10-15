@@ -1,0 +1,16 @@
+services:
+  web:
+    build: .
+    ports:
+      - "127.0.0.1:${LOOP_LOCAL_PORT:-8000}:8000"
+    environment:
+      PORT: "8000"
+      LOOP_AUTH_USERNAME: ${LOOP_AUTH_USERNAME:?Set LOOP_AUTH_USERNAME}
+      LOOP_AUTH_PASSWORD: ${LOOP_AUTH_PASSWORD:?Set LOOP_AUTH_PASSWORD}
+    volumes:
+      - loop-data:/data
+    restart: unless-stopped
+    stop_grace_period: 20s
+
+volumes:
+  loop-data:
