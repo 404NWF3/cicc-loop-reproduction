@@ -1,6 +1,6 @@
 # Railway 部署
 
-部署形态为一个 Docker 服务、一个 `/data` 持久卷。镜像内先构建 React 前端，再安装 Python 依赖；运行时 FastAPI 同时提供页面和 API，并管理一个独立 worker。当前仍是演示框架，不运行真实模型或市场实验。
+部署形态为一个 Docker 服务、一个 `/data` 持久卷。镜像内先构建 React 前端，再安装 Python 依赖；运行时 FastAPI 同时提供页面和 API，并管理一个独立 worker。包含历史快照上的真实因子挖掘与 14 页网页研究演示；本地搜索免费，DeepSeek 模式需要额外口令并受累计预算限制。
 
 ## 1. 从 GitHub 创建服务
 
@@ -24,7 +24,9 @@
 
 首次访问网站时，浏览器会弹出 HTTP Basic 登录框。登录后页面、API、导出和 SSE 使用同一凭据。只有 `GET /api/v1/health` 不需要登录。生产入口始终要求认证，设置 `LOOP_AUTH_REQUIRED=false` 也不会关闭它。
 
-演示不需要 `DEEPSEEK_API_KEY`。以后如需使用模型适配器，在 Railway 另设密钥和核实过的 `DEEPSEEK_MODEL`；配置这些变量不会自动启用尚未实现的 live 流程。
+本地搜索不需要 `DEEPSEEK_API_KEY`。使用付费模式时，在后端另设 `DEEPSEEK_API_KEY` 和独立的 `LOOP_RESEARCH_TOKEN`，模型为已核实的 `deepseek-flash`。后者是网页付费任务的演示口令，与网站登录密码分开；密钥不能放入前端变量。浏览和翻页不会发起模型请求。
+
+已有前后端分开部署时，前端构建环境设置 `VITE_API_BASE_URL=https://后端域名`，后端设置 `LOOP_CORS_ORIGINS=https://前端域名`，均使用完整精确来源。在浏览器先打开后端域名完成 HTTP Basic 登录，再打开前端；跨域 API 与 SSE 会携带浏览器已保存的认证凭据。浏览器若限制跨站认证，使用同域反向代理或由后端提供静态前端。
 
 ## 3. 挂载持久卷
 
@@ -36,10 +38,11 @@
 | --- | --- | --- |
 | `LOOP_STATE_DIR` | `/data/runtime` | SQLite 数据库、WAL 与检查点 |
 | `LOOP_DATA_DIR` | `/data/datasets` | 本地数据快照 |
+| `LOOP_BUDGET_PATH` | `/data/deepseek.sqlite3` | 累计模型费用与未知请求预留 |
 | `LOOP_WEB_DIST` | `/app/web/dist` | 构建好的前端 |
 | `LOOP_WORKER_AUTOSTART` | `true` | 启动独立 worker |
 
-不要将卷挂到 `/app`，否则会遮住镜像内的应用文件。Railway 自动注入 `RAILWAY_VOLUME_MOUNT_PATH`，不要手工伪造该变量。生产入口在检测到 Railway 环境时，会要求挂载卷，并检查两个数据目录都位于该卷内。
+不要将卷挂到 `/app`，否则会遮住镜像内的应用文件。Railway 自动注入 `RAILWAY_VOLUME_MOUNT_PATH`，不要手工伪造该变量。生产入口在检测到 Railway 环境时，会要求挂载卷，并检查任务目录、数据目录与累计预算账本都位于该卷内。已有 `/data` 卷及任务继续沿用；账本初始化会带入已发生的实验费用，迁移时需一并保留账本。
 
 镜像使用 root 运行以兼容 Railway 的 root 所有持久卷，无需额外设置 `RAILWAY_RUN_UID`。卷仅在运行时挂载，因此初始化数据库在服务启动时完成。
 
@@ -62,7 +65,7 @@ Railway 入口终止 HTTPS；容器只接收代理后的 HTTP，并信任入口�
 ## 5. 验证与后续更新
 
 1. 访问 `https://你的域名/api/v1/health`，应返回 `status: ok`、`worker: online`。worker 未取得租约时返回 503。
-2. 打开首页，输入账号密码；进入研究控制台，新建演示任务，验证候选更新、暂停和恢复。
+2. 打开首页，输入账号密码；进入 `/presentation` 放映，在第 13 页进入 `/mine`，启动本地搜索并验证真实净值、门槛、暂停和恢复。六个已知种子的复算与新候选分别计数。
 3. 重启或重新部署服务，确认历史任务仍然存在。被中断的任务需要从控制台继续；不会自动启动新的模型请求。
 4. 后续推送到绑定分支可触发 Railway 自动部署。服务有持久卷时，替换实例会有短暂中断。
 

@@ -2,6 +2,8 @@ import { useEffect } from 'react';
 import { Link, Outlet, Route, Routes, useLocation } from 'react-router-dom';
 import { SiteFooter, SiteHeader } from './components';
 import { ExperimentsPage, HomePage, ResearchPage } from './pages/ResearchPages';
+import { LivePage } from './pages/LivePage';
+import { PresentationPage } from './pages/PresentationPage';
 import {
   ConsoleLayout,
   ConsolePage,
@@ -32,10 +34,13 @@ export default function App() {
       </a>
       <div id="main-content">
         <Routes>
+          <Route path="presentation" element={<PresentationPage />} />
           <Route element={<SiteLayout />}>
             <Route index element={<HomePage />} />
             <Route path="research" element={<ResearchPage />} />
             <Route path="experiments" element={<ExperimentsPage />} />
+            <Route path="mine" element={<LivePage />} />
+            <Route path="mine/:runId" element={<LivePage />} />
           </Route>
           <Route path="console" element={<ConsoleLayout />}>
             <Route index element={<ConsolePage />} />

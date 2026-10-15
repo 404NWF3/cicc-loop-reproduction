@@ -143,7 +143,6 @@ dependencies = [
     { name = "pandas" },
     { name = "pydantic-settings" },
     { name = "pyyaml" },
-    { name = "scipy" },
     { name = "uvicorn" },
 ]
 
@@ -151,6 +150,7 @@ dependencies = [
 dev = [
     { name = "pytest" },
     { name = "ruff" },
+    { name = "scipy" },
 ]
 
 [package.metadata]
@@ -161,7 +161,6 @@ requires-dist = [
     { name = "pandas", specifier = ">=2.2,<3" },
     { name = "pydantic-settings", specifier = ">=2.7,<3" },
     { name = "pyyaml", specifier = ">=6.0,<7" },
-    { name = "scipy", specifier = ">=1.14,<2" },
     { name = "uvicorn", specifier = ">=0.34,<1" },
 ]
 
@@ -169,6 +168,7 @@ requires-dist = [
 dev = [
     { name = "pytest", specifier = ">=8.3,<9" },
     { name = "ruff", specifier = ">=0.11,<1" },
+    { name = "scipy", specifier = ">=1.14,<2" },
 ]
 
 [[package]]

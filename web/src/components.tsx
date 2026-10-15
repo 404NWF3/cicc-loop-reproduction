@@ -36,6 +36,8 @@ export function SiteHeader() {
           </NavLink>
           <NavLink to="/research">原理与方法</NavLink>
           <NavLink to="/experiments">实验记录</NavLink>
+          <NavLink to="/mine">实时挖掘</NavLink>
+          <NavLink to="/presentation">研究演示</NavLink>
         </nav>
         <Link className="button navy compact" to="/console">
           进入控制台 <ArrowUpRight size={15} />

@@ -8,10 +8,15 @@ from loop_research.factors.generation import propose_fixture
 from loop_research.storage import Store
 
 
-def step(store: Store, token: str) -> bool:
+def step(store: Store, token: str, settings=None) -> bool:
     run = store.next_work(token)
     if run is None:
         return False
+    if run["config"]["mode"] == "live":
+        from loop_research.config import Settings
+        from loop_research.live import step_live
+
+        return step_live(store, run, token, settings or Settings())
     config, index = run["config"], run["cursor"]
     if index >= run["target"]:
         store.finish(run["id"], "completed", token, "演示流程完成。市场回测和模型审查均未运行。")

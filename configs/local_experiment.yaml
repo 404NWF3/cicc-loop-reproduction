@@ -1,0 +1,28 @@
+# Frozen before inspecting development metrics. Monetary cap applies across E2/E3/retries.
+experiment_version: local_market_v1
+model: deepseek-flash
+model_official_name: DeepSeek-V4.1-Flash
+thinking: disabled
+seed: 42
+rounds: 10
+batch_size: 10
+random_attempts: 100
+max_cny: 40
+max_requests: 60
+max_tokens: 120000
+max_seconds: 1800
+candidate_timeout_seconds: 5
+data_commit: 330708b5ddc359961078bef469f43f48992fd6e4
+max_assets: 50
+discovery: [2012-09-04, 2013-12-31]
+selection: [2014-01-01, 2015-12-31]
+holdout: [2016-01-01, 2017-09-01]
+warmup_trading_days: 120
+label_horizon: 5
+execution_lag: 1
+rebalance: 5
+top_fraction: 0.2
+cost_one_side: 0.001
+gate_profile: demo_joint_v1
+max_composite_factors: 5
+branches: [E0, E1, E2, E3]

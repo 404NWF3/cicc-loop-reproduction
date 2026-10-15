@@ -8,10 +8,14 @@ export class ApiError extends Error {
   }
 }
 
+const apiBase = (import.meta.env.VITE_API_BASE_URL || '').replace(/\/$/, '');
+export const apiUrl = (path: string) => `${apiBase}/api/v1${path}`;
+
 export async function api<T>(path: string, init: RequestInit = {}): Promise<T> {
   let response: Response;
   try {
-    response = await fetch(`/api/v1${path}`, {
+    response = await fetch(apiUrl(path), {
+      credentials: 'include',
       ...init,
       headers: { ...(init.body ? { 'Content-Type': 'application/json' } : {}), ...init.headers },
     });
@@ -38,7 +42,12 @@ export function post<T>(
   return api<T>(path, {
     method: 'POST',
     body: body === undefined ? undefined : JSON.stringify(body),
-    headers,
+    headers: {
+      ...(sessionStorage.getItem('loop-research-token')
+        ? { 'X-Research-Token': sessionStorage.getItem('loop-research-token')! }
+        : {}),
+      ...headers,
+    },
   });
 }
 

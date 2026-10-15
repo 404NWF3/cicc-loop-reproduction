@@ -1,7 +1,7 @@
 from enum import StrEnum
 from typing import Literal
 
-from pydantic import BaseModel, ConfigDict, Field, field_validator
+from pydantic import BaseModel, ConfigDict, Field, field_validator, model_validator
 
 
 class RunState(StrEnum):
@@ -34,6 +34,19 @@ class RunConfig(BaseModel):
     max_candidates: int = Field(100, ge=1, le=1000)
     max_seconds: int = Field(600, ge=5, le=1800)
     dataset_id: str | None = Field(None, pattern=r"^[a-zA-Z0-9_-]{1,64}$")
+    generator: Literal["local", "deepseek"] = "local"
+    max_model_cny: float = Field(0.5, gt=0, le=1)
+
+    @model_validator(mode="after")
+    def bounded_live_run(self):
+        if self.mode == "live" and (
+            self.rounds * self.batch_size > 120
+            or self.max_candidates > 120
+            or self.max_seconds > 600
+            or self.batch_size > 12
+        ):
+            raise ValueError("现场挖掘每次最多 120 个候选、600 秒、每批 12 个")
+        return self
 
     @field_validator("name")
     @classmethod

@@ -6,6 +6,8 @@ COPY package.json package-lock.json ./
 COPY web/package.json ./web/package.json
 RUN npm ci --no-audit --no-fund
 COPY web/ ./web/
+ARG VITE_API_BASE_URL=""
+ENV VITE_API_BASE_URL=$VITE_API_BASE_URL
 RUN npm run build
 
 FROM ghcr.io/astral-sh/uv:0.12.23 AS uv
@@ -22,8 +24,11 @@ WORKDIR /app
 ENV PATH="/app/.venv/bin:$PATH" \
     PYTHONUNBUFFERED=1 \
     PYTHONDONTWRITEBYTECODE=1 \
+    OPENBLAS_NUM_THREADS=1 \
+    OMP_NUM_THREADS=1 \
     LOOP_STATE_DIR=/data/runtime \
     LOOP_DATA_DIR=/data/datasets \
+    LOOP_BUDGET_PATH=/data/deepseek.sqlite3 \
     LOOP_WEB_DIST=/app/web/dist \
     LOOP_WORKER_AUTOSTART=true
 COPY --from=backend /app/.venv /app/.venv

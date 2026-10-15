@@ -49,6 +49,11 @@ export const stateLabels: Record<string, string> = {
   fsa_blocked: '骨架冻结',
   passed: '通过',
   not_evaluated: '尚未计算',
+  not_applicable: '不适用',
+  accepted: '入库',
+  gate_rejected: '门槛未通过',
+  llm_rejected: '审查未通过',
+  degenerate: '退化信号',
 };
 export const stages = [
   {

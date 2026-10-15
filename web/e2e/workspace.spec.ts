@@ -1,7 +1,7 @@
 import { test, expect } from '@playwright/test';
 import { readFile } from 'node:fs/promises';
 
-test('research pages and responsive layout clearly identify unrun experiments', async ({
+test('research pages show archived experiments and keep the demo separate', async ({
   page,
 }, testInfo) => {
   const errors: string[] = [];
@@ -19,8 +19,21 @@ test('research pages and responsive layout clearly identify unrun experiments', 
     .getByRole('navigation', { name: '网站导航' })
     .getByRole('link', { name: '实验记录' })
     .click();
-  await expect(page.getByRole('heading', { name: '实验尚未开始' })).toBeVisible();
+  await expect(
+    page.getByRole('heading', { name: '6637 次尝试，23 个因子通过开发筛选入库。' }),
+  ).toBeVisible();
+  await expect(page.getByRole('heading', { name: '入库因子与冻结后的留出检验' })).toBeVisible();
+  await expect(page.getByText(/等权排名组合：留出期年化超额/)).toContainText('-3.18%');
+  await page.getByLabel('实验版本').selectOption('stocknet_flash_20261015_v1');
+  await expect(
+    page.getByRole('heading', { name: '306 次尝试，0 个因子通过全部门槛。' }),
+  ).toBeVisible();
+  await page.getByLabel('实验版本').selectOption('stocknet_flash_20261015_v2');
+  await expect(page.getByText('DeepSeek-V4.1-Flash', { exact: false })).toBeVisible();
+  await page.screenshot({ path: testInfo.outputPath('experiments-desktop.png'), fullPage: true });
   await page.setViewportSize({ width: 390, height: 844 });
+  await page.screenshot({ path: testInfo.outputPath('experiments-mobile.png'), fullPage: true });
+  expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(390);
   await page.goto('/');
   await page.screenshot({ path: testInfo.outputPath('home-mobile.png'), fullPage: true });
   expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(390);

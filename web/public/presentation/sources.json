@@ -1,0 +1,32 @@
+[
+  {
+    "asset": "shanghai.jpg",
+    "title": "Pudong Shanghai November 2017 panorama.jpg",
+    "artist": "King of Hearts",
+    "license": "CC BY-SA 4.0",
+    "license_url": "https://creativecommons.org/licenses/by-sa/4.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Pudong_Shanghai_November_2017_panorama.jpg",
+    "image_url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/d/df/Pudong_Shanghai_November_2017_panorama.jpg/1920px-Pudong_Shanghai_November_2017_panorama.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+    "bytes": 301041
+  },
+  {
+    "asset": "trading-floor.jpg",
+    "title": "New York Stock Exchange trading floor on Wall Street, New York, New York LCCN2011634218.tif",
+    "artist": "Carol M. Highsmith",
+    "license": "Public domain",
+    "license_url": "",
+    "source": "https://commons.wikimedia.org/wiki/File:New_York_Stock_Exchange_trading_floor_on_Wall_Street,_New_York,_New_York_LCCN2011634218.tif",
+    "image_url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/8/80/New_York_Stock_Exchange_trading_floor_on_Wall_Street%2C_New_York%2C_New_York_LCCN2011634218.tif/lossy-page1-1920px-New_York_Stock_Exchange_trading_floor_on_Wall_Street%2C_New_York%2C_New_York_LCCN2011634218.tif.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+    "bytes": 748528
+  },
+  {
+    "asset": "servers.jpg",
+    "title": "Server racks near the GBAR experiment.jpg",
+    "artist": "Unnerving duck",
+    "license": "CC BY-SA 4.0",
+    "license_url": "https://creativecommons.org/licenses/by-sa/4.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Server_racks_near_the_GBAR_experiment.jpg",
+    "image_url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/c/cf/Server_racks_near_the_GBAR_experiment.jpg/1920px-Server_racks_near_the_GBAR_experiment.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+    "bytes": 1234364
+  }
+]

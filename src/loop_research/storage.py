@@ -20,8 +20,10 @@ def encode(value) -> str:
 
 
 class Store:
-    def __init__(self, path: Path):
+    def __init__(self, path: Path, max_state_bytes: int = 64 * 1024 * 1024, *, live_enabled=False):
         self.path = path.resolve()
+        self.max_state_bytes = max_state_bytes
+        self.live_enabled = live_enabled
         self.path.parent.mkdir(parents=True, exist_ok=True)
         with self.connection() as db:
             db.execute("PRAGMA journal_mode=WAL")
@@ -57,6 +59,7 @@ class Store:
         db = sqlite3.connect(self.path, timeout=5)
         db.row_factory = sqlite3.Row
         db.execute("PRAGMA foreign_keys=ON")
+        db.execute("PRAGMA journal_size_limit=8388608")
         try:
             if write:
                 db.execute("BEGIN IMMEDIATE")
@@ -67,6 +70,16 @@ class Store:
             raise
         finally:
             db.close()
+
+    def storage_bytes(self) -> int:
+        return sum(
+            p.stat().st_size
+            for p in (self.path, Path(str(self.path) + "-wal"), Path(str(self.path) + "-shm"))
+            if p.exists()
+        )
+
+    def has_capacity(self) -> bool:
+        return self.storage_bytes() < self.max_state_bytes
 
     def _event(self, db, run_id: str, kind: str, payload: dict):
         db.execute(
@@ -99,6 +112,10 @@ class Store:
                     raise ResearchError("idempotency_conflict", "该幂等键已经用于不同配置。", 409)
                 run_id = existing["id"]
             else:
+                if not self.has_capacity():
+                    raise ResearchError(
+                        "storage_budget_exhausted", "演示存储预算已用尽；请导出并清理旧任务。", 409
+                    )
                 run_id = uuid.uuid4().hex[:16]
                 db.execute(
                     "INSERT INTO runs(id,config,config_hash,state,created_at,updated_at,idempotency_key) VALUES(?,?,?,'draft',?,?,?)",
@@ -120,6 +137,8 @@ class Store:
             ).fetchall()
         config = json.loads(row["config"])
         candidates = [json.loads(r[0]) for r in counts]
+        live = config["mode"] == "live"
+        checkpoint = json.loads(row["checkpoint"])
         return {
             "id": row["id"],
             "config": config,
@@ -129,23 +148,31 @@ class Store:
             "round": min(
                 config["rounds"], (row["cursor"] + config["batch_size"] - 1) // config["batch_size"]
             ),
-            "target": config["rounds"] * config["batch_size"],
+            "target": min(config["rounds"] * config["batch_size"], config["max_candidates"])
+            if live
+            else config["rounds"] * config["batch_size"],
             "counts": {
                 "generated": len(candidates),
-                "validated": sum(c["status"] == "awaiting_data" for c in candidates),
-                "rejected": sum(c["status"] != "awaiting_data" for c in candidates),
-                "backtested": 0,
-                "accepted": 0,
-                "model_calls": 0,
-                "tokens": 0,
+                "validated": sum(bool(c.get("validation")) for c in candidates)
+                if live
+                else sum(c["status"] == "awaiting_data" for c in candidates),
+                "rejected": sum(not c.get("accepted", False) for c in candidates)
+                if live
+                else sum(c["status"] != "awaiting_data" for c in candidates),
+                "backtested": sum(c.get("metrics") is not None for c in candidates),
+                "accepted": sum(c.get("accepted", False) for c in candidates),
+                "model_calls": checkpoint.get("model_requests", 0),
+                "tokens": checkpoint.get("model_tokens", 0),
             },
             "created_at": row["created_at"],
             "updated_at": row["updated_at"],
             "started_at": row["started_at"],
             "error": row["error"],
-            "checkpoint": json.loads(row["checkpoint"]),
-            "is_experiment": False,
-            "notice": "这是本地流程演示，未调用大模型、加载市场数据或生成回测收益。",
+            "checkpoint": checkpoint,
+            "is_experiment": live,
+            "notice": "历史快照上的现场挖掘：开发期筛选，非实时行情或独立样本外验证。"
+            if live
+            else "这是本地流程演示，未调用大模型、加载市场数据或生成回测收益。",
         }
 
     def list_runs(self, limit: int = 50) -> list[dict]:
@@ -164,10 +191,10 @@ class Store:
             state = row["state"]
             config = json.loads(row["config"])
             if action in {"start", "resume"}:
-                if config["mode"] != "fixture":
+                if config["mode"] != "fixture" and not self.live_enabled:
                     raise ResearchError(
                         "live_pipeline_pending",
-                        "当前交付为代码框架，真实模型与数据实验尚未接通。请使用演示模式。",
+                        "当前服务未启用现场挖掘。请使用演示模式。",
                         409,
                     )
                 if state in ACTIVE_STATES:
@@ -243,6 +270,36 @@ class Store:
             ).fetchone()
         return "online" if active else "offline"
 
+    def renew_worker(self, token: str):
+        with self.connection(write=True) as db:
+            db.execute(
+                "UPDATE worker_lease SET expires=? WHERE id=1 AND token=? AND expires>?",
+                (time.time() + 10, token, time.time()),
+            )
+
+    def checkpoint(self, run: dict, checkpoint: dict, token: str, message: str) -> bool:
+        with self.connection(write=True) as db:
+            if not self._has_lease(db, token):
+                return False
+            row = self._require(db, run["id"])
+            if row["cursor"] != run["cursor"] or row["state"] not in {
+                "running",
+                "pause_requested",
+                "stop_requested",
+            }:
+                return False
+            if not self.has_capacity():
+                self._state(db, run["id"], "budget_exhausted", "存储预算已用尽。")
+                return False
+            db.execute(
+                "UPDATE runs SET checkpoint=?,updated_at=? WHERE id=?",
+                (encode(checkpoint), now(), run["id"]),
+            )
+            self._event(
+                db, run["id"], "run.stage", {"message": message, "stage": checkpoint.get("stage")}
+            )
+        return True
+
     def release_worker(self, token: str):
         with self.connection(write=True) as db:
             if not self._has_lease(db, token):
@@ -279,7 +336,15 @@ class Store:
                 )
                 return None
             if row["state"] == "queued":
-                self._state(db, run_id, "running", "本地演示已开始，不执行市场实验。")
+                live = json.loads(row["config"])["mode"] == "live"
+                self._state(
+                    db,
+                    run_id,
+                    "running",
+                    "现场挖掘已开始：历史快照、逐候选真实回测。"
+                    if live
+                    else "本地演示已开始，不执行市场实验。",
+                )
                 db.execute(
                     "UPDATE runs SET started_at=COALESCE(started_at,?) WHERE id=?", (now(), run_id)
                 )
@@ -310,6 +375,9 @@ class Store:
                 "pause_requested",
                 "stop_requested",
             }:
+                return False
+            if not self.has_capacity():
+                self._state(db, run["id"], "budget_exhausted", "演示存储预算已用尽，检查点已保留。")
                 return False
             db.execute(
                 "INSERT INTO candidates VALUES(?,?,?,?,?)",

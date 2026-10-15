@@ -1,0 +1,45 @@
+{
+  "id": "stocknet-development-v1",
+  "source_commit": "330708b5ddc359961078bef469f43f48992fd6e4",
+  "original_sha256": "f88cea3c3bbd6c2d0aff9e6473f9795350b972d6407baad1cab58a912f6ac61a",
+  "sha256": "c5423f3fe893014d7263faf74af7c628abd72998930d51d7a37be363d25de205",
+  "assets": 50,
+  "dates": 837,
+  "start": "2012-09-04",
+  "end": "2015-12-31",
+  "holdout_included": false,
+  "cost_one_side": 0.001,
+  "rebalance": 5,
+  "seeds": [
+    {
+      "expression": "ts_mean(add(cs_rank(ts_corr(ret1, intraday_return, 60)), cs_rank(neg(ts_corr(gap, upper_shadow, 60)))), 5)",
+      "name": "归档研究种子 E7-01156",
+      "source": "E7-01156"
+    },
+    {
+      "expression": "ts_mean(add(cs_rank(ts_mean(ts_corr(ret1, intraday_return, 40), 5)), cs_rank(ts_corr(rel_volume, upper_shadow, 60))), 3)",
+      "name": "归档研究种子 E7-01310",
+      "source": "E7-01310"
+    },
+    {
+      "expression": "ts_mean(ts_mean(ts_mean(ts_corr(gap, upper_shadow, 60), 5), 10), 5)",
+      "name": "归档研究种子 E7-01980",
+      "source": "E7-01980"
+    },
+    {
+      "expression": "add(cs_rank(ts_mean(safe_div(ts_mean(intraday_range, 60), ts_mean(intraday_range, 20)), 3)), cs_rank(neg(neg(ts_corr(upper_shadow, rel_volume, 60)))))",
+      "name": "归档研究种子 E7-00057",
+      "source": "E7-00057"
+    },
+    {
+      "expression": "add(cs_rank(sub(cs_zscore(ts_mean(upper_shadow, 3)), cs_zscore(ts_rank(intraday_return, 5)))), cs_rank(neg(ts_mean(ts_corr(gap, upper_shadow, 40), 60))))",
+      "name": "归档研究种子 E7-00892",
+      "source": "E7-00892"
+    },
+    {
+      "expression": "ts_mean(add(cs_rank(ts_corr(rel_volume, upper_shadow, 60)), cs_rank(ts_corr(rel_volume, upper_shadow, 60))), 5)",
+      "name": "归档研究种子 E7-00948",
+      "source": "E7-00948"
+    }
+  ]
+}

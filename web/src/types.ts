@@ -20,6 +20,8 @@ export interface RunConfig {
   max_candidates: number;
   max_seconds: number;
   dataset_id?: string | null;
+  generator?: 'local' | 'deepseek';
+  max_model_cny?: number;
 }
 export interface Run {
   id: string;
@@ -43,7 +45,7 @@ export interface Run {
   started_at: string | null;
   error: string | null;
   checkpoint: Record<string, unknown>;
-  is_experiment: false;
+  is_experiment: boolean;
   notice: string;
 }
 export interface Gate {
@@ -53,7 +55,7 @@ export interface Gate {
   operator: string;
   threshold: number;
   value: number | null;
-  status: 'passed' | 'failed' | 'not_evaluated';
+  status: 'passed' | 'failed' | 'not_evaluated' | 'not_applicable';
   period: string;
   origin: string;
 }
@@ -75,15 +77,24 @@ export interface Candidate {
   hypothesis: string;
   origin: string;
   llm_review: string;
+  review?: { verdict: string; explanation: string; reason_code?: string };
   ordinal: number;
   round: number;
   status: string;
   reason: string;
   fingerprint: string | null;
   validation: Validation | null;
-  metrics: null;
+  metrics: Record<string, number | null> | null;
   gates: Gate[];
-  accepted: false;
+  accepted: boolean;
+  is_experiment?: boolean;
+  direction?: number;
+  discovery_ic?: number | null;
+  periods?: Record<
+    string,
+    { annual_excess: number | null; sharpe: number | null; calmar: number | null }
+  >;
+  series?: { date: string; nav: number; benchmark: number; relative: number }[];
 }
 export interface RunEvent {
   id: number;
@@ -103,7 +114,7 @@ export interface ModelStatus {
 export interface Capabilities {
   phase: string;
   available_modes: string[];
-  live_enabled: false;
+  live_enabled: boolean;
   model: ModelStatus;
   worker: string;
   fields: string[];
@@ -127,4 +138,84 @@ export interface Dataset {
     issues: string[];
     note: string;
   } | null;
+}
+
+export interface ExperimentResult {
+  id: string;
+  status: string;
+  started_at_utc: string;
+  asset_count: number;
+  rows: number;
+  seed: number;
+  seconds: number;
+  experiment_version?: string;
+  random_seeds?: number[];
+  research_note?: string;
+  accepted_factors?: {
+    id: string;
+    branch: string;
+    expression: string;
+    direction: number;
+    discovery_ic: number;
+    metrics: { calmar: number; max_correlation: number | null };
+    periods: Record<string, { annual_excess: number; sharpe: number }>;
+  }[];
+  holdout?: Record<
+    string,
+    {
+      status: string;
+      factors: {
+        id: string;
+        annual_excess: number | null;
+        sharpe: number | null;
+        max_drawdown: number | null;
+        rank_ic: number | null;
+      }[];
+      composite: {
+        annual_excess: number | null;
+        sharpe: number | null;
+        max_drawdown: number | null;
+        factor_count: number;
+      } | null;
+    }
+  >;
+  model: { id: string; name: string; thinking: string };
+  periods: Record<string, string[]>;
+  data_commit: string;
+  data_sha256: string;
+  protocol_sha256: string;
+  budget: {
+    run_requests: number;
+    run_tokens: number;
+    run_cost_upper_bound_cny: number;
+    hard_cap_cny: number;
+    cost_upper_bound_cny?: number;
+  };
+  verification: {
+    status: string;
+    peak_price_usage_estimate_cny: number;
+    max_ic_absolute_error: number;
+    max_nav_absolute_error: number;
+  };
+  branches: Record<
+    string,
+    {
+      attempts: number;
+      legal: number;
+      backtested: number;
+      accepted: number;
+      unique_expressions: number;
+      unique_skeletons: number;
+      outcomes: Record<string, number>;
+    }
+  >;
+  baselines: {
+    id: string;
+    name: string;
+    expression: string;
+    direction: number;
+    discovery_ic: number | null;
+    periods: Record<string, { annual_excess: number | null; sharpe: number | null }>;
+  }[];
+  sources: Record<string, string>;
 }

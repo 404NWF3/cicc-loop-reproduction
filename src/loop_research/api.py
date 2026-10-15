@@ -1,5 +1,6 @@
 import asyncio
 import json
+import secrets
 import subprocess
 import sys
 import uuid
@@ -8,6 +9,7 @@ from urllib.parse import urlparse
 
 from fastapi import FastAPI, Header, Query, Request
 from fastapi.exceptions import RequestValidationError
+from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse, JSONResponse, StreamingResponse
 from starlette.exceptions import HTTPException
 
@@ -19,13 +21,18 @@ from loop_research.config import Settings
 from loop_research.data.registry import DatasetRegistry
 from loop_research.errors import ResearchError
 from loop_research.factors.dsl import ARITIES, FIELDS, compile_expression
+from loop_research.results import bundled_results
 from loop_research.schemas import DebugRequest, RunConfig
 from loop_research.storage import Store
 
 
 def create_app(settings: Settings | None = None) -> FastAPI:
     settings = settings or Settings()
-    store = Store(settings.database_path)
+    store = Store(
+        settings.database_path,
+        settings.state_max_mb * 1024 * 1024,
+        live_enabled=settings.live_enabled,
+    )
     datasets = DatasetRegistry(settings.data_dir)
 
     @asynccontextmanager
@@ -55,6 +62,23 @@ def create_app(settings: Settings | None = None) -> FastAPI:
     app = FastAPI(title="Loop Research API", version=__version__, lifespan=lifespan)
     app.state.store = store
     app.state.settings = settings
+    frontend_origins = [
+        o.strip().rstrip("/") for o in settings.cors_origins.split(",") if o.strip()
+    ]
+    if "*" in frontend_origins:
+        raise ValueError("Configure exact frontend origins, not a wildcard")
+    def authorize_paid(config: dict, request: Request):
+        if config.get("mode") != "live" or config.get("generator") != "deepseek":
+            return
+        if not settings.research_token:
+            raise ResearchError(
+                "paid_mode_locked", "请先在服务端设置演示口令，才能使用模型模式。", 409
+            )
+        supplied = request.headers.get("x-research-token", "")
+        if not secrets.compare_digest(supplied, settings.research_token):
+            raise ResearchError("research_auth_required", "演示口令不正确。", 401)
+        if not settings.deepseek_api_key:
+            raise ResearchError("model_not_configured", "服务端尚未配置 DeepSeek 密钥。", 409)
 
     @app.middleware("http")
     async def context(request: Request, call_next):
@@ -81,7 +105,10 @@ def create_app(settings: Settings | None = None) -> FastAPI:
             allowed = {request.url.netloc}
             if not settings.auth_enabled:
                 allowed.update({"127.0.0.1:5173", "localhost:5173", "127.0.0.1:5174"})
-            if urlparse(origin).netloc not in allowed:
+            if (
+                urlparse(origin).netloc not in allowed
+                and origin.rstrip("/") not in frontend_origins
+            ):
                 return JSONResponse(
                     {
                         "code": "origin_denied",
@@ -96,6 +123,17 @@ def create_app(settings: Settings | None = None) -> FastAPI:
         if settings.auth_enabled and not public_health:
             response.headers["Cache-Control"] = "no-store"
         return response
+
+    # Wrap authentication too, so trusted frontends can read a 401 and preflight
+    # without credentials. Actual API requests still pass the authentication check.
+    if frontend_origins:
+        app.add_middleware(
+            CORSMiddleware,
+            allow_origins=frontend_origins,
+            allow_credentials=True,
+            allow_methods=["GET", "POST", "OPTIONS"],
+            allow_headers=["Authorization", "Content-Type", "Idempotency-Key", "X-Research-Token"],
+        )
 
     def error_response(request: Request, code: str, message: str, status: int, details=None):
         return JSONResponse(
@@ -135,6 +173,8 @@ def create_app(settings: Settings | None = None) -> FastAPI:
                 "status": "ok" if ready else "unavailable",
                 "version": __version__,
                 "database": "online",
+                "state_bytes": store.storage_bytes(),
+                "state_limit_mb": settings.state_max_mb,
                 "worker": worker,
             },
             status_code=200 if ready else 503,
@@ -143,9 +183,9 @@ def create_app(settings: Settings | None = None) -> FastAPI:
     @app.get("/api/v1/capabilities")
     def capabilities():
         return {
-            "phase": "scaffold",
-            "available_modes": ["fixture"],
-            "live_enabled": False,
+            "phase": "live_development",
+            "available_modes": ["fixture", "live"] if settings.live_enabled else ["fixture"],
+            "live_enabled": settings.live_enabled,
             "model": settings.model_status(),
             "worker": store.worker_status(),
             "strategies": STRATEGIES,
@@ -155,7 +195,24 @@ def create_app(settings: Settings | None = None) -> FastAPI:
             "seed_factors": SEED_FACTORS,
             "gates": evaluate_gates({}),
             "data_count": len(datasets.list()),
-            "notice": "演示模式检查代码框架，不运行市场实验或付费模型。",
+            "notice": "现场挖掘使用历史开发快照；本地生成免费，模型模式受口令与预算限制。",
+        }
+
+    @app.get("/api/v1/live/status")
+    def live_status():
+        from loop_research.live import budget_for, manifest
+
+        snapshot = manifest()
+        return {
+            "enabled": settings.live_enabled,
+            "snapshot": snapshot,
+            "worker": store.worker_status(),
+            "budget": budget_for(settings).summary(),
+            "model_ready": bool(settings.deepseek_api_key and settings.research_token),
+            "model_id": "deepseek-flash",
+            "max_candidates": 120,
+            "max_seconds": 600,
+            "notice": "现场重算历史数据；2014–2015 为开发筛选期，不使用留出期调参。",
         }
 
     @app.post("/api/v1/models/check")
@@ -194,7 +251,14 @@ def create_app(settings: Settings | None = None) -> FastAPI:
         return {"items": store.list_runs(limit)}
 
     @app.post("/api/v1/runs", status_code=201)
-    def create_run(body: RunConfig, idempotency_key: str | None = Header(None, max_length=128)):
+    def create_run(
+        body: RunConfig,
+        request: Request,
+        idempotency_key: str | None = Header(None, max_length=128),
+    ):
+        if body.mode == "live" and not settings.live_enabled:
+            raise ResearchError("live_disabled", "现场挖掘未启用。", 409)
+        authorize_paid(body.model_dump(), request)
         return store.create(body, idempotency_key)
 
     @app.get("/api/v1/runs/{run_id}")
@@ -202,7 +266,8 @@ def create_app(settings: Settings | None = None) -> FastAPI:
         return store.get(run_id)
 
     @app.post("/api/v1/runs/{run_id}/{action}")
-    def control_run(run_id: str, action: str):
+    def control_run(run_id: str, action: str, request: Request):
+        authorize_paid(store.get(run_id)["config"], request)
         return store.control(run_id, action)
 
     @app.get("/api/v1/runs/{run_id}/factors")
@@ -223,12 +288,15 @@ def create_app(settings: Settings | None = None) -> FastAPI:
 
     @app.get("/api/v1/runs/{run_id}/report")
     def report(run_id: str):
+        live = store.get(run_id)["config"]["mode"] == "live"
         return {
-            "kind": "fixture_record",
-            "is_experiment": False,
+            "kind": "live_development_record" if live else "fixture_record",
+            "is_experiment": live,
             "run": store.get(run_id),
             "candidates": store.candidates(run_id),
-            "notice": "仅为框架演示记录，不包含任何真实市场回测或模型效果。",
+            "notice": "历史开发快照上的真实计算；已知研究种子与新候选分别标注，不代表样本外收益。"
+            if live
+            else "仅为框架演示记录，不包含任何真实市场回测或模型效果。",
         }
 
     @app.get("/api/v1/runs/{run_id}/events")
@@ -265,7 +333,18 @@ def create_app(settings: Settings | None = None) -> FastAPI:
 
     @app.get("/api/v1/experiments")
     def experiments():
-        return {"items": [], "status": "not_run", "message": "当前阶段搭建框架，尚未运行真实实验。"}
+        items = bundled_results()
+        return {"items": items, "status": "completed" if items else "not_run"}
+
+    @app.get("/api/v1/experiments/{experiment_id}/report")
+    def experiment_report(experiment_id: str):
+        for report in bundled_results():
+            if report["id"] == experiment_id:
+                return JSONResponse(
+                    report,
+                    headers={"Content-Disposition": f'attachment; filename="{experiment_id}.json"'},
+                )
+        raise ResearchError("experiment_not_found", "找不到该实验记录。", 404)
 
     @app.get("/{path:path}", include_in_schema=False)
     def frontend(path: str):

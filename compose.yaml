@@ -7,6 +7,9 @@ services:
       PORT: "8000"
       LOOP_AUTH_USERNAME: ${LOOP_AUTH_USERNAME:?Set LOOP_AUTH_USERNAME}
       LOOP_AUTH_PASSWORD: ${LOOP_AUTH_PASSWORD:?Set LOOP_AUTH_PASSWORD}
+      DEEPSEEK_API_KEY: ${DEEPSEEK_API_KEY:-}
+      DEEPSEEK_MODEL: ${DEEPSEEK_MODEL:-deepseek-flash}
+      LOOP_RESEARCH_TOKEN: ${LOOP_RESEARCH_TOKEN:-}
     volumes:
       - loop-data:/data
     restart: unless-stopped

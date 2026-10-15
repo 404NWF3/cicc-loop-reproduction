@@ -83,6 +83,21 @@ def test_budget_single_worker_and_idempotent_creation(tmp_path):
 def test_live_task_never_falls_back_to_fixture(tmp_path):
     store = Store(tmp_path / "db.sqlite")
     run = store.create(RunConfig(mode="live"))
-    with pytest.raises(ResearchError, match="尚未接通"):
+    with pytest.raises(ResearchError, match="未启用现场挖掘"):
         store.control(run["id"], "start")
     assert store.get(run["id"])["state"] == "draft"
+
+
+def test_storage_quota_stops_new_writes_without_removing_history(tmp_path):
+    store = Store(tmp_path / "db.sqlite")
+    run = store.create(RunConfig(rounds=1, batch_size=3), "quota-key")
+    store.control(run["id"], "start")
+    store.acquire_worker("quota-worker")
+    store.max_state_bytes = 1
+    step(store, "quota-worker")
+    assert store.get(run["id"])["state"] == "budget_exhausted"
+    assert store.get(run["id"])["cursor"] == 0
+    # Existing idempotent requests and reads remain available.
+    assert store.create(RunConfig(rounds=1, batch_size=3), "quota-key")["id"] == run["id"]
+    with pytest.raises(ResearchError, match="存储预算"):
+        store.create(RunConfig())

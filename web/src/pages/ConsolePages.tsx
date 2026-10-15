@@ -26,6 +26,7 @@ import {
   Workflow,
 } from 'lucide-react';
 import { Link, NavLink, Outlet, useNavigate, useParams } from 'react-router-dom';
+import { LiveRun, NavChart } from './LivePage';
 import { api, messageOf, post } from '../api';
 import { Brand, dateTime, EmptyState, ErrorNotice, Loading, Modal, Status } from '../components';
 import { strategyName } from '../content';
@@ -66,6 +67,16 @@ export function ConsoleLayout() {
           <NavLink to="/console/settings">
             <Settings2 size={18} />
             数据与模型
+          </NavLink>
+          <NavLink to="/mine">
+            <FlaskConical size={18} />
+            实时挖掘
+            <ArrowUpRight size={13} />
+          </NavLink>
+          <NavLink to="/presentation">
+            <Play size={18} />
+            研究演示
+            <ArrowUpRight size={13} />
           </NavLink>
           <NavLink to="/experiments">
             <FlaskConical size={18} />
@@ -376,7 +387,7 @@ function DebugPanel() {
 export function ConsolePage() {
   const [creating, setCreating] = useState(false);
   const runs = useResource<{ items: Run[] }>('/runs', 2500);
-  const items = runs.data?.items ?? [];
+  const items = runs.data?.items.filter((r) => r.config.mode === 'fixture') ?? [];
   return (
     <>
       <div className="console-heading">
@@ -487,17 +498,13 @@ export function ConsolePage() {
         <section className="panel next-panel">
           <span className="eyebrow">NEXT CONNECTION</span>
           <Database size={27} strokeWidth={1.3} />
-          <h2>
-            为真实研究，
-            <br />
-            留好连接。
-          </h2>
+          <h2>从流程演示，进入现场研究。</h2>
           <p>
-            DeepSeek 官方接口适配器和本地数据契约已准备。待模型 ID
-            与数据口径确认后，再连接真实实验。
+            现在可以在网页上启动真实回测，检查净值与门槛；本地搜索免费，DeepSeek
+            模式受演示口令和预算保护。
           </p>
-          <Link className="text-link" to="/console/settings">
-            查看数据与模型 <ArrowRight size={15} />
+          <Link className="text-link" to="/mine">
+            打开实时挖掘 <ArrowRight size={15} />
           </Link>
         </section>
       </div>
@@ -564,6 +571,7 @@ export function RunPage() {
     'interrupted',
   ].includes(run.state);
   const filtered = candidates.filter((c) => filter === 'all' || c.status === filter);
+  if (run.config.mode === 'live') return <LiveRun id={runId} />;
   return (
     <>
       <Link className="back-link" to="/console">
@@ -789,7 +797,10 @@ export function FactorPage() {
     );
   return (
     <>
-      <Link className="back-link" to={`/console/runs/${factor.run_id}`}>
+      <Link
+        className="back-link"
+        to={factor.is_experiment ? `/mine/${factor.run_id}` : `/console/runs/${factor.run_id}`}
+      >
         <ArrowLeft size={15} />
         返回运行记录
       </Link>
@@ -804,9 +815,9 @@ export function FactorPage() {
             </span>
           </div>
         </div>
-        <span className="tag">预置演示候选</span>
+        <span className="tag">{factor.is_experiment ? '历史开发期真实计算' : '预置演示候选'}</span>
       </div>
-      <FixtureNotice />
+      {!factor.is_experiment && <FixtureNotice />}
       <section className="panel factor-expression">
         <span className="eyebrow">EXPRESSION</span>
         <pre>{factor.expression}</pre>
@@ -822,7 +833,14 @@ export function FactorPage() {
           </span>
           <span>
             <ShieldCheck size={15} />
-            LLM 审查：未运行
+            LLM 审查：
+            {factor.llm_review === 'approve'
+              ? '通过'
+              : factor.llm_review === 'reject'
+                ? '未通过'
+                : factor.llm_review === 'uncertain'
+                  ? '不确定'
+                  : '未运行'}
           </span>
         </div>
       </section>
@@ -855,7 +873,9 @@ export function FactorPage() {
             <Check size={19} />
             <h2>联合过滤</h2>
           </div>
-          <span className="subtle-label">11 CHECKS · 待数据验证</span>
+          <span className="subtle-label">
+            11 CHECKS · {factor.is_experiment ? '现场计算' : '待数据验证'}
+          </span>
         </div>
         <div className="table-wrap">
           <table>
@@ -878,7 +898,7 @@ export function FactorPage() {
                   <td className="mono">
                     {g.operator} {g.threshold}
                   </td>
-                  <td>—</td>
+                  <td>{g.value === null ? '—' : g.value.toFixed(4)}</td>
                   <td>
                     <Status state={g.status} />
                   </td>
@@ -891,8 +911,11 @@ export function FactorPage() {
           </table>
         </div>
       </section>
+      {factor.is_experiment && <NavChart candidate={factor} />}
       <p className="source-note">
-        本地 11 项口径详见 SPEC。当前没有市场数据与验证结果，不判定任何候选正式入库。
+        {factor.is_experiment
+          ? '本地 11 项口径详见 SPEC。开发期入库不等于独立测试通过。'
+          : '本地 11 项口径详见 SPEC。当前没有市场数据与验证结果，不判定任何候选正式入库。'}
       </p>
     </>
   );
@@ -940,7 +963,9 @@ export function SettingsPage() {
           <h1>数据与模型</h1>
           <p>把输入和连接核实清楚，再开始真实研究。</p>
         </div>
-        <span className="tag">当前仅启用演示模式</span>
+        <Link className="button navy compact" to="/mine">
+          进入实时挖掘 <ArrowUpRight size={14} />
+        </Link>
       </div>
       <ErrorNotice message={error || capabilities.error || datasets.error} />
       <section className="panel model-panel">
@@ -952,7 +977,7 @@ export function SettingsPage() {
           <span className="tag">{model?.configured ? '已配置 · 未验证' : '待配置'}</span>
         </div>
         <p className="model-target">
-          DeepSeek 4.1 Flash <small>用户指定目标 · 官方模型 ID 待核实</small>
+          DeepSeek 4.1 Flash <small>已核实官方 ID：deepseek-flash</small>
         </p>
         <div className="connection-fields">
           <div>
@@ -969,7 +994,7 @@ export function SettingsPage() {
           </div>
           <div>
             <span>真实运行通道</span>
-            <strong>尚未启用</strong>
+            <strong>{capabilities.data?.live_enabled ? '历史快照研究已启用' : '暂未启用'}</strong>
           </div>
         </div>
         <div className="model-footer">
@@ -993,7 +1018,10 @@ export function SettingsPage() {
         )}
         <details>
           <summary>开发者配置说明</summary>
-          <pre>DEEPSEEK_API_KEY=你的密钥{`\n`}DEEPSEEK_MODEL=核实后的官方模型ID</pre>
+          <pre>
+            DEEPSEEK_API_KEY=你的密钥{`\n`}DEEPSEEK_MODEL=deepseek-flash{`\n`}
+            LOOP_RESEARCH_TOKEN=自行设置的演示口令
+          </pre>
           <p>在项目根目录的本地 .env 中设置，重启后端生效。框架不会自动替换模型或发起付费请求。</p>
         </details>
       </section>
@@ -1030,10 +1058,13 @@ export function SettingsPage() {
             ))}
           </div>
         ) : (
-          <EmptyState icon={<Database size={28} strokeWidth={1.2} />} title="尚未连接研究数据">
-            本轮不下载市场数据。后续可以通过本地 CSV 接口，
+          <EmptyState
+            icon={<Database size={28} strokeWidth={1.2} />}
+            title="没有额外注册的 CSV 数据"
+          >
+            实时挖掘已内置 50 股的历史开发期快照。
             <br />
-            接入经过确认的股票价格快照。
+            自定义 CSV 可单独注册并校验，暂不用于网页现场任务。
           </EmptyState>
         )}
         <details>
@@ -1048,11 +1079,11 @@ export function SettingsPage() {
       <div className="readiness-note">
         <Clock3 size={17} />
         <p>
-          真实实验入口保持关闭，直到官方模型
-          ID、数据口径与验证协议完成确认。当前可以在工作台运行本地演示和公式校验。
+          实时挖掘使用固定历史快照与开发期协议。本地搜索免费；DeepSeek
+          模式需要服务端配置和演示口令。
         </p>
-        <Link className="text-link" to="/console">
-          返回工作台 <ArrowRight size={15} />
+        <Link className="text-link" to="/mine">
+          进入实时挖掘 <ArrowRight size={15} />
         </Link>
       </div>
     </>

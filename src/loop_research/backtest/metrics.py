@@ -11,15 +11,11 @@ def forward_returns(opens: pd.DataFrame, horizon: int = 5) -> pd.DataFrame:
 
 
 def rank_ic(signal: pd.DataFrame, labels: pd.DataFrame, min_assets: int = 20) -> pd.Series:
-    result = {}
-    for date in signal.index.intersection(labels.index):
-        pair = pd.concat([signal.loc[date], labels.loc[date]], axis=1)
-        pair = pair.replace([np.inf, -np.inf], np.nan).dropna()
-        if len(pair) < min_assets or (pair.nunique() < 2).any():
-            result[date] = np.nan
-        else:
-            result[date] = pair.iloc[:, 0].rank().corr(pair.iloc[:, 1].rank())
-    return pd.Series(result, dtype=float, name="rank_ic")
+    left, right = signal.align(labels, join="inner")
+    valid = np.isfinite(left) & np.isfinite(right)
+    left, right = left.where(valid).rank(axis=1), right.where(valid).rank(axis=1)
+    result = left.corrwith(right, axis=1).where(valid.sum(axis=1) >= min_assets)
+    return result.rename("rank_ic")
 
 
 def relative_metrics(portfolio: pd.Series, benchmark: pd.Series) -> dict:
