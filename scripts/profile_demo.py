@@ -40,7 +40,7 @@ def docker(*args):
 
 
 async def profile(image: str, mode: str = "fixture"):
-    target = 120 if mode == "live" else 1000
+    target = 1200 if mode == "live" else 1000
     password = secrets.token_hex(24)
     image_info = json.loads(docker("image", "inspect", image))[0]
     identifier = docker(
@@ -116,19 +116,23 @@ async def profile(image: str, mode: str = "fixture"):
                 json={
                     "name": f"Resource check: {target} {mode} attempts",
                     "mode": mode,
-                    "rounds": 20 if mode == "live" else 50,
-                    "batch_size": 6 if mode == "live" else 20,
+                    "rounds": 100 if mode == "live" else 50,
+                    "batch_size": 12 if mode == "live" else 20,
                     "max_candidates": target,
-                    "max_seconds": 600 if mode == "live" else 1800,
+                    "max_seconds": 3600 if mode == "live" else 1800,
                 },
             )
             response.raise_for_status()
             run_id = response.json()["id"]
             (await client.post(f"/api/v1/runs/{run_id}/start")).raise_for_status()
             started = time.monotonic()
-            while time.monotonic() - started < 300:
+            last_progress = -1
+            while time.monotonic() - started < 3600:
                 await asyncio.gather(*(readers(client, run_id) for _ in range(4)))
                 state = (await client.get(f"/api/v1/runs/{run_id}")).json()
+                if state["cursor"] // 100 != last_progress:
+                    last_progress = state["cursor"] // 100
+                    print(json.dumps({"processed": state["cursor"], "target": target}), flush=True)
                 if state["state"] in {"completed", "budget_exhausted", "failed"}:
                     break
                 await asyncio.sleep(0.1)
@@ -152,8 +156,18 @@ async def profile(image: str, mode: str = "fixture"):
             if mode == "live":
                 assert state["counts"]["accepted"] >= 6
                 assert state["counts"]["backtested"] >= 6
+            downloaded = []
+            after = 0
+            while after < target:
+                page = (await client.get(
+                    f"/api/v1/runs/{run_id}/factors", params={"after": after, "limit": 100}
+                )).json()
+                assert 0 < len(page["items"]) <= 100 and page["next_after"] > after
+                downloaded.extend(c["id"] for c in page["items"])
+                after = page["next_after"]
+            assert len(downloaded) == len(set(downloaded)) == target
             full = (await client.get(f"/api/v1/runs/{run_id}/report")).content
-            assert len(full) < 20_000_000
+            assert len(full) < 64_000_000
             (await client.get("/api/v1/experiments")).raise_for_status()
             (await client.get("/experiments")).raise_for_status()
             (await client.get("/presentation")).raise_for_status()
@@ -194,6 +208,8 @@ async def profile(image: str, mode: str = "fixture"):
             "p95_response_seconds": sorted(response_seconds)[int(len(response_seconds) * 0.95)],
             "database_bytes": health["state_bytes"],
             "database_limit_mb": health["state_limit_mb"],
+            "paginated_candidates": len(downloaded),
+            "report_bytes": len(full),
             "api_and_worker_seconds": time.monotonic() - started,
             **details,
             "storage_limit_enforced": False,

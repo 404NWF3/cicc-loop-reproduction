@@ -10,9 +10,15 @@ class PersistentBudget:
     # Official peak Flash prices (2026-10-15): input 2, cache-hit .04, output 8 CNY/M.
     # Charge every reserved/actual token at 8 CNY/M, so accounting is an upper bound.
     RATE_MICROCNY = 8
+    LIVE_MAX_REQUESTS = 2000
+    LIVE_MAX_TOKENS = 5_000_000
 
     def __init__(self, path: Path, *, max_cny: float = 40, max_requests=60, max_tokens=120_000):
-        if not 0 < max_cny <= 40 or not 0 < max_requests <= 60 or not 0 < max_tokens <= 120_000:
+        if (
+            not 0 < max_cny <= 40
+            or not 0 < max_requests <= self.LIVE_MAX_REQUESTS
+            or not 0 < max_tokens <= self.LIVE_MAX_TOKENS
+        ):
             raise ValueError("Local experiment limits cannot exceed the authorized budget")
         path.parent.mkdir(parents=True, exist_ok=True)
         self.path, self.pending = path, None
@@ -43,6 +49,28 @@ class PersistentBudget:
 
     def connect(self):
         return sqlite3.connect(self.path, timeout=10)
+
+    @classmethod
+    def for_live(cls, path: Path):
+        """Upgrade only the known v1 request/token defaults, retaining every charge.
+
+        The money limit never increases. Custom stricter quotas remain in force,
+        and the migration is applied once, so reopening cannot undo later limits.
+        """
+        ledger = cls(path, max_requests=cls.LIVE_MAX_REQUESTS, max_tokens=cls.LIVE_MAX_TOKENS)
+        with ledger.connect() as db:
+            db.execute("BEGIN IMMEDIATE")
+            db.execute("CREATE TABLE IF NOT EXISTS migrations (name TEXT PRIMARY KEY)")
+            migrated = db.execute(
+                "SELECT 1 FROM migrations WHERE name='live_1200_v2'"
+            ).fetchone()
+            if not migrated:
+                db.execute(
+                    "UPDATE limits SET requests=?,tokens=? WHERE id=1 AND requests=60 AND tokens=120000",
+                    (cls.LIVE_MAX_REQUESTS, cls.LIVE_MAX_TOKENS),
+                )
+                db.execute("INSERT INTO migrations VALUES('live_1200_v2')")
+        return ledger
 
     def carry_floor(self, requests: int, tokens: int):
         """Carry published historical usage into a new persistent deployment, never reset it."""
@@ -106,7 +134,10 @@ class PersistentBudget:
                 "SELECT count(*),coalesce(sum(charged),0),"
                 "coalesce(sum(state='reserved'),0) FROM calls"
             ).fetchone()
-            cap = db.execute("SELECT microcny FROM limits WHERE id=1").fetchone()[0] / 1_000_000
+            money, request_cap, token_cap = db.execute(
+                "SELECT microcny,requests,tokens FROM limits WHERE id=1"
+            ).fetchone()
+            cap = money / 1_000_000
             carry_calls, carry_tokens = db.execute(
                 "SELECT requests,tokens FROM carried WHERE id=1"
             ).fetchone()
@@ -117,6 +148,9 @@ class PersistentBudget:
             "cost_upper_bound_cny": tokens * self.RATE_MICROCNY / 1_000_000,
             "unresolved_requests": unresolved,
             "hard_cap_cny": cap,
+            "remaining_upper_bound_cny": max(0, cap - tokens * self.RATE_MICROCNY / 1_000_000),
+            "request_cap": request_cap,
+            "token_cap": token_cap,
             "pricing_source": "https://api-docs.deepseek.com/zh-cn/quick_start/pricing",
             "pricing_basis": "all tokens at peak output price 8 CNY/million; conservative",
         }

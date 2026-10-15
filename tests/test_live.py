@@ -122,9 +122,10 @@ def test_unknown_paid_phase_is_not_resubmitted_after_restart(tmp_path):
 
 def test_live_limits_and_disabled_mode(tmp_path):
     for values in [
-        {"max_candidates": 121},
-        {"rounds": 50},
-        {"max_seconds": 601},
+        {"max_candidates": 1201},
+        {"rounds": 101, "batch_size": 12},
+        {"max_seconds": 3601},
+        {"max_model_cny": 11},
         {"batch_size": 13},
     ]:
         with pytest.raises(ValidationError):

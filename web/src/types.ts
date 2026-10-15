@@ -37,6 +37,7 @@ export interface Run {
     rejected: number;
     backtested: number;
     accepted: number;
+    novel: number;
     model_calls: number;
     tokens: number;
   };

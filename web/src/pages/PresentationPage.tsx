@@ -478,11 +478,11 @@ function Visual({ kind }: { kind: string }) {
             进入实时挖掘 <ArrowUpRight size={22} />
           </Link>
           <p>
-            建议选择 36 个候选，约半分钟。
+            完整搜索可选 1,200 个，短演示可选 36 个。
             <br />
             暂停、刷新与继续，均保留检查点。
           </p>
-          <small>本地模式 ¥0 · DeepSeek 单任务上限 ¥0.50</small>
+          <small>本地模式 ¥0 · DeepSeek 默认预算 ¥5，可调至 ¥10</small>
         </div>
       );
     default:
