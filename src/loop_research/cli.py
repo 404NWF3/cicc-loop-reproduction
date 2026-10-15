@@ -35,6 +35,15 @@ def main():
     register.add_argument("--id", required=True)
     validate = actions.add_parser("validate")
     validate.add_argument("id")
+    experiment = commands.add_parser(
+        "experiment", help="Run a bounded local E0–E3 market experiment"
+    )
+    experiment.add_argument("--config", type=Path, default=Path("configs/local_experiment.yaml"))
+    experiment.add_argument("--id", required=True)
+    experiment.add_argument("--data-dir", type=Path, default=Path("data/stocknet-330708b5"))
+    experiment.add_argument(
+        "--replay", type=Path, help="Replay archived responses, with zero API calls"
+    )
     args = parser.parse_args()
     try:
         settings = Settings()
@@ -53,7 +62,7 @@ def main():
         elif args.command == "worker":
             from loop_research.worker import run_worker
 
-            run_worker(settings.database_path, settings.fixture_step_seconds)
+            run_worker(settings.database_path, settings.fixture_step_seconds, settings.state_max_mb)
         elif args.command == "doctor":
             result = {
                 "database": "online",
@@ -83,6 +92,40 @@ def main():
                 else registry.validate(args.id)
             )
             print(json.dumps(result, ensure_ascii=False, indent=2))
+        elif args.command == "experiment":
+            import asyncio
+            import fcntl
+            import re
+
+            from loop_research.experiments.runner import run_experiment
+
+            if not re.fullmatch(r"[a-zA-Z0-9_-]{1,80}", args.id):
+                parser.error("Experiment ID must be a simple directory name")
+            ledger = Path("artifacts/budgets/deepseek.sqlite3")
+            ledger.parent.mkdir(parents=True, exist_ok=True)
+            with ledger.with_suffix(".lock").open("w") as lock:
+                try:
+                    fcntl.flock(lock, fcntl.LOCK_EX | fcntl.LOCK_NB)
+                except BlockingIOError:
+                    parser.error("Another local experiment already holds the shared budget lock")
+                result = asyncio.run(
+                    run_experiment(
+                        yaml.safe_load(args.config.read_text()),
+                        args.data_dir,
+                        Path("artifacts") / args.id,
+                        ledger,
+                        replay=args.replay,
+                    )
+                )
+            print(
+                json.dumps(
+                    {k: result[k] for k in ("id", "status", "budget", "seconds")},
+                    ensure_ascii=False,
+                    indent=2,
+                )
+            )
+            if result["status"] != "completed":
+                parser.exit(1, "实验只完成部分工作，详见 report.json；未解封 holdout。\n")
     except ResearchError as exc:
         parser.exit(1, f"{exc.code}: {exc.message}\n")
 

@@ -22,7 +22,14 @@ def test_api_lifecycle_validation_and_local_configuration(tmp_path):
         assert client.post(f"/api/v1/runs/{run['id']}/pause").json()["state"] == "paused"
         assert client.get(f"/api/v1/runs/{run['id']}/report").json()["is_experiment"] is False
         assert client.get("/api/v1/datasets").json() == {"items": []}
-        assert client.get("/api/v1/experiments").json()["status"] == "not_run"
+        registry = client.get("/api/v1/experiments").json()
+        assert registry["status"] == "completed"
+        experiment_id = registry["items"][0]["id"]
+        report = client.get(f"/api/v1/experiments/{experiment_id}/report")
+        assert report.status_code == 200
+        assert report.json()["verification"]["status"] == "passed"
+        assert "attachment" in report.headers["content-disposition"]
+        assert client.get("/api/v1/experiments/missing/report").status_code == 404
         check = client.post("/api/v1/models/check")
         assert check.json()["remote_check_performed"] is False
         assert "test-only-sentinel" not in check.text

@@ -1,0 +1,3778 @@
+{
+  "id": "stocknet_flash_20261015_v2",
+  "status": "completed",
+  "started_at_utc": "2026-10-15T11:17:38.245196+00:00",
+  "protocol_sha256": "f5707ddcd7609ba32f6c007133f0d2863b2112264265b59dd857374055cf8bb7",
+  "data_commit": "330708b5ddc359961078bef469f43f48992fd6e4",
+  "data_sha256": "f88cea3c3bbd6c2d0aff9e6473f9795350b972d6407baad1cab58a912f6ac61a",
+  "asset_count": 50,
+  "rows": 62900,
+  "limitations": [
+    "Source universe has survivorship/selection bias",
+    "Retrospective Yahoo adjustment factors; not point-in-time corporate actions",
+    "US equities, not the original A-share universe",
+    "LLM pretraining may include the historical period",
+    "Overlapping 5-day labels; no IID significance claims",
+    "Exploratory expansion after seeing v1 development failures; many hypotheses tested.",
+    "Branches share a library and E7 uses development feedback; no controlled FSA comparison."
+  ],
+  "seconds": 327.0766001009997,
+  "model": {
+    "id": "deepseek-flash",
+    "name": "DeepSeek-V4.1-Flash",
+    "thinking": "disabled"
+  },
+  "seed": 20261015,
+  "periods": {
+    "discovery": [
+      "2012-09-04",
+      "2013-12-31"
+    ],
+    "selection": [
+      "2014-01-01",
+      "2015-12-31"
+    ],
+    "holdout": [
+      "2016-01-01",
+      "2017-09-01"
+    ]
+  },
+  "budget": {
+    "requests": 50,
+    "tokens_charged_or_reserved": 44836,
+    "cost_upper_bound_cny": 0.358688,
+    "unresolved_requests": 0,
+    "hard_cap_cny": 40.0,
+    "pricing_source": "https://api-docs.deepseek.com/zh-cn/quick_start/pricing",
+    "pricing_basis": "all tokens at peak output price 8 CNY/million; conservative",
+    "run_requests": 10,
+    "run_tokens": 12520,
+    "run_cost_upper_bound_cny": 0.10016000000000003,
+    "replayed_responses": 0
+  },
+  "verification": {
+    "status": "passed",
+    "baseline_count": 6,
+    "ic_reference": "SciPy Spearman: six baselines plus every admitted factor",
+    "portfolio_reference": "Independent scalar holdings and SciPy brentq: baseline, admitted selection/holdout, composites",
+    "max_ic_absolute_error": 4.994338276276267e-13,
+    "max_nav_absolute_error": 5.000000413701855e-12,
+    "adjusted_close_identity_max_error": 1.4210854715202004e-14,
+    "gate_failures": {
+      "G02": 413,
+      "G03": 438,
+      "G04": 615,
+      "G05": 576,
+      "G06": 788,
+      "G07": 506,
+      "G08": 438,
+      "G01": 4,
+      "G09": 113,
+      "G10": 6
+    },
+    "peak_price_usage_estimate_cny": 0.059396,
+    "archived_calls": 10,
+    "tokens": 12520,
+    "accepted_count": 23,
+    "accepted_factor_checks": [
+      {
+        "id": "E7-01156",
+        "gates_passed": true,
+        "holdout_nav_checked": true
+      },
+      {
+        "id": "E7-01310",
+        "gates_passed": true,
+        "holdout_nav_checked": true
+      },
+      {
+        "id": "E7-01980",
+        "gates_passed": true,
+        "holdout_nav_checked": true
+      },
+      {
+        "id": "E7-00057",
+        "gates_passed": true,
+        "holdout_nav_checked": true
+      },
+      {
+        "id": "E7-00892",
+        "gates_passed": true,
+        "holdout_nav_checked": true
+      },
+      {
+        "id": "E7-00948",
+        "gates_passed": true,
+        "holdout_nav_checked": true
+      },
+      {
+        "id": "E7-00774",
+        "gates_passed": true,
+        "holdout_nav_checked": true
+      },
+      {
+        "id": "E7-02224",
+        "gates_passed": true,
+        "holdout_nav_checked": true
+      },
+      {
+        "id": "E7-00984",
+        "gates_passed": true,
+        "holdout_nav_checked": true
+      },
+      {
+        "id": "E7-00764",
+        "gates_passed": true,
+        "holdout_nav_checked": true
+      },
+      {
+        "id": "E7-01962",
+        "gates_passed": true,
+        "holdout_nav_checked": true
+      },
+      {
+        "id": "E7-01777",
+        "gates_passed": true,
+        "holdout_nav_checked": true
+      },
+      {
+        "id": "E7-01044",
+        "gates_passed": true,
+        "holdout_nav_checked": true
+      },
+      {
+        "id": "E7-00471",
+        "gates_passed": true,
+        "holdout_nav_checked": true
+      },
+      {
+        "id": "E7-00397",
+        "gates_passed": true,
+        "holdout_nav_checked": true
+      },
+      {
+        "id": "E7-00599",
+        "gates_passed": true,
+        "holdout_nav_checked": true
+      },
+      {
+        "id": "E7-00342",
+        "gates_passed": true,
+        "holdout_nav_checked": true
+      },
+      {
+        "id": "E7-01958",
+        "gates_passed": true,
+        "holdout_nav_checked": true
+      },
+      {
+        "id": "E7-02259",
+        "gates_passed": true,
+        "holdout_nav_checked": true
+      },
+      {
+        "id": "E7-00264",
+        "gates_passed": true,
+        "holdout_nav_checked": true
+      },
+      {
+        "id": "E7-02100",
+        "gates_passed": true,
+        "holdout_nav_checked": true
+      },
+      {
+        "id": "E7-01120",
+        "gates_passed": true,
+        "holdout_nav_checked": true
+      },
+      {
+        "id": "E7-00728",
+        "gates_passed": true,
+        "holdout_nav_checked": true
+      }
+    ],
+    "max_metric_absolute_error": 3.872457909892546e-13,
+    "max_correlation_absolute_error": 1.1102230246251565e-16,
+    "freeze_hash_verified": true
+  },
+  "branches": {
+    "E0": {
+      "status": "completed",
+      "attempts": 6,
+      "legal": 6,
+      "backtested": 6,
+      "accepted": 0,
+      "quality_passed": 0,
+      "unique_expressions": 6,
+      "unique_skeletons": 6,
+      "outcomes": {
+        "gate_rejected": 6
+      },
+      "gate_failures": {
+        "G02": 6,
+        "G03": 6,
+        "G04": 6,
+        "G05": 6,
+        "G06": 6,
+        "G07": 6,
+        "G08": 6,
+        "G01": 4
+      }
+    },
+    "E4": {
+      "status": "completed",
+      "attempts": 966,
+      "legal": 966,
+      "backtested": 160,
+      "accepted": 0,
+      "quality_passed": 2,
+      "unique_expressions": 966,
+      "unique_skeletons": 104,
+      "outcomes": {
+        "discovery_rejected": 803,
+        "gate_rejected": 160,
+        "duplicate": 3
+      },
+      "gate_failures": {
+        "G01": 803,
+        "G02": 89,
+        "G03": 100,
+        "G04": 126,
+        "G05": 125,
+        "G06": 154,
+        "G07": 109,
+        "G08": 100,
+        "G09": 2
+      }
+    },
+    "E5": {
+      "status": "completed",
+      "attempts": 3000,
+      "legal": 3000,
+      "backtested": 265,
+      "accepted": 0,
+      "quality_passed": 0,
+      "unique_expressions": 2980,
+      "unique_skeletons": 2024,
+      "outcomes": {
+        "discovery_rejected": 2715,
+        "gate_rejected": 265,
+        "duplicate": 20
+      },
+      "gate_failures": {
+        "G01": 2715,
+        "G02": 183,
+        "G03": 209,
+        "G04": 240,
+        "G05": 240,
+        "G06": 264,
+        "G07": 211,
+        "G08": 209
+      }
+    },
+    "E6": {
+      "status": "completed",
+      "attempts": 265,
+      "legal": 190,
+      "backtested": 26,
+      "accepted": 0,
+      "quality_passed": 1,
+      "unique_expressions": 153,
+      "unique_skeletons": 34,
+      "outcomes": {
+        "llm_rejected": 15,
+        "discovery_rejected": 104,
+        "gate_rejected": 26,
+        "duplicate": 58,
+        "degenerate": 2,
+        "dsl_rejected": 60
+      },
+      "gate_failures": {
+        "G01": 104,
+        "G03": 19,
+        "G04": 18,
+        "G05": 24,
+        "G06": 24,
+        "G07": 16,
+        "G08": 19,
+        "G02": 16,
+        "G09": 1
+      }
+    },
+    "E7": {
+      "status": "completed",
+      "attempts": 2400,
+      "legal": 1311,
+      "backtested": 509,
+      "accepted": 23,
+      "quality_passed": 133,
+      "unique_expressions": 980,
+      "unique_skeletons": 272,
+      "outcomes": {
+        "discovery_rejected": 411,
+        "gate_rejected": 486,
+        "duplicate": 376,
+        "dsl_rejected": 1089,
+        "degenerate": 15,
+        "accepted": 23
+      },
+      "gate_failures": {
+        "G01": 411,
+        "G04": 225,
+        "G05": 181,
+        "G06": 340,
+        "G02": 119,
+        "G03": 104,
+        "G08": 104,
+        "G09": 110,
+        "G07": 164,
+        "G10": 6
+      }
+    }
+  },
+  "holdout": {
+    "LIBRARY": {
+      "factors": [
+        {
+          "id": "E7-01156",
+          "expression": "ts_mean(add(cs_rank(ts_corr(ret1, intraday_return, 60)), cs_rank(neg(ts_corr(gap, upper_shadow, 60)))), 5)",
+          "direction": 1,
+          "annual_excess": -0.004277100082277108,
+          "sharpe": -0.038556447069735725,
+          "max_drawdown": -0.048040049498841,
+          "calmar": -0.0890319665965435,
+          "rank_ic": -0.006075882816277005,
+          "ic_days": 415
+        },
+        {
+          "id": "E7-01310",
+          "expression": "ts_mean(add(cs_rank(ts_mean(ts_corr(ret1, intraday_return, 40), 5)), cs_rank(ts_corr(rel_volume, upper_shadow, 60))), 3)",
+          "direction": 1,
+          "annual_excess": -0.1107702697512295,
+          "sharpe": -1.8795254749072248,
+          "max_drawdown": -0.19696569825949983,
+          "calmar": -0.5623835557666039,
+          "rank_ic": -0.023030183665616943,
+          "ic_days": 415
+        },
+        {
+          "id": "E7-01980",
+          "expression": "ts_mean(ts_mean(ts_mean(ts_corr(gap, upper_shadow, 60), 5), 10), 5)",
+          "direction": -1,
+          "annual_excess": 0.0073421216668529965,
+          "sharpe": 0.16636904682791598,
+          "max_drawdown": -0.07211501306207246,
+          "calmar": 0.10181127833303337,
+          "rank_ic": 0.0018336203434695334,
+          "ic_days": 415
+        },
+        {
+          "id": "E7-00057",
+          "expression": "add(cs_rank(ts_mean(safe_div(ts_mean(intraday_range, 60), ts_mean(intraday_range, 20)), 3)), cs_rank(neg(neg(ts_corr(upper_shadow, rel_volume, 60)))))",
+          "direction": 1,
+          "annual_excess": -0.024181066686085773,
+          "sharpe": -0.4227765714905781,
+          "max_drawdown": -0.08601631961148382,
+          "calmar": -0.28112184752040265,
+          "rank_ic": -0.018024521256965013,
+          "ic_days": 415
+        },
+        {
+          "id": "E7-00892",
+          "expression": "add(cs_rank(sub(cs_zscore(ts_mean(upper_shadow, 3)), cs_zscore(ts_rank(intraday_return, 5)))), cs_rank(neg(ts_mean(ts_corr(gap, upper_shadow, 40), 60))))",
+          "direction": 1,
+          "annual_excess": -0.04852433193755634,
+          "sharpe": -0.7777692578827489,
+          "max_drawdown": -0.10959049185655367,
+          "calmar": -0.4427786673416095,
+          "rank_ic": 0.014234151010944244,
+          "ic_days": 415
+        },
+        {
+          "id": "E7-00948",
+          "expression": "ts_mean(add(cs_rank(ts_corr(rel_volume, upper_shadow, 60)), cs_rank(ts_corr(rel_volume, upper_shadow, 60))), 5)",
+          "direction": 1,
+          "annual_excess": -0.09893322048403352,
+          "sharpe": -1.871837313906398,
+          "max_drawdown": -0.16343669189280008,
+          "calmar": -0.6053305370921538,
+          "rank_ic": -0.028331745679013382,
+          "ic_days": 415
+        },
+        {
+          "id": "E7-00774",
+          "expression": "add(cs_rank(sub(cs_rank(ts_mean(intraday_range, 20)), cs_rank(ts_rank(intraday_return, 20)))), cs_rank(neg(neg(ts_corr(upper_shadow, rel_volume, 60)))))",
+          "direction": 1,
+          "annual_excess": -0.08785618282745966,
+          "sharpe": -1.2698610516461457,
+          "max_drawdown": -0.15219286149349198,
+          "calmar": -0.5772687494361655,
+          "rank_ic": -0.012166992160731556,
+          "ic_days": 415
+        },
+        {
+          "id": "E7-02224",
+          "expression": "ts_mean(ts_mean(ts_mean(ts_corr(gap, upper_shadow, 5), 40), 20), 2)",
+          "direction": -1,
+          "annual_excess": -0.016946537707185017,
+          "sharpe": -0.26732069594508784,
+          "max_drawdown": -0.06594014127144687,
+          "calmar": -0.2569988080162506,
+          "rank_ic": -0.008819405852629386,
+          "ic_days": 415
+        },
+        {
+          "id": "E7-00984",
+          "expression": "ts_mean(add(cs_rank(ts_mean(ts_corr(rel_volume, upper_shadow, 60), 20)), cs_rank(ts_mean(ts_corr(intraday_range, rel_volume, 40), 20))), 10)",
+          "direction": 1,
+          "annual_excess": -0.04598494656933838,
+          "sharpe": -0.791689289004948,
+          "max_drawdown": -0.09083427594006355,
+          "calmar": -0.5062510389765342,
+          "rank_ic": -0.01726078543883304,
+          "ic_days": 415
+        },
+        {
+          "id": "E7-00764",
+          "expression": "add(cs_rank(neg(ts_mean(ts_corr(gap, upper_shadow, 40), 20))), cs_rank(neg(neg(ts_corr(upper_shadow, rel_volume, 60)))))",
+          "direction": 1,
+          "annual_excess": -0.03477388163498618,
+          "sharpe": -0.5833105036000863,
+          "max_drawdown": -0.09642130122755987,
+          "calmar": -0.36064522250034564,
+          "rank_ic": -0.028612656902374828,
+          "ic_days": 415
+        },
+        {
+          "id": "E7-01962",
+          "expression": "add(cs_rank(ts_corr(ret1, intraday_return, 40)), cs_rank(neg(ts_mean(ts_corr(gap, upper_shadow, 5), 40))))",
+          "direction": 1,
+          "annual_excess": -0.036301153958448795,
+          "sharpe": -0.6074723821004928,
+          "max_drawdown": -0.11662627443557261,
+          "calmar": -0.3112605125571639,
+          "rank_ic": -0.007081328153925487,
+          "ic_days": 415
+        },
+        {
+          "id": "E7-01777",
+          "expression": "add(cs_rank(sub(cs_zscore(ts_mean(upper_shadow, 2)), cs_zscore(ts_rank(intraday_return, 20)))), cs_rank(neg(ts_mean(ts_corr(gap, upper_shadow, 3), 5))))",
+          "direction": 1,
+          "annual_excess": -0.06590127506608179,
+          "sharpe": -1.1334566218985613,
+          "max_drawdown": -0.16454507079966274,
+          "calmar": -0.40050592063203183,
+          "rank_ic": 0.00867588052012469,
+          "ic_days": 415
+        },
+        {
+          "id": "E7-01044",
+          "expression": "add(cs_rank(ts_mean(ts_corr(rel_volume, upper_shadow, 5), 60)), cs_rank(ts_mean(ts_corr(intraday_range, rel_volume, 40), 5)))",
+          "direction": 1,
+          "annual_excess": -0.0865648895363581,
+          "sharpe": -1.4480456631078227,
+          "max_drawdown": -0.14847050265555395,
+          "calmar": -0.5830443622676043,
+          "rank_ic": -0.019641401610885702,
+          "ic_days": 415
+        },
+        {
+          "id": "E7-00471",
+          "expression": "add(cs_rank(sub(cs_zscore(ts_mean(upper_shadow, 2)), cs_zscore(ts_rank(intraday_return, 60)))), cs_rank(ts_mean(ts_corr(ret1, intraday_return, 40), 5)))",
+          "direction": 1,
+          "annual_excess": -0.04077366954185557,
+          "sharpe": -0.6076423906650251,
+          "max_drawdown": -0.11997424987818772,
+          "calmar": -0.3398535067587745,
+          "rank_ic": 0.0113674276369569,
+          "ic_days": 415
+        },
+        {
+          "id": "E7-00397",
+          "expression": "sub(cs_zscore(ts_std(intraday_range, 60)), cs_zscore(ts_rank(intraday_return, 60)))",
+          "direction": 1,
+          "annual_excess": -0.019475470296152375,
+          "sharpe": -0.21273983989071354,
+          "max_drawdown": -0.07307172813321017,
+          "calmar": -0.2665253825754399,
+          "rank_ic": 0.004366260684118708,
+          "ic_days": 415
+        },
+        {
+          "id": "E7-00599",
+          "expression": "add(cs_rank(ts_corr(rel_volume, upper_shadow, 40)), cs_rank(neg(ts_mean(ts_rank(intraday_range, 20), 20))))",
+          "direction": 1,
+          "annual_excess": -0.1005816065962939,
+          "sharpe": -1.8866686757614328,
+          "max_drawdown": -0.20495455829929743,
+          "calmar": -0.49075076656462285,
+          "rank_ic": -0.04482069377541299,
+          "ic_days": 415
+        },
+        {
+          "id": "E7-00342",
+          "expression": "add(cs_rank(sub(cs_zscore(ts_std(intraday_range, 40)), cs_zscore(ts_rank(intraday_return, 60)))), cs_rank(neg(ts_corr(gap, upper_shadow, 60))))",
+          "direction": 1,
+          "annual_excess": -0.07556522985167868,
+          "sharpe": -1.1752170543568523,
+          "max_drawdown": -0.12885604483735924,
+          "calmar": -0.5864313928543774,
+          "rank_ic": -0.003612207461496615,
+          "ic_days": 415
+        },
+        {
+          "id": "E7-01958",
+          "expression": "add(cs_rank(ts_mean(ts_corr(ret1, intraday_return, 60), 40)), cs_rank(neg(ts_mean(ts_corr(gap, upper_shadow, 10), 20))))",
+          "direction": 1,
+          "annual_excess": -0.056310692523295236,
+          "sharpe": -0.9143016802898227,
+          "max_drawdown": -0.13531095467009313,
+          "calmar": -0.416157676668445,
+          "rank_ic": -0.017583926742552304,
+          "ic_days": 415
+        },
+        {
+          "id": "E7-02259",
+          "expression": "add(cs_rank(ts_mean(ts_corr(ret1, intraday_return, 3), 60)), cs_rank(neg(ts_mean(ts_corr(gap, upper_shadow, 60), 60))))",
+          "direction": 1,
+          "annual_excess": -0.02109087782329022,
+          "sharpe": -0.3082270936981068,
+          "max_drawdown": -0.06518637927080428,
+          "calmar": -0.3235473124787653,
+          "rank_ic": -0.013037379912737589,
+          "ic_days": 415
+        },
+        {
+          "id": "E7-00264",
+          "expression": "add(cs_rank(ts_corr(ret1, intraday_return, 40)), cs_rank(add(cs_rank(delta(upper_shadow, 20)), cs_rank(ts_std(intraday_return, 40)))))",
+          "direction": 1,
+          "annual_excess": -0.0991464847532364,
+          "sharpe": -1.5215180064722778,
+          "max_drawdown": -0.18027214730697738,
+          "calmar": -0.5499822697757313,
+          "rank_ic": 0.0014306145571641444,
+          "ic_days": 415
+        },
+        {
+          "id": "E7-02100",
+          "expression": "add(cs_rank(neg(ts_mean(ts_corr(gap, upper_shadow, 40), 40))), cs_rank(ts_corr(ret1, intraday_return, 10)))",
+          "direction": 1,
+          "annual_excess": -0.0818829110655489,
+          "sharpe": -1.4264930167330194,
+          "max_drawdown": -0.14700157033114658,
+          "calmar": -0.5570206555011176,
+          "rank_ic": 0.006877478845949886,
+          "ic_days": 415
+        },
+        {
+          "id": "E7-01120",
+          "expression": "add(cs_rank(ts_mean(ts_corr(ret1, intraday_return, 20), 5)), cs_rank(neg(ts_mean(ts_corr(gap, upper_shadow, 5), 2))))",
+          "direction": 1,
+          "annual_excess": -0.1315954062903839,
+          "sharpe": -2.0103005675295185,
+          "max_drawdown": -0.25008811135131337,
+          "calmar": -0.5261961697392491,
+          "rank_ic": -0.004201048602624824,
+          "ic_days": 415
+        },
+        {
+          "id": "E7-00728",
+          "expression": "add(cs_rank(neg(ts_mean(ts_corr(gap, upper_shadow, 40), 20))), cs_rank(ts_mean(ts_corr(intraday_range, rel_volume, 10), 20)))",
+          "direction": 1,
+          "annual_excess": -0.04258278300960272,
+          "sharpe": -0.7293648282032228,
+          "max_drawdown": -0.11992203666538681,
+          "calmar": -0.3550872232800681,
+          "rank_ic": -0.0007085381680428776,
+          "ic_days": 415
+        }
+      ],
+      "composite": {
+        "annual_excess": -0.0559827937645625,
+        "sharpe": -0.9428396345923763,
+        "max_drawdown": -0.11504500118632432,
+        "calmar": -0.48661648213549075,
+        "factor_count": 23
+      },
+      "status": "evaluated"
+    },
+    "TOP5": {
+      "factors": [
+        {
+          "id": "E7-01156",
+          "expression": "ts_mean(add(cs_rank(ts_corr(ret1, intraday_return, 60)), cs_rank(neg(ts_corr(gap, upper_shadow, 60)))), 5)",
+          "direction": 1,
+          "annual_excess": -0.004277100082277108,
+          "sharpe": -0.038556447069735725,
+          "max_drawdown": -0.048040049498841,
+          "calmar": -0.0890319665965435,
+          "rank_ic": -0.006075882816277005,
+          "ic_days": 415
+        },
+        {
+          "id": "E7-01310",
+          "expression": "ts_mean(add(cs_rank(ts_mean(ts_corr(ret1, intraday_return, 40), 5)), cs_rank(ts_corr(rel_volume, upper_shadow, 60))), 3)",
+          "direction": 1,
+          "annual_excess": -0.1107702697512295,
+          "sharpe": -1.8795254749072248,
+          "max_drawdown": -0.19696569825949983,
+          "calmar": -0.5623835557666039,
+          "rank_ic": -0.023030183665616943,
+          "ic_days": 415
+        },
+        {
+          "id": "E7-01980",
+          "expression": "ts_mean(ts_mean(ts_mean(ts_corr(gap, upper_shadow, 60), 5), 10), 5)",
+          "direction": -1,
+          "annual_excess": 0.0073421216668529965,
+          "sharpe": 0.16636904682791598,
+          "max_drawdown": -0.07211501306207246,
+          "calmar": 0.10181127833303337,
+          "rank_ic": 0.0018336203434695334,
+          "ic_days": 415
+        },
+        {
+          "id": "E7-00057",
+          "expression": "add(cs_rank(ts_mean(safe_div(ts_mean(intraday_range, 60), ts_mean(intraday_range, 20)), 3)), cs_rank(neg(neg(ts_corr(upper_shadow, rel_volume, 60)))))",
+          "direction": 1,
+          "annual_excess": -0.024181066686085773,
+          "sharpe": -0.4227765714905781,
+          "max_drawdown": -0.08601631961148382,
+          "calmar": -0.28112184752040265,
+          "rank_ic": -0.018024521256965013,
+          "ic_days": 415
+        },
+        {
+          "id": "E7-00892",
+          "expression": "add(cs_rank(sub(cs_zscore(ts_mean(upper_shadow, 3)), cs_zscore(ts_rank(intraday_return, 5)))), cs_rank(neg(ts_mean(ts_corr(gap, upper_shadow, 40), 60))))",
+          "direction": 1,
+          "annual_excess": -0.04852433193755634,
+          "sharpe": -0.7777692578827489,
+          "max_drawdown": -0.10959049185655367,
+          "calmar": -0.4427786673416095,
+          "rank_ic": 0.014234151010944244,
+          "ic_days": 415
+        }
+      ],
+      "composite": {
+        "annual_excess": -0.031758809614786054,
+        "sharpe": -0.5089713019312035,
+        "max_drawdown": -0.09091769906951064,
+        "calmar": -0.34931382931837096,
+        "factor_count": 5
+      },
+      "status": "evaluated"
+    }
+  },
+  "cost_one_side": 0.001,
+  "experiment_version": "expanded_search_v2",
+  "random_seeds": [
+    17,
+    43,
+    101
+  ],
+  "accepted_factors": [
+    {
+      "id": "E7-01156",
+      "branch": "E7",
+      "expression": "ts_mean(add(cs_rank(ts_corr(ret1, intraday_return, 60)), cs_rank(neg(ts_corr(gap, upper_shadow, 60)))), 5)",
+      "direction": 1,
+      "discovery_ic": 0.07177635166667387,
+      "metrics": {
+        "abs_ic": 0.07177635166667387,
+        "year1_excess": 0.1602664894342949,
+        "year2_excess": 0.11647416321069337,
+        "year1_sharpe": 2.714594288043541,
+        "year2_sharpe": 1.7809859035814726,
+        "calmar": 3.4597846736268703,
+        "last9m_excess": 0.06514671065771038,
+        "last12m_excess": 0.11647416321069337,
+        "max_correlation": null,
+        "coverage": 1.0,
+        "sample_check": 1
+      },
+      "accepted": true,
+      "periods": {
+        "selection": {
+          "annual_excess": 0.13811619662233832,
+          "sharpe": 2.2138318087767135,
+          "max_drawdown": -0.039920460274642466,
+          "calmar": 3.4597846736268703
+        },
+        "year2014": {
+          "annual_excess": 0.1602664894342949,
+          "sharpe": 2.714594288043541,
+          "max_drawdown": -0.020077679511485536,
+          "calmar": 7.9823213306405085
+        },
+        "year2015": {
+          "annual_excess": 0.11647416321069337,
+          "sharpe": 1.7809859035814726,
+          "max_drawdown": -0.039920460274642466,
+          "calmar": 2.9176558188302737
+        }
+      },
+      "gates": [
+        {
+          "id": "G01",
+          "value": 0.07177635166667387,
+          "operator": ">",
+          "threshold": 0.03,
+          "status": "passed"
+        },
+        {
+          "id": "G02",
+          "value": 0.1602664894342949,
+          "operator": ">",
+          "threshold": 0,
+          "status": "passed"
+        },
+        {
+          "id": "G03",
+          "value": 0.11647416321069337,
+          "operator": ">",
+          "threshold": 0,
+          "status": "passed"
+        },
+        {
+          "id": "G04",
+          "value": 2.714594288043541,
+          "operator": ">",
+          "threshold": 0.5,
+          "status": "passed"
+        },
+        {
+          "id": "G05",
+          "value": 1.7809859035814726,
+          "operator": ">",
+          "threshold": 0.5,
+          "status": "passed"
+        },
+        {
+          "id": "G06",
+          "value": 3.4597846736268703,
+          "operator": ">",
+          "threshold": 1,
+          "status": "passed"
+        },
+        {
+          "id": "G07",
+          "value": 0.06514671065771038,
+          "operator": ">",
+          "threshold": 0,
+          "status": "passed"
+        },
+        {
+          "id": "G08",
+          "value": 0.11647416321069337,
+          "operator": ">",
+          "threshold": 0,
+          "status": "passed"
+        },
+        {
+          "id": "G09",
+          "value": null,
+          "operator": "<",
+          "threshold": 0.7,
+          "status": "not_applicable"
+        },
+        {
+          "id": "G10",
+          "value": 1.0,
+          "operator": ">=",
+          "threshold": 0.9,
+          "status": "passed"
+        },
+        {
+          "id": "G11",
+          "value": 1,
+          "operator": "==",
+          "threshold": 1,
+          "status": "passed"
+        }
+      ]
+    },
+    {
+      "id": "E7-01310",
+      "branch": "E7",
+      "expression": "ts_mean(add(cs_rank(ts_mean(ts_corr(ret1, intraday_return, 40), 5)), cs_rank(ts_corr(rel_volume, upper_shadow, 60))), 3)",
+      "direction": 1,
+      "discovery_ic": 0.043002829586837515,
+      "metrics": {
+        "abs_ic": 0.043002829586837515,
+        "year1_excess": 0.13133110702858164,
+        "year2_excess": 0.10735937798973616,
+        "year1_sharpe": 2.2523782739392626,
+        "year2_sharpe": 1.8204826799593614,
+        "calmar": 3.8887585410043624,
+        "last9m_excess": 0.10481556631690081,
+        "last12m_excess": 0.10735937798973616,
+        "max_correlation": 0.4078063507199539,
+        "coverage": 1.0,
+        "sample_check": 1
+      },
+      "accepted": true,
+      "periods": {
+        "selection": {
+          "annual_excess": 0.11925724075500721,
+          "sharpe": 2.034956299067918,
+          "max_drawdown": -0.03066717552594722,
+          "calmar": 3.8887585410043624
+        },
+        "year2014": {
+          "annual_excess": 0.13133110702858164,
+          "sharpe": 2.2523782739392626,
+          "max_drawdown": -0.03066717552594722,
+          "calmar": 4.28246503879901
+        },
+        "year2015": {
+          "annual_excess": 0.10735937798973616,
+          "sharpe": 1.8204826799593614,
+          "max_drawdown": -0.020592776365356613,
+          "calmar": 5.213448448376668
+        }
+      },
+      "gates": [
+        {
+          "id": "G01",
+          "value": 0.043002829586837515,
+          "operator": ">",
+          "threshold": 0.03,
+          "status": "passed"
+        },
+        {
+          "id": "G02",
+          "value": 0.13133110702858164,
+          "operator": ">",
+          "threshold": 0,
+          "status": "passed"
+        },
+        {
+          "id": "G03",
+          "value": 0.10735937798973616,
+          "operator": ">",
+          "threshold": 0,
+          "status": "passed"
+        },
+        {
+          "id": "G04",
+          "value": 2.2523782739392626,
+          "operator": ">",
+          "threshold": 0.5,
+          "status": "passed"
+        },
+        {
+          "id": "G05",
+          "value": 1.8204826799593614,
+          "operator": ">",
+          "threshold": 0.5,
+          "status": "passed"
+        },
+        {
+          "id": "G06",
+          "value": 3.8887585410043624,
+          "operator": ">",
+          "threshold": 1,
+          "status": "passed"
+        },
+        {
+          "id": "G07",
+          "value": 0.10481556631690081,
+          "operator": ">",
+          "threshold": 0,
+          "status": "passed"
+        },
+        {
+          "id": "G08",
+          "value": 0.10735937798973616,
+          "operator": ">",
+          "threshold": 0,
+          "status": "passed"
+        },
+        {
+          "id": "G09",
+          "value": 0.4078063507199539,
+          "operator": "<",
+          "threshold": 0.7,
+          "status": "passed"
+        },
+        {
+          "id": "G10",
+          "value": 1.0,
+          "operator": ">=",
+          "threshold": 0.9,
+          "status": "passed"
+        },
+        {
+          "id": "G11",
+          "value": 1,
+          "operator": "==",
+          "threshold": 1,
+          "status": "passed"
+        }
+      ]
+    },
+    {
+      "id": "E7-01980",
+      "branch": "E7",
+      "expression": "ts_mean(ts_mean(ts_mean(ts_corr(gap, upper_shadow, 60), 5), 10), 5)",
+      "direction": -1,
+      "discovery_ic": 0.04446230666179515,
+      "metrics": {
+        "abs_ic": 0.04446230666179515,
+        "year1_excess": 0.11926105331015613,
+        "year2_excess": 0.09314509590575248,
+        "year1_sharpe": 2.28536974778353,
+        "year2_sharpe": 1.5586805371912136,
+        "calmar": 3.642580788314247,
+        "last9m_excess": 0.031746782015859676,
+        "last12m_excess": 0.09314509590575248,
+        "max_correlation": 0.6345224175368743,
+        "coverage": 1.0,
+        "sample_check": 1
+      },
+      "accepted": true,
+      "periods": {
+        "selection": {
+          "annual_excess": 0.10610004233334402,
+          "sharpe": 1.889193343873811,
+          "max_drawdown": -0.029127711504360665,
+          "calmar": 3.642580788314247
+        },
+        "year2014": {
+          "annual_excess": 0.11926105331015613,
+          "sharpe": 2.28536974778353,
+          "max_drawdown": -0.01826488508941626,
+          "calmar": 6.529526614939556
+        },
+        "year2015": {
+          "annual_excess": 0.09314509590575248,
+          "sharpe": 1.5586805371912136,
+          "max_drawdown": -0.029127711504360665,
+          "calmar": 3.1978171677444647
+        }
+      },
+      "gates": [
+        {
+          "id": "G01",
+          "value": 0.04446230666179515,
+          "operator": ">",
+          "threshold": 0.03,
+          "status": "passed"
+        },
+        {
+          "id": "G02",
+          "value": 0.11926105331015613,
+          "operator": ">",
+          "threshold": 0,
+          "status": "passed"
+        },
+        {
+          "id": "G03",
+          "value": 0.09314509590575248,
+          "operator": ">",
+          "threshold": 0,
+          "status": "passed"
+        },
+        {
+          "id": "G04",
+          "value": 2.28536974778353,
+          "operator": ">",
+          "threshold": 0.5,
+          "status": "passed"
+        },
+        {
+          "id": "G05",
+          "value": 1.5586805371912136,
+          "operator": ">",
+          "threshold": 0.5,
+          "status": "passed"
+        },
+        {
+          "id": "G06",
+          "value": 3.642580788314247,
+          "operator": ">",
+          "threshold": 1,
+          "status": "passed"
+        },
+        {
+          "id": "G07",
+          "value": 0.031746782015859676,
+          "operator": ">",
+          "threshold": 0,
+          "status": "passed"
+        },
+        {
+          "id": "G08",
+          "value": 0.09314509590575248,
+          "operator": ">",
+          "threshold": 0,
+          "status": "passed"
+        },
+        {
+          "id": "G09",
+          "value": 0.6345224175368743,
+          "operator": "<",
+          "threshold": 0.7,
+          "status": "passed"
+        },
+        {
+          "id": "G10",
+          "value": 1.0,
+          "operator": ">=",
+          "threshold": 0.9,
+          "status": "passed"
+        },
+        {
+          "id": "G11",
+          "value": 1,
+          "operator": "==",
+          "threshold": 1,
+          "status": "passed"
+        }
+      ]
+    },
+    {
+      "id": "E7-00057",
+      "branch": "E7",
+      "expression": "add(cs_rank(ts_mean(safe_div(ts_mean(intraday_range, 60), ts_mean(intraday_range, 20)), 3)), cs_rank(neg(neg(ts_corr(upper_shadow, rel_volume, 60)))))",
+      "direction": 1,
+      "discovery_ic": 0.05262861725944732,
+      "metrics": {
+        "abs_ic": 0.05262861725944732,
+        "year1_excess": 0.08117304289067961,
+        "year2_excess": 0.11866243135433074,
+        "year1_sharpe": 1.5426886908843114,
+        "year2_sharpe": 1.8000766161616721,
+        "calmar": 2.3694109924651907,
+        "last9m_excess": 0.14779494960498463,
+        "last12m_excess": 0.11866243135433074,
+        "max_correlation": 0.443421783366858,
+        "coverage": 1.0,
+        "sample_check": 1
+      },
+      "accepted": true,
+      "periods": {
+        "selection": {
+          "annual_excess": 0.09979526749011236,
+          "sharpe": 1.6773443933244219,
+          "max_drawdown": -0.04211817527962214,
+          "calmar": 2.3694109924651907
+        },
+        "year2014": {
+          "annual_excess": 0.08117304289067961,
+          "sharpe": 1.5426886908843114,
+          "max_drawdown": -0.03917199935475735,
+          "calmar": 2.072221082093461
+        },
+        "year2015": {
+          "annual_excess": 0.11866243135433074,
+          "sharpe": 1.8000766161616721,
+          "max_drawdown": -0.04211817527962214,
+          "calmar": 2.8173687622156485
+        }
+      },
+      "gates": [
+        {
+          "id": "G01",
+          "value": 0.05262861725944732,
+          "operator": ">",
+          "threshold": 0.03,
+          "status": "passed"
+        },
+        {
+          "id": "G02",
+          "value": 0.08117304289067961,
+          "operator": ">",
+          "threshold": 0,
+          "status": "passed"
+        },
+        {
+          "id": "G03",
+          "value": 0.11866243135433074,
+          "operator": ">",
+          "threshold": 0,
+          "status": "passed"
+        },
+        {
+          "id": "G04",
+          "value": 1.5426886908843114,
+          "operator": ">",
+          "threshold": 0.5,
+          "status": "passed"
+        },
+        {
+          "id": "G05",
+          "value": 1.8000766161616721,
+          "operator": ">",
+          "threshold": 0.5,
+          "status": "passed"
+        },
+        {
+          "id": "G06",
+          "value": 2.3694109924651907,
+          "operator": ">",
+          "threshold": 1,
+          "status": "passed"
+        },
+        {
+          "id": "G07",
+          "value": 0.14779494960498463,
+          "operator": ">",
+          "threshold": 0,
+          "status": "passed"
+        },
+        {
+          "id": "G08",
+          "value": 0.11866243135433074,
+          "operator": ">",
+          "threshold": 0,
+          "status": "passed"
+        },
+        {
+          "id": "G09",
+          "value": 0.443421783366858,
+          "operator": "<",
+          "threshold": 0.7,
+          "status": "passed"
+        },
+        {
+          "id": "G10",
+          "value": 1.0,
+          "operator": ">=",
+          "threshold": 0.9,
+          "status": "passed"
+        },
+        {
+          "id": "G11",
+          "value": 1,
+          "operator": "==",
+          "threshold": 1,
+          "status": "passed"
+        }
+      ]
+    },
+    {
+      "id": "E7-00892",
+      "branch": "E7",
+      "expression": "add(cs_rank(sub(cs_zscore(ts_mean(upper_shadow, 3)), cs_zscore(ts_rank(intraday_return, 5)))), cs_rank(neg(ts_mean(ts_corr(gap, upper_shadow, 40), 60))))",
+      "direction": 1,
+      "discovery_ic": 0.04369808418076775,
+      "metrics": {
+        "abs_ic": 0.04369808418076775,
+        "year1_excess": 0.06573975211255934,
+        "year2_excess": 0.14779728868234354,
+        "year1_sharpe": 1.1244752909093045,
+        "year2_sharpe": 2.140546563831099,
+        "calmar": 2.3985167738360555,
+        "last9m_excess": 0.08302694170575409,
+        "last12m_excess": 0.14779728868234354,
+        "max_correlation": 0.6110183782789812,
+        "coverage": 1.0,
+        "sample_check": 1
+      },
+      "accepted": true,
+      "periods": {
+        "selection": {
+          "annual_excess": 0.10608932723677245,
+          "sharpe": 1.6610463445062424,
+          "max_drawdown": -0.04423122172587479,
+          "calmar": 2.3985167738360555
+        },
+        "year2014": {
+          "annual_excess": 0.06573975211255934,
+          "sharpe": 1.1244752909093045,
+          "max_drawdown": -0.04423122172587479,
+          "calmar": 1.4862748426888304
+        },
+        "year2015": {
+          "annual_excess": 0.14779728868234354,
+          "sharpe": 2.140546563831099,
+          "max_drawdown": -0.031937642712554615,
+          "calmar": 4.627683076442106
+        }
+      },
+      "gates": [
+        {
+          "id": "G01",
+          "value": 0.04369808418076775,
+          "operator": ">",
+          "threshold": 0.03,
+          "status": "passed"
+        },
+        {
+          "id": "G02",
+          "value": 0.06573975211255934,
+          "operator": ">",
+          "threshold": 0,
+          "status": "passed"
+        },
+        {
+          "id": "G03",
+          "value": 0.14779728868234354,
+          "operator": ">",
+          "threshold": 0,
+          "status": "passed"
+        },
+        {
+          "id": "G04",
+          "value": 1.1244752909093045,
+          "operator": ">",
+          "threshold": 0.5,
+          "status": "passed"
+        },
+        {
+          "id": "G05",
+          "value": 2.140546563831099,
+          "operator": ">",
+          "threshold": 0.5,
+          "status": "passed"
+        },
+        {
+          "id": "G06",
+          "value": 2.3985167738360555,
+          "operator": ">",
+          "threshold": 1,
+          "status": "passed"
+        },
+        {
+          "id": "G07",
+          "value": 0.08302694170575409,
+          "operator": ">",
+          "threshold": 0,
+          "status": "passed"
+        },
+        {
+          "id": "G08",
+          "value": 0.14779728868234354,
+          "operator": ">",
+          "threshold": 0,
+          "status": "passed"
+        },
+        {
+          "id": "G09",
+          "value": 0.6110183782789812,
+          "operator": "<",
+          "threshold": 0.7,
+          "status": "passed"
+        },
+        {
+          "id": "G10",
+          "value": 1.0,
+          "operator": ">=",
+          "threshold": 0.9,
+          "status": "passed"
+        },
+        {
+          "id": "G11",
+          "value": 1,
+          "operator": "==",
+          "threshold": 1,
+          "status": "passed"
+        }
+      ]
+    },
+    {
+      "id": "E7-00948",
+      "branch": "E7",
+      "expression": "ts_mean(add(cs_rank(ts_corr(rel_volume, upper_shadow, 60)), cs_rank(ts_corr(rel_volume, upper_shadow, 60))), 5)",
+      "direction": 1,
+      "discovery_ic": 0.031978900467219476,
+      "metrics": {
+        "abs_ic": 0.031978900467219476,
+        "year1_excess": 0.055101246288173034,
+        "year2_excess": 0.11981301857317384,
+        "year1_sharpe": 1.0786642603322265,
+        "year2_sharpe": 1.9743016690221866,
+        "calmar": 2.0260431437293045,
+        "last9m_excess": 0.14315409407206325,
+        "last12m_excess": 0.11981301857317384,
+        "max_correlation": 0.6762791265326646,
+        "coverage": 1.0,
+        "sample_check": 1
+      },
+      "accepted": true,
+      "periods": {
+        "selection": {
+          "annual_excess": 0.08703999021825148,
+          "sharpe": 1.5543367236959338,
+          "max_drawdown": -0.04296058081864851,
+          "calmar": 2.0260431437293045
+        },
+        "year2014": {
+          "annual_excess": 0.055101246288173034,
+          "sharpe": 1.0786642603322265,
+          "max_drawdown": -0.04296058081864851,
+          "calmar": 1.2826001240712848
+        },
+        "year2015": {
+          "annual_excess": 0.11981301857317384,
+          "sharpe": 1.9743016690221866,
+          "max_drawdown": -0.03360340520367511,
+          "calmar": 3.5655023009415197
+        }
+      },
+      "gates": [
+        {
+          "id": "G01",
+          "value": 0.031978900467219476,
+          "operator": ">",
+          "threshold": 0.03,
+          "status": "passed"
+        },
+        {
+          "id": "G02",
+          "value": 0.055101246288173034,
+          "operator": ">",
+          "threshold": 0,
+          "status": "passed"
+        },
+        {
+          "id": "G03",
+          "value": 0.11981301857317384,
+          "operator": ">",
+          "threshold": 0,
+          "status": "passed"
+        },
+        {
+          "id": "G04",
+          "value": 1.0786642603322265,
+          "operator": ">",
+          "threshold": 0.5,
+          "status": "passed"
+        },
+        {
+          "id": "G05",
+          "value": 1.9743016690221866,
+          "operator": ">",
+          "threshold": 0.5,
+          "status": "passed"
+        },
+        {
+          "id": "G06",
+          "value": 2.0260431437293045,
+          "operator": ">",
+          "threshold": 1,
+          "status": "passed"
+        },
+        {
+          "id": "G07",
+          "value": 0.14315409407206325,
+          "operator": ">",
+          "threshold": 0,
+          "status": "passed"
+        },
+        {
+          "id": "G08",
+          "value": 0.11981301857317384,
+          "operator": ">",
+          "threshold": 0,
+          "status": "passed"
+        },
+        {
+          "id": "G09",
+          "value": 0.6762791265326646,
+          "operator": "<",
+          "threshold": 0.7,
+          "status": "passed"
+        },
+        {
+          "id": "G10",
+          "value": 1.0,
+          "operator": ">=",
+          "threshold": 0.9,
+          "status": "passed"
+        },
+        {
+          "id": "G11",
+          "value": 1,
+          "operator": "==",
+          "threshold": 1,
+          "status": "passed"
+        }
+      ]
+    },
+    {
+      "id": "E7-00774",
+      "branch": "E7",
+      "expression": "add(cs_rank(sub(cs_rank(ts_mean(intraday_range, 20)), cs_rank(ts_rank(intraday_return, 20)))), cs_rank(neg(neg(ts_corr(upper_shadow, rel_volume, 60)))))",
+      "direction": 1,
+      "discovery_ic": 0.049709061766675444,
+      "metrics": {
+        "abs_ic": 0.049709061766675444,
+        "year1_excess": 0.08828676273834324,
+        "year2_excess": 0.11431952266937584,
+        "year1_sharpe": 1.5063575253842816,
+        "year2_sharpe": 1.6020033351258511,
+        "calmar": 2.0229527451520277,
+        "last9m_excess": 0.08920841406213165,
+        "last12m_excess": 0.11431952266937584,
+        "max_correlation": 0.690346122395366,
+        "coverage": 1.0,
+        "sample_check": 1
+      },
+      "accepted": true,
+      "periods": {
+        "selection": {
+          "annual_excess": 0.10125209645480293,
+          "sharpe": 1.5534154653700825,
+          "max_drawdown": -0.05005163699322779,
+          "calmar": 2.0229527451520277
+        },
+        "year2014": {
+          "annual_excess": 0.08828676273834324,
+          "sharpe": 1.5063575253842816,
+          "max_drawdown": -0.0435579995646751,
+          "calmar": 2.0268782685314712
+        },
+        "year2015": {
+          "annual_excess": 0.11431952266937584,
+          "sharpe": 1.6020033351258511,
+          "max_drawdown": -0.05005163699322801,
+          "calmar": 2.2840316428580203
+        }
+      },
+      "gates": [
+        {
+          "id": "G01",
+          "value": 0.049709061766675444,
+          "operator": ">",
+          "threshold": 0.03,
+          "status": "passed"
+        },
+        {
+          "id": "G02",
+          "value": 0.08828676273834324,
+          "operator": ">",
+          "threshold": 0,
+          "status": "passed"
+        },
+        {
+          "id": "G03",
+          "value": 0.11431952266937584,
+          "operator": ">",
+          "threshold": 0,
+          "status": "passed"
+        },
+        {
+          "id": "G04",
+          "value": 1.5063575253842816,
+          "operator": ">",
+          "threshold": 0.5,
+          "status": "passed"
+        },
+        {
+          "id": "G05",
+          "value": 1.6020033351258511,
+          "operator": ">",
+          "threshold": 0.5,
+          "status": "passed"
+        },
+        {
+          "id": "G06",
+          "value": 2.0229527451520277,
+          "operator": ">",
+          "threshold": 1,
+          "status": "passed"
+        },
+        {
+          "id": "G07",
+          "value": 0.08920841406213165,
+          "operator": ">",
+          "threshold": 0,
+          "status": "passed"
+        },
+        {
+          "id": "G08",
+          "value": 0.11431952266937584,
+          "operator": ">",
+          "threshold": 0,
+          "status": "passed"
+        },
+        {
+          "id": "G09",
+          "value": 0.690346122395366,
+          "operator": "<",
+          "threshold": 0.7,
+          "status": "passed"
+        },
+        {
+          "id": "G10",
+          "value": 1.0,
+          "operator": ">=",
+          "threshold": 0.9,
+          "status": "passed"
+        },
+        {
+          "id": "G11",
+          "value": 1,
+          "operator": "==",
+          "threshold": 1,
+          "status": "passed"
+        }
+      ]
+    },
+    {
+      "id": "E7-02224",
+      "branch": "E7",
+      "expression": "ts_mean(ts_mean(ts_mean(ts_corr(gap, upper_shadow, 5), 40), 20), 2)",
+      "direction": -1,
+      "discovery_ic": 0.05676125522672838,
+      "metrics": {
+        "abs_ic": 0.05676125522672838,
+        "year1_excess": 0.10141510744603366,
+        "year2_excess": 0.0609775904280494,
+        "year1_sharpe": 1.9847272420868678,
+        "year2_sharpe": 1.043172997195833,
+        "calmar": 2.0600871283302147,
+        "last9m_excess": 0.02614212035107233,
+        "last12m_excess": 0.0609775904280494,
+        "max_correlation": 0.575026582061396,
+        "coverage": 1.0,
+        "sample_check": 1
+      },
+      "accepted": true,
+      "periods": {
+        "selection": {
+          "annual_excess": 0.08096709014932713,
+          "sharpe": 1.4691981245461527,
+          "max_drawdown": -0.039302750371997264,
+          "calmar": 2.0600871283302147
+        },
+        "year2014": {
+          "annual_excess": 0.10141510744603366,
+          "sharpe": 1.9847272420868678,
+          "max_drawdown": -0.022890821796388794,
+          "calmar": 4.430382987037743
+        },
+        "year2015": {
+          "annual_excess": 0.0609775904280494,
+          "sharpe": 1.043172997195833,
+          "max_drawdown": -0.039302750371997264,
+          "calmar": 1.551484052665566
+        }
+      },
+      "gates": [
+        {
+          "id": "G01",
+          "value": 0.05676125522672838,
+          "operator": ">",
+          "threshold": 0.03,
+          "status": "passed"
+        },
+        {
+          "id": "G02",
+          "value": 0.10141510744603366,
+          "operator": ">",
+          "threshold": 0,
+          "status": "passed"
+        },
+        {
+          "id": "G03",
+          "value": 0.0609775904280494,
+          "operator": ">",
+          "threshold": 0,
+          "status": "passed"
+        },
+        {
+          "id": "G04",
+          "value": 1.9847272420868678,
+          "operator": ">",
+          "threshold": 0.5,
+          "status": "passed"
+        },
+        {
+          "id": "G05",
+          "value": 1.043172997195833,
+          "operator": ">",
+          "threshold": 0.5,
+          "status": "passed"
+        },
+        {
+          "id": "G06",
+          "value": 2.0600871283302147,
+          "operator": ">",
+          "threshold": 1,
+          "status": "passed"
+        },
+        {
+          "id": "G07",
+          "value": 0.02614212035107233,
+          "operator": ">",
+          "threshold": 0,
+          "status": "passed"
+        },
+        {
+          "id": "G08",
+          "value": 0.0609775904280494,
+          "operator": ">",
+          "threshold": 0,
+          "status": "passed"
+        },
+        {
+          "id": "G09",
+          "value": 0.575026582061396,
+          "operator": "<",
+          "threshold": 0.7,
+          "status": "passed"
+        },
+        {
+          "id": "G10",
+          "value": 1.0,
+          "operator": ">=",
+          "threshold": 0.9,
+          "status": "passed"
+        },
+        {
+          "id": "G11",
+          "value": 1,
+          "operator": "==",
+          "threshold": 1,
+          "status": "passed"
+        }
+      ]
+    },
+    {
+      "id": "E7-00984",
+      "branch": "E7",
+      "expression": "ts_mean(add(cs_rank(ts_mean(ts_corr(rel_volume, upper_shadow, 60), 20)), cs_rank(ts_mean(ts_corr(intraday_range, rel_volume, 40), 20))), 10)",
+      "direction": 1,
+      "discovery_ic": 0.05093770574617539,
+      "metrics": {
+        "abs_ic": 0.05093770574617539,
+        "year1_excess": 0.04977057275287011,
+        "year2_excess": 0.12463678344235629,
+        "year1_sharpe": 0.8979135148871707,
+        "year2_sharpe": 1.9488125041643312,
+        "calmar": 1.3230192727449337,
+        "last9m_excess": 0.12904198257658672,
+        "last12m_excess": 0.12463678344235629,
+        "max_correlation": 0.677773560017098,
+        "coverage": 1.0,
+        "sample_check": 1
+      },
+      "accepted": true,
+      "periods": {
+        "selection": {
+          "annual_excess": 0.0866334718639925,
+          "sharpe": 1.4476012332775907,
+          "max_drawdown": -0.06548164010056312,
+          "calmar": 1.3230192727449337
+        },
+        "year2014": {
+          "annual_excess": 0.04977057275287011,
+          "sharpe": 0.8979135148871707,
+          "max_drawdown": -0.06548164010056312,
+          "calmar": 0.7600691228325251
+        },
+        "year2015": {
+          "annual_excess": 0.12463678344235629,
+          "sharpe": 1.9488125041643312,
+          "max_drawdown": -0.03407774455760337,
+          "calmar": 3.6574246641140316
+        }
+      },
+      "gates": [
+        {
+          "id": "G01",
+          "value": 0.05093770574617539,
+          "operator": ">",
+          "threshold": 0.03,
+          "status": "passed"
+        },
+        {
+          "id": "G02",
+          "value": 0.04977057275287011,
+          "operator": ">",
+          "threshold": 0,
+          "status": "passed"
+        },
+        {
+          "id": "G03",
+          "value": 0.12463678344235629,
+          "operator": ">",
+          "threshold": 0,
+          "status": "passed"
+        },
+        {
+          "id": "G04",
+          "value": 0.8979135148871707,
+          "operator": ">",
+          "threshold": 0.5,
+          "status": "passed"
+        },
+        {
+          "id": "G05",
+          "value": 1.9488125041643312,
+          "operator": ">",
+          "threshold": 0.5,
+          "status": "passed"
+        },
+        {
+          "id": "G06",
+          "value": 1.3230192727449337,
+          "operator": ">",
+          "threshold": 1,
+          "status": "passed"
+        },
+        {
+          "id": "G07",
+          "value": 0.12904198257658672,
+          "operator": ">",
+          "threshold": 0,
+          "status": "passed"
+        },
+        {
+          "id": "G08",
+          "value": 0.12463678344235629,
+          "operator": ">",
+          "threshold": 0,
+          "status": "passed"
+        },
+        {
+          "id": "G09",
+          "value": 0.677773560017098,
+          "operator": "<",
+          "threshold": 0.7,
+          "status": "passed"
+        },
+        {
+          "id": "G10",
+          "value": 1.0,
+          "operator": ">=",
+          "threshold": 0.9,
+          "status": "passed"
+        },
+        {
+          "id": "G11",
+          "value": 1,
+          "operator": "==",
+          "threshold": 1,
+          "status": "passed"
+        }
+      ]
+    },
+    {
+      "id": "E7-00764",
+      "branch": "E7",
+      "expression": "add(cs_rank(neg(ts_mean(ts_corr(gap, upper_shadow, 40), 20))), cs_rank(neg(neg(ts_corr(upper_shadow, rel_volume, 60)))))",
+      "direction": 1,
+      "discovery_ic": 0.05124101326387222,
+      "metrics": {
+        "abs_ic": 0.05124101326387222,
+        "year1_excess": 0.05398366804057386,
+        "year2_excess": 0.10094264443545398,
+        "year1_sharpe": 1.114644543310025,
+        "year2_sharpe": 1.6975686990164083,
+        "calmar": 1.4436878446561996,
+        "last9m_excess": 0.20245422751602393,
+        "last12m_excess": 0.10094264443545398,
+        "max_correlation": 0.6751761985362092,
+        "coverage": 1.0,
+        "sample_check": 1
+      },
+      "accepted": true,
+      "periods": {
+        "selection": {
+          "annual_excess": 0.07725397599191974,
+          "sharpe": 1.4279192682514579,
+          "max_drawdown": -0.053511551183224815,
+          "calmar": 1.4436878446561996
+        },
+        "year2014": {
+          "annual_excess": 0.05398366804057386,
+          "sharpe": 1.114644543310025,
+          "max_drawdown": -0.033838420857730145,
+          "calmar": 1.595336504251843
+        },
+        "year2015": {
+          "annual_excess": 0.10094264443545398,
+          "sharpe": 1.6975686990164083,
+          "max_drawdown": -0.053511551183224704,
+          "calmar": 1.88637111433799
+        }
+      },
+      "gates": [
+        {
+          "id": "G01",
+          "value": 0.05124101326387222,
+          "operator": ">",
+          "threshold": 0.03,
+          "status": "passed"
+        },
+        {
+          "id": "G02",
+          "value": 0.05398366804057386,
+          "operator": ">",
+          "threshold": 0,
+          "status": "passed"
+        },
+        {
+          "id": "G03",
+          "value": 0.10094264443545398,
+          "operator": ">",
+          "threshold": 0,
+          "status": "passed"
+        },
+        {
+          "id": "G04",
+          "value": 1.114644543310025,
+          "operator": ">",
+          "threshold": 0.5,
+          "status": "passed"
+        },
+        {
+          "id": "G05",
+          "value": 1.6975686990164083,
+          "operator": ">",
+          "threshold": 0.5,
+          "status": "passed"
+        },
+        {
+          "id": "G06",
+          "value": 1.4436878446561996,
+          "operator": ">",
+          "threshold": 1,
+          "status": "passed"
+        },
+        {
+          "id": "G07",
+          "value": 0.20245422751602393,
+          "operator": ">",
+          "threshold": 0,
+          "status": "passed"
+        },
+        {
+          "id": "G08",
+          "value": 0.10094264443545398,
+          "operator": ">",
+          "threshold": 0,
+          "status": "passed"
+        },
+        {
+          "id": "G09",
+          "value": 0.6751761985362092,
+          "operator": "<",
+          "threshold": 0.7,
+          "status": "passed"
+        },
+        {
+          "id": "G10",
+          "value": 1.0,
+          "operator": ">=",
+          "threshold": 0.9,
+          "status": "passed"
+        },
+        {
+          "id": "G11",
+          "value": 1,
+          "operator": "==",
+          "threshold": 1,
+          "status": "passed"
+        }
+      ]
+    },
+    {
+      "id": "E7-01962",
+      "branch": "E7",
+      "expression": "add(cs_rank(ts_corr(ret1, intraday_return, 40)), cs_rank(neg(ts_mean(ts_corr(gap, upper_shadow, 5), 40))))",
+      "direction": 1,
+      "discovery_ic": 0.05050896409251046,
+      "metrics": {
+        "abs_ic": 0.05050896409251046,
+        "year1_excess": 0.11900614122641362,
+        "year2_excess": 0.05892813401144403,
+        "year1_sharpe": 1.808270960447157,
+        "year2_sharpe": 0.957684915756907,
+        "calmar": 2.6461356228056996,
+        "last9m_excess": 0.07472039195847535,
+        "last12m_excess": 0.05892813401144403,
+        "max_correlation": 0.6808279117084064,
+        "coverage": 1.0,
+        "sample_check": 1
+      },
+      "accepted": true,
+      "periods": {
+        "selection": {
+          "annual_excess": 0.08849303747859127,
+          "sharpe": 1.3880583357433518,
+          "max_drawdown": -0.03344236656500699,
+          "calmar": 2.6461356228056996
+        },
+        "year2014": {
+          "annual_excess": 0.11900614122641362,
+          "sharpe": 1.808270960447157,
+          "max_drawdown": -0.02949143531792009,
+          "calmar": 4.035278037284983
+        },
+        "year2015": {
+          "annual_excess": 0.05892813401144403,
+          "sharpe": 0.957684915756907,
+          "max_drawdown": -0.0334423665650071,
+          "calmar": 1.7620802611829611
+        }
+      },
+      "gates": [
+        {
+          "id": "G01",
+          "value": 0.05050896409251046,
+          "operator": ">",
+          "threshold": 0.03,
+          "status": "passed"
+        },
+        {
+          "id": "G02",
+          "value": 0.11900614122641362,
+          "operator": ">",
+          "threshold": 0,
+          "status": "passed"
+        },
+        {
+          "id": "G03",
+          "value": 0.05892813401144403,
+          "operator": ">",
+          "threshold": 0,
+          "status": "passed"
+        },
+        {
+          "id": "G04",
+          "value": 1.808270960447157,
+          "operator": ">",
+          "threshold": 0.5,
+          "status": "passed"
+        },
+        {
+          "id": "G05",
+          "value": 0.957684915756907,
+          "operator": ">",
+          "threshold": 0.5,
+          "status": "passed"
+        },
+        {
+          "id": "G06",
+          "value": 2.6461356228056996,
+          "operator": ">",
+          "threshold": 1,
+          "status": "passed"
+        },
+        {
+          "id": "G07",
+          "value": 0.07472039195847535,
+          "operator": ">",
+          "threshold": 0,
+          "status": "passed"
+        },
+        {
+          "id": "G08",
+          "value": 0.05892813401144403,
+          "operator": ">",
+          "threshold": 0,
+          "status": "passed"
+        },
+        {
+          "id": "G09",
+          "value": 0.6808279117084064,
+          "operator": "<",
+          "threshold": 0.7,
+          "status": "passed"
+        },
+        {
+          "id": "G10",
+          "value": 1.0,
+          "operator": ">=",
+          "threshold": 0.9,
+          "status": "passed"
+        },
+        {
+          "id": "G11",
+          "value": 1,
+          "operator": "==",
+          "threshold": 1,
+          "status": "passed"
+        }
+      ]
+    },
+    {
+      "id": "E7-01777",
+      "branch": "E7",
+      "expression": "add(cs_rank(sub(cs_zscore(ts_mean(upper_shadow, 2)), cs_zscore(ts_rank(intraday_return, 20)))), cs_rank(neg(ts_mean(ts_corr(gap, upper_shadow, 3), 5))))",
+      "direction": 1,
+      "discovery_ic": 0.03364277541111386,
+      "metrics": {
+        "abs_ic": 0.03364277541111386,
+        "year1_excess": 0.02810929840523846,
+        "year2_excess": 0.14337580079555035,
+        "year1_sharpe": 0.5276802841799898,
+        "year2_sharpe": 2.103478718758186,
+        "calmar": 1.4444310671074152,
+        "last9m_excess": 0.08872439440724134,
+        "last12m_excess": 0.14337580079555035,
+        "max_correlation": 0.4070814243625001,
+        "coverage": 0.9963737796373779,
+        "sample_check": 1
+      },
+      "accepted": true,
+      "periods": {
+        "selection": {
+          "annual_excess": 0.08432636121209369,
+          "sharpe": 1.3730462941217971,
+          "max_drawdown": -0.05838032920530001,
+          "calmar": 1.4444310671074152
+        },
+        "year2014": {
+          "annual_excess": 0.02810929840523846,
+          "sharpe": 0.5276802841799898,
+          "max_drawdown": -0.05838032920530001,
+          "calmar": 0.4814857810477468
+        },
+        "year2015": {
+          "annual_excess": 0.14337580079555035,
+          "sharpe": 2.103478718758186,
+          "max_drawdown": -0.029433913591991767,
+          "calmar": 4.871108979356361
+        }
+      },
+      "gates": [
+        {
+          "id": "G01",
+          "value": 0.03364277541111386,
+          "operator": ">",
+          "threshold": 0.03,
+          "status": "passed"
+        },
+        {
+          "id": "G02",
+          "value": 0.02810929840523846,
+          "operator": ">",
+          "threshold": 0,
+          "status": "passed"
+        },
+        {
+          "id": "G03",
+          "value": 0.14337580079555035,
+          "operator": ">",
+          "threshold": 0,
+          "status": "passed"
+        },
+        {
+          "id": "G04",
+          "value": 0.5276802841799898,
+          "operator": ">",
+          "threshold": 0.5,
+          "status": "passed"
+        },
+        {
+          "id": "G05",
+          "value": 2.103478718758186,
+          "operator": ">",
+          "threshold": 0.5,
+          "status": "passed"
+        },
+        {
+          "id": "G06",
+          "value": 1.4444310671074152,
+          "operator": ">",
+          "threshold": 1,
+          "status": "passed"
+        },
+        {
+          "id": "G07",
+          "value": 0.08872439440724134,
+          "operator": ">",
+          "threshold": 0,
+          "status": "passed"
+        },
+        {
+          "id": "G08",
+          "value": 0.14337580079555035,
+          "operator": ">",
+          "threshold": 0,
+          "status": "passed"
+        },
+        {
+          "id": "G09",
+          "value": 0.4070814243625001,
+          "operator": "<",
+          "threshold": 0.7,
+          "status": "passed"
+        },
+        {
+          "id": "G10",
+          "value": 0.9963737796373779,
+          "operator": ">=",
+          "threshold": 0.9,
+          "status": "passed"
+        },
+        {
+          "id": "G11",
+          "value": 1,
+          "operator": "==",
+          "threshold": 1,
+          "status": "passed"
+        }
+      ]
+    },
+    {
+      "id": "E7-01044",
+      "branch": "E7",
+      "expression": "add(cs_rank(ts_mean(ts_corr(rel_volume, upper_shadow, 5), 60)), cs_rank(ts_mean(ts_corr(intraday_range, rel_volume, 40), 5)))",
+      "direction": 1,
+      "discovery_ic": 0.033487880966843055,
+      "metrics": {
+        "abs_ic": 0.033487880966843055,
+        "year1_excess": 0.041390719382438323,
+        "year2_excess": 0.10293302106939128,
+        "year1_sharpe": 0.8919116012758892,
+        "year2_sharpe": 1.5257928254248045,
+        "calmar": 1.6262259891840847,
+        "last9m_excess": 0.15596312549917557,
+        "last12m_excess": 0.10293302106939128,
+        "max_correlation": 0.6674144609928109,
+        "coverage": 1.0,
+        "sample_check": 1
+      },
+      "accepted": true,
+      "periods": {
+        "selection": {
+          "annual_excess": 0.07178138032898507,
+          "sharpe": 1.2459221008955834,
+          "max_drawdown": -0.04413985559596145,
+          "calmar": 1.6262259891840847
+        },
+        "year2014": {
+          "annual_excess": 0.041390719382438323,
+          "sharpe": 0.8919116012758892,
+          "max_drawdown": -0.04413985559596145,
+          "calmar": 0.9377175983834741
+        },
+        "year2015": {
+          "annual_excess": 0.10293302106939128,
+          "sharpe": 1.5257928254248045,
+          "max_drawdown": -0.024790469193974096,
+          "calmar": 4.152120730914264
+        }
+      },
+      "gates": [
+        {
+          "id": "G01",
+          "value": 0.033487880966843055,
+          "operator": ">",
+          "threshold": 0.03,
+          "status": "passed"
+        },
+        {
+          "id": "G02",
+          "value": 0.041390719382438323,
+          "operator": ">",
+          "threshold": 0,
+          "status": "passed"
+        },
+        {
+          "id": "G03",
+          "value": 0.10293302106939128,
+          "operator": ">",
+          "threshold": 0,
+          "status": "passed"
+        },
+        {
+          "id": "G04",
+          "value": 0.8919116012758892,
+          "operator": ">",
+          "threshold": 0.5,
+          "status": "passed"
+        },
+        {
+          "id": "G05",
+          "value": 1.5257928254248045,
+          "operator": ">",
+          "threshold": 0.5,
+          "status": "passed"
+        },
+        {
+          "id": "G06",
+          "value": 1.6262259891840847,
+          "operator": ">",
+          "threshold": 1,
+          "status": "passed"
+        },
+        {
+          "id": "G07",
+          "value": 0.15596312549917557,
+          "operator": ">",
+          "threshold": 0,
+          "status": "passed"
+        },
+        {
+          "id": "G08",
+          "value": 0.10293302106939128,
+          "operator": ">",
+          "threshold": 0,
+          "status": "passed"
+        },
+        {
+          "id": "G09",
+          "value": 0.6674144609928109,
+          "operator": "<",
+          "threshold": 0.7,
+          "status": "passed"
+        },
+        {
+          "id": "G10",
+          "value": 1.0,
+          "operator": ">=",
+          "threshold": 0.9,
+          "status": "passed"
+        },
+        {
+          "id": "G11",
+          "value": 1,
+          "operator": "==",
+          "threshold": 1,
+          "status": "passed"
+        }
+      ]
+    },
+    {
+      "id": "E7-00471",
+      "branch": "E7",
+      "expression": "add(cs_rank(sub(cs_zscore(ts_mean(upper_shadow, 2)), cs_zscore(ts_rank(intraday_return, 60)))), cs_rank(ts_mean(ts_corr(ret1, intraday_return, 40), 5)))",
+      "direction": 1,
+      "discovery_ic": 0.04450767275156733,
+      "metrics": {
+        "abs_ic": 0.04450767275156733,
+        "year1_excess": 0.08358385945144775,
+        "year2_excess": 0.07526549099247726,
+        "year1_sharpe": 1.3338051286055168,
+        "year2_sharpe": 1.1547661991946947,
+        "calmar": 1.41431617630616,
+        "last9m_excess": 0.0813751822606319,
+        "last12m_excess": 0.07526549099247726,
+        "max_correlation": 0.49807099539396193,
+        "coverage": 1.0,
+        "sample_check": 1
+      },
+      "accepted": true,
+      "periods": {
+        "selection": {
+          "annual_excess": 0.07940839350991724,
+          "sharpe": 1.2428236462063282,
+          "max_drawdown": -0.05614613962580284,
+          "calmar": 1.41431617630616
+        },
+        "year2014": {
+          "annual_excess": 0.08358385945144775,
+          "sharpe": 1.3338051286055168,
+          "max_drawdown": -0.05614613962580284,
+          "calmar": 1.488683995168841
+        },
+        "year2015": {
+          "annual_excess": 0.07526549099247726,
+          "sharpe": 1.1547661991946947,
+          "max_drawdown": -0.03870248700919232,
+          "calmar": 1.9447197533998466
+        }
+      },
+      "gates": [
+        {
+          "id": "G01",
+          "value": 0.04450767275156733,
+          "operator": ">",
+          "threshold": 0.03,
+          "status": "passed"
+        },
+        {
+          "id": "G02",
+          "value": 0.08358385945144775,
+          "operator": ">",
+          "threshold": 0,
+          "status": "passed"
+        },
+        {
+          "id": "G03",
+          "value": 0.07526549099247726,
+          "operator": ">",
+          "threshold": 0,
+          "status": "passed"
+        },
+        {
+          "id": "G04",
+          "value": 1.3338051286055168,
+          "operator": ">",
+          "threshold": 0.5,
+          "status": "passed"
+        },
+        {
+          "id": "G05",
+          "value": 1.1547661991946947,
+          "operator": ">",
+          "threshold": 0.5,
+          "status": "passed"
+        },
+        {
+          "id": "G06",
+          "value": 1.41431617630616,
+          "operator": ">",
+          "threshold": 1,
+          "status": "passed"
+        },
+        {
+          "id": "G07",
+          "value": 0.0813751822606319,
+          "operator": ">",
+          "threshold": 0,
+          "status": "passed"
+        },
+        {
+          "id": "G08",
+          "value": 0.07526549099247726,
+          "operator": ">",
+          "threshold": 0,
+          "status": "passed"
+        },
+        {
+          "id": "G09",
+          "value": 0.49807099539396193,
+          "operator": "<",
+          "threshold": 0.7,
+          "status": "passed"
+        },
+        {
+          "id": "G10",
+          "value": 1.0,
+          "operator": ">=",
+          "threshold": 0.9,
+          "status": "passed"
+        },
+        {
+          "id": "G11",
+          "value": 1,
+          "operator": "==",
+          "threshold": 1,
+          "status": "passed"
+        }
+      ]
+    },
+    {
+      "id": "E7-00397",
+      "branch": "E7",
+      "expression": "sub(cs_zscore(ts_std(intraday_range, 60)), cs_zscore(ts_rank(intraday_return, 60)))",
+      "direction": 1,
+      "discovery_ic": 0.03939546833226045,
+      "metrics": {
+        "abs_ic": 0.03939546833226045,
+        "year1_excess": 0.05722336679165685,
+        "year2_excess": 0.11562765304079847,
+        "year1_sharpe": 0.7671657630668174,
+        "year2_sharpe": 1.7091365949404735,
+        "calmar": 1.0491868988993325,
+        "last9m_excess": 0.06203154000568878,
+        "last12m_excess": 0.11562765304079847,
+        "max_correlation": 0.6167202567793598,
+        "coverage": 1.0,
+        "sample_check": 1
+      },
+      "accepted": true,
+      "periods": {
+        "selection": {
+          "annual_excess": 0.08609102580595418,
+          "sharpe": 1.1995594511236538,
+          "max_drawdown": -0.08205499505976432,
+          "calmar": 1.0491868988993325
+        },
+        "year2014": {
+          "annual_excess": 0.05722336679165685,
+          "sharpe": 0.7671657630668174,
+          "max_drawdown": -0.08205499505976432,
+          "calmar": 0.697378224811037
+        },
+        "year2015": {
+          "annual_excess": 0.11562765304079847,
+          "sharpe": 1.7091365949404735,
+          "max_drawdown": -0.04664918737877677,
+          "calmar": 2.4786638211280767
+        }
+      },
+      "gates": [
+        {
+          "id": "G01",
+          "value": 0.03939546833226045,
+          "operator": ">",
+          "threshold": 0.03,
+          "status": "passed"
+        },
+        {
+          "id": "G02",
+          "value": 0.05722336679165685,
+          "operator": ">",
+          "threshold": 0,
+          "status": "passed"
+        },
+        {
+          "id": "G03",
+          "value": 0.11562765304079847,
+          "operator": ">",
+          "threshold": 0,
+          "status": "passed"
+        },
+        {
+          "id": "G04",
+          "value": 0.7671657630668174,
+          "operator": ">",
+          "threshold": 0.5,
+          "status": "passed"
+        },
+        {
+          "id": "G05",
+          "value": 1.7091365949404735,
+          "operator": ">",
+          "threshold": 0.5,
+          "status": "passed"
+        },
+        {
+          "id": "G06",
+          "value": 1.0491868988993325,
+          "operator": ">",
+          "threshold": 1,
+          "status": "passed"
+        },
+        {
+          "id": "G07",
+          "value": 0.06203154000568878,
+          "operator": ">",
+          "threshold": 0,
+          "status": "passed"
+        },
+        {
+          "id": "G08",
+          "value": 0.11562765304079847,
+          "operator": ">",
+          "threshold": 0,
+          "status": "passed"
+        },
+        {
+          "id": "G09",
+          "value": 0.6167202567793598,
+          "operator": "<",
+          "threshold": 0.7,
+          "status": "passed"
+        },
+        {
+          "id": "G10",
+          "value": 1.0,
+          "operator": ">=",
+          "threshold": 0.9,
+          "status": "passed"
+        },
+        {
+          "id": "G11",
+          "value": 1,
+          "operator": "==",
+          "threshold": 1,
+          "status": "passed"
+        }
+      ]
+    },
+    {
+      "id": "E7-00599",
+      "branch": "E7",
+      "expression": "add(cs_rank(ts_corr(rel_volume, upper_shadow, 40)), cs_rank(neg(ts_mean(ts_rank(intraday_range, 20), 20))))",
+      "direction": 1,
+      "discovery_ic": 0.0550840289296548,
+      "metrics": {
+        "abs_ic": 0.0550840289296548,
+        "year1_excess": 0.06274867136078233,
+        "year2_excess": 0.07167692808651926,
+        "year1_sharpe": 1.2612667701992095,
+        "year2_sharpe": 1.145944923656136,
+        "calmar": 1.4018578767845655,
+        "last9m_excess": 0.08886411929500038,
+        "last12m_excess": 0.07167692808651926,
+        "max_correlation": 0.6467983252776871,
+        "coverage": 1.0,
+        "sample_check": 1
+      },
+      "accepted": true,
+      "periods": {
+        "selection": {
+          "annual_excess": 0.06721233802368531,
+          "sharpe": 1.1900674931129926,
+          "max_drawdown": -0.047945186981329324,
+          "calmar": 1.4018578767845655
+        },
+        "year2014": {
+          "annual_excess": 0.06274867136078233,
+          "sharpe": 1.2612667701992095,
+          "max_drawdown": -0.047945186981329324,
+          "calmar": 1.3087585076103203
+        },
+        "year2015": {
+          "annual_excess": 0.07167692808651926,
+          "sharpe": 1.145944923656136,
+          "max_drawdown": -0.03652902563628457,
+          "calmar": 1.9621910751247085
+        }
+      },
+      "gates": [
+        {
+          "id": "G01",
+          "value": 0.0550840289296548,
+          "operator": ">",
+          "threshold": 0.03,
+          "status": "passed"
+        },
+        {
+          "id": "G02",
+          "value": 0.06274867136078233,
+          "operator": ">",
+          "threshold": 0,
+          "status": "passed"
+        },
+        {
+          "id": "G03",
+          "value": 0.07167692808651926,
+          "operator": ">",
+          "threshold": 0,
+          "status": "passed"
+        },
+        {
+          "id": "G04",
+          "value": 1.2612667701992095,
+          "operator": ">",
+          "threshold": 0.5,
+          "status": "passed"
+        },
+        {
+          "id": "G05",
+          "value": 1.145944923656136,
+          "operator": ">",
+          "threshold": 0.5,
+          "status": "passed"
+        },
+        {
+          "id": "G06",
+          "value": 1.4018578767845655,
+          "operator": ">",
+          "threshold": 1,
+          "status": "passed"
+        },
+        {
+          "id": "G07",
+          "value": 0.08886411929500038,
+          "operator": ">",
+          "threshold": 0,
+          "status": "passed"
+        },
+        {
+          "id": "G08",
+          "value": 0.07167692808651926,
+          "operator": ">",
+          "threshold": 0,
+          "status": "passed"
+        },
+        {
+          "id": "G09",
+          "value": 0.6467983252776871,
+          "operator": "<",
+          "threshold": 0.7,
+          "status": "passed"
+        },
+        {
+          "id": "G10",
+          "value": 1.0,
+          "operator": ">=",
+          "threshold": 0.9,
+          "status": "passed"
+        },
+        {
+          "id": "G11",
+          "value": 1,
+          "operator": "==",
+          "threshold": 1,
+          "status": "passed"
+        }
+      ]
+    },
+    {
+      "id": "E7-00342",
+      "branch": "E7",
+      "expression": "add(cs_rank(sub(cs_zscore(ts_std(intraday_range, 40)), cs_zscore(ts_rank(intraday_return, 60)))), cs_rank(neg(ts_corr(gap, upper_shadow, 60))))",
+      "direction": 1,
+      "discovery_ic": 0.048653699346240115,
+      "metrics": {
+        "abs_ic": 0.048653699346240115,
+        "year1_excess": 0.06907760799786211,
+        "year2_excess": 0.07436418062453476,
+        "year1_sharpe": 1.2416801009600071,
+        "year2_sharpe": 1.114153367019613,
+        "calmar": 1.812117715630154,
+        "last9m_excess": 0.0010149118160611703,
+        "last12m_excess": 0.07436418062453476,
+        "max_correlation": 0.6711784546442571,
+        "coverage": 1.0,
+        "sample_check": 1
+      },
+      "accepted": true,
+      "periods": {
+        "selection": {
+          "annual_excess": 0.07172288966301088,
+          "sharpe": 1.1679081922287835,
+          "max_drawdown": -0.03957959742039696,
+          "calmar": 1.812117715630154
+        },
+        "year2014": {
+          "annual_excess": 0.06907760799786211,
+          "sharpe": 1.2416801009600071,
+          "max_drawdown": -0.02516764206485278,
+          "calmar": 2.7446992380081032
+        },
+        "year2015": {
+          "annual_excess": 0.07436418062453476,
+          "sharpe": 1.114153367019613,
+          "max_drawdown": -0.03957959742039685,
+          "calmar": 1.8788513646228273
+        }
+      },
+      "gates": [
+        {
+          "id": "G01",
+          "value": 0.048653699346240115,
+          "operator": ">",
+          "threshold": 0.03,
+          "status": "passed"
+        },
+        {
+          "id": "G02",
+          "value": 0.06907760799786211,
+          "operator": ">",
+          "threshold": 0,
+          "status": "passed"
+        },
+        {
+          "id": "G03",
+          "value": 0.07436418062453476,
+          "operator": ">",
+          "threshold": 0,
+          "status": "passed"
+        },
+        {
+          "id": "G04",
+          "value": 1.2416801009600071,
+          "operator": ">",
+          "threshold": 0.5,
+          "status": "passed"
+        },
+        {
+          "id": "G05",
+          "value": 1.114153367019613,
+          "operator": ">",
+          "threshold": 0.5,
+          "status": "passed"
+        },
+        {
+          "id": "G06",
+          "value": 1.812117715630154,
+          "operator": ">",
+          "threshold": 1,
+          "status": "passed"
+        },
+        {
+          "id": "G07",
+          "value": 0.0010149118160611703,
+          "operator": ">",
+          "threshold": 0,
+          "status": "passed"
+        },
+        {
+          "id": "G08",
+          "value": 0.07436418062453476,
+          "operator": ">",
+          "threshold": 0,
+          "status": "passed"
+        },
+        {
+          "id": "G09",
+          "value": 0.6711784546442571,
+          "operator": "<",
+          "threshold": 0.7,
+          "status": "passed"
+        },
+        {
+          "id": "G10",
+          "value": 1.0,
+          "operator": ">=",
+          "threshold": 0.9,
+          "status": "passed"
+        },
+        {
+          "id": "G11",
+          "value": 1,
+          "operator": "==",
+          "threshold": 1,
+          "status": "passed"
+        }
+      ]
+    },
+    {
+      "id": "E7-01958",
+      "branch": "E7",
+      "expression": "add(cs_rank(ts_mean(ts_corr(ret1, intraday_return, 60), 40)), cs_rank(neg(ts_mean(ts_corr(gap, upper_shadow, 10), 20))))",
+      "direction": 1,
+      "discovery_ic": 0.056508960967554,
+      "metrics": {
+        "abs_ic": 0.056508960967554,
+        "year1_excess": 0.08838756360789612,
+        "year2_excess": 0.04282699295207637,
+        "year1_sharpe": 1.5170986208307804,
+        "year2_sharpe": 0.7416692094066522,
+        "calmar": 1.4000478337443385,
+        "last9m_excess": 0.029708958534831575,
+        "last12m_excess": 0.04282699295207637,
+        "max_correlation": 0.6916890369258072,
+        "coverage": 1.0,
+        "sample_check": 1
+      },
+      "accepted": true,
+      "periods": {
+        "selection": {
+          "annual_excess": 0.06531847041379102,
+          "sharpe": 1.1226586978316462,
+          "max_drawdown": -0.046654456254613064,
+          "calmar": 1.4000478337443385
+        },
+        "year2014": {
+          "annual_excess": 0.08838756360789612,
+          "sharpe": 1.5170986208307804,
+          "max_drawdown": -0.025295952970158075,
+          "calmar": 3.4941385174208675
+        },
+        "year2015": {
+          "annual_excess": 0.04282699295207637,
+          "sharpe": 0.7416692094066522,
+          "max_drawdown": -0.046654456254613064,
+          "calmar": 0.9179614637099485
+        }
+      },
+      "gates": [
+        {
+          "id": "G01",
+          "value": 0.056508960967554,
+          "operator": ">",
+          "threshold": 0.03,
+          "status": "passed"
+        },
+        {
+          "id": "G02",
+          "value": 0.08838756360789612,
+          "operator": ">",
+          "threshold": 0,
+          "status": "passed"
+        },
+        {
+          "id": "G03",
+          "value": 0.04282699295207637,
+          "operator": ">",
+          "threshold": 0,
+          "status": "passed"
+        },
+        {
+          "id": "G04",
+          "value": 1.5170986208307804,
+          "operator": ">",
+          "threshold": 0.5,
+          "status": "passed"
+        },
+        {
+          "id": "G05",
+          "value": 0.7416692094066522,
+          "operator": ">",
+          "threshold": 0.5,
+          "status": "passed"
+        },
+        {
+          "id": "G06",
+          "value": 1.4000478337443385,
+          "operator": ">",
+          "threshold": 1,
+          "status": "passed"
+        },
+        {
+          "id": "G07",
+          "value": 0.029708958534831575,
+          "operator": ">",
+          "threshold": 0,
+          "status": "passed"
+        },
+        {
+          "id": "G08",
+          "value": 0.04282699295207637,
+          "operator": ">",
+          "threshold": 0,
+          "status": "passed"
+        },
+        {
+          "id": "G09",
+          "value": 0.6916890369258072,
+          "operator": "<",
+          "threshold": 0.7,
+          "status": "passed"
+        },
+        {
+          "id": "G10",
+          "value": 1.0,
+          "operator": ">=",
+          "threshold": 0.9,
+          "status": "passed"
+        },
+        {
+          "id": "G11",
+          "value": 1,
+          "operator": "==",
+          "threshold": 1,
+          "status": "passed"
+        }
+      ]
+    },
+    {
+      "id": "E7-02259",
+      "branch": "E7",
+      "expression": "add(cs_rank(ts_mean(ts_corr(ret1, intraday_return, 3), 60)), cs_rank(neg(ts_mean(ts_corr(gap, upper_shadow, 60), 60))))",
+      "direction": 1,
+      "discovery_ic": 0.06629711815423991,
+      "metrics": {
+        "abs_ic": 0.06629711815423991,
+        "year1_excess": 0.07262555047033592,
+        "year2_excess": 0.0551298497581274,
+        "year1_sharpe": 1.294332078670952,
+        "year2_sharpe": 0.9522101304660786,
+        "calmar": 1.4961463943141082,
+        "last9m_excess": 0.01574616259506212,
+        "last12m_excess": 0.0551298497581274,
+        "max_correlation": 0.6606973382042187,
+        "coverage": 1.0,
+        "sample_check": 1
+      },
+      "accepted": true,
+      "periods": {
+        "selection": {
+          "annual_excess": 0.06382434341528409,
+          "sharpe": 1.1194817406731028,
+          "max_drawdown": -0.042659156655952546,
+          "calmar": 1.4961463943141082
+        },
+        "year2014": {
+          "annual_excess": 0.07262555047033592,
+          "sharpe": 1.294332078670952,
+          "max_drawdown": -0.04055102753256523,
+          "calmar": 1.7909669591482649
+        },
+        "year2015": {
+          "annual_excess": 0.0551298497581274,
+          "sharpe": 0.9522101304660786,
+          "max_drawdown": -0.042659156655952546,
+          "calmar": 1.2923333248885203
+        }
+      },
+      "gates": [
+        {
+          "id": "G01",
+          "value": 0.06629711815423991,
+          "operator": ">",
+          "threshold": 0.03,
+          "status": "passed"
+        },
+        {
+          "id": "G02",
+          "value": 0.07262555047033592,
+          "operator": ">",
+          "threshold": 0,
+          "status": "passed"
+        },
+        {
+          "id": "G03",
+          "value": 0.0551298497581274,
+          "operator": ">",
+          "threshold": 0,
+          "status": "passed"
+        },
+        {
+          "id": "G04",
+          "value": 1.294332078670952,
+          "operator": ">",
+          "threshold": 0.5,
+          "status": "passed"
+        },
+        {
+          "id": "G05",
+          "value": 0.9522101304660786,
+          "operator": ">",
+          "threshold": 0.5,
+          "status": "passed"
+        },
+        {
+          "id": "G06",
+          "value": 1.4961463943141082,
+          "operator": ">",
+          "threshold": 1,
+          "status": "passed"
+        },
+        {
+          "id": "G07",
+          "value": 0.01574616259506212,
+          "operator": ">",
+          "threshold": 0,
+          "status": "passed"
+        },
+        {
+          "id": "G08",
+          "value": 0.0551298497581274,
+          "operator": ">",
+          "threshold": 0,
+          "status": "passed"
+        },
+        {
+          "id": "G09",
+          "value": 0.6606973382042187,
+          "operator": "<",
+          "threshold": 0.7,
+          "status": "passed"
+        },
+        {
+          "id": "G10",
+          "value": 1.0,
+          "operator": ">=",
+          "threshold": 0.9,
+          "status": "passed"
+        },
+        {
+          "id": "G11",
+          "value": 1,
+          "operator": "==",
+          "threshold": 1,
+          "status": "passed"
+        }
+      ]
+    },
+    {
+      "id": "E7-00264",
+      "branch": "E7",
+      "expression": "add(cs_rank(ts_corr(ret1, intraday_return, 40)), cs_rank(add(cs_rank(delta(upper_shadow, 20)), cs_rank(ts_std(intraday_return, 40)))))",
+      "direction": 1,
+      "discovery_ic": 0.045133799018992296,
+      "metrics": {
+        "abs_ic": 0.045133799018992296,
+        "year1_excess": 0.06885221052937651,
+        "year2_excess": 0.08051659240459719,
+        "year1_sharpe": 0.9694370025218714,
+        "year2_sharpe": 1.2442080032074183,
+        "calmar": 1.2633811388862952,
+        "last9m_excess": 0.13849124114772482,
+        "last12m_excess": 0.08051659240459719,
+        "max_correlation": 0.6493670139018097,
+        "coverage": 1.0,
+        "sample_check": 1
+      },
+      "accepted": true,
+      "periods": {
+        "selection": {
+          "annual_excess": 0.07468017084815504,
+          "sharpe": 1.0989718662975216,
+          "max_drawdown": -0.05911135487900954,
+          "calmar": 1.2633811388862952
+        },
+        "year2014": {
+          "annual_excess": 0.06885221052937651,
+          "sharpe": 0.9694370025218714,
+          "max_drawdown": -0.05911135487900954,
+          "calmar": 1.16478823180935
+        },
+        "year2015": {
+          "annual_excess": 0.08051659240459719,
+          "sharpe": 1.2442080032074183,
+          "max_drawdown": -0.03389397757765422,
+          "calmar": 2.37554274118835
+        }
+      },
+      "gates": [
+        {
+          "id": "G01",
+          "value": 0.045133799018992296,
+          "operator": ">",
+          "threshold": 0.03,
+          "status": "passed"
+        },
+        {
+          "id": "G02",
+          "value": 0.06885221052937651,
+          "operator": ">",
+          "threshold": 0,
+          "status": "passed"
+        },
+        {
+          "id": "G03",
+          "value": 0.08051659240459719,
+          "operator": ">",
+          "threshold": 0,
+          "status": "passed"
+        },
+        {
+          "id": "G04",
+          "value": 0.9694370025218714,
+          "operator": ">",
+          "threshold": 0.5,
+          "status": "passed"
+        },
+        {
+          "id": "G05",
+          "value": 1.2442080032074183,
+          "operator": ">",
+          "threshold": 0.5,
+          "status": "passed"
+        },
+        {
+          "id": "G06",
+          "value": 1.2633811388862952,
+          "operator": ">",
+          "threshold": 1,
+          "status": "passed"
+        },
+        {
+          "id": "G07",
+          "value": 0.13849124114772482,
+          "operator": ">",
+          "threshold": 0,
+          "status": "passed"
+        },
+        {
+          "id": "G08",
+          "value": 0.08051659240459719,
+          "operator": ">",
+          "threshold": 0,
+          "status": "passed"
+        },
+        {
+          "id": "G09",
+          "value": 0.6493670139018097,
+          "operator": "<",
+          "threshold": 0.7,
+          "status": "passed"
+        },
+        {
+          "id": "G10",
+          "value": 1.0,
+          "operator": ">=",
+          "threshold": 0.9,
+          "status": "passed"
+        },
+        {
+          "id": "G11",
+          "value": 1,
+          "operator": "==",
+          "threshold": 1,
+          "status": "passed"
+        }
+      ]
+    },
+    {
+      "id": "E7-02100",
+      "branch": "E7",
+      "expression": "add(cs_rank(neg(ts_mean(ts_corr(gap, upper_shadow, 40), 40))), cs_rank(ts_corr(ret1, intraday_return, 10)))",
+      "direction": 1,
+      "discovery_ic": 0.0685445680940319,
+      "metrics": {
+        "abs_ic": 0.0685445680940319,
+        "year1_excess": 0.056541783809712864,
+        "year2_excess": 0.06802794807912216,
+        "year1_sharpe": 0.9671974948770682,
+        "year2_sharpe": 1.1256845736060856,
+        "calmar": 1.3769077996583825,
+        "last9m_excess": 0.07135851974489205,
+        "last12m_excess": 0.06802794807912216,
+        "max_correlation": 0.6769196661314489,
+        "coverage": 1.0,
+        "sample_check": 1
+      },
+      "accepted": true,
+      "periods": {
+        "selection": {
+          "annual_excess": 0.062280758943445536,
+          "sharpe": 1.0485025495148332,
+          "max_drawdown": -0.04523233796692683,
+          "calmar": 1.3769077996583825
+        },
+        "year2014": {
+          "annual_excess": 0.056541783809712864,
+          "sharpe": 0.9671974948770682,
+          "max_drawdown": -0.033641968091691954,
+          "calmar": 1.6806919159903766
+        },
+        "year2015": {
+          "annual_excess": 0.06802794807912216,
+          "sharpe": 1.1256845736060856,
+          "max_drawdown": -0.04523233796692683,
+          "calmar": 1.5039670982486715
+        }
+      },
+      "gates": [
+        {
+          "id": "G01",
+          "value": 0.0685445680940319,
+          "operator": ">",
+          "threshold": 0.03,
+          "status": "passed"
+        },
+        {
+          "id": "G02",
+          "value": 0.056541783809712864,
+          "operator": ">",
+          "threshold": 0,
+          "status": "passed"
+        },
+        {
+          "id": "G03",
+          "value": 0.06802794807912216,
+          "operator": ">",
+          "threshold": 0,
+          "status": "passed"
+        },
+        {
+          "id": "G04",
+          "value": 0.9671974948770682,
+          "operator": ">",
+          "threshold": 0.5,
+          "status": "passed"
+        },
+        {
+          "id": "G05",
+          "value": 1.1256845736060856,
+          "operator": ">",
+          "threshold": 0.5,
+          "status": "passed"
+        },
+        {
+          "id": "G06",
+          "value": 1.3769077996583825,
+          "operator": ">",
+          "threshold": 1,
+          "status": "passed"
+        },
+        {
+          "id": "G07",
+          "value": 0.07135851974489205,
+          "operator": ">",
+          "threshold": 0,
+          "status": "passed"
+        },
+        {
+          "id": "G08",
+          "value": 0.06802794807912216,
+          "operator": ">",
+          "threshold": 0,
+          "status": "passed"
+        },
+        {
+          "id": "G09",
+          "value": 0.6769196661314489,
+          "operator": "<",
+          "threshold": 0.7,
+          "status": "passed"
+        },
+        {
+          "id": "G10",
+          "value": 1.0,
+          "operator": ">=",
+          "threshold": 0.9,
+          "status": "passed"
+        },
+        {
+          "id": "G11",
+          "value": 1,
+          "operator": "==",
+          "threshold": 1,
+          "status": "passed"
+        }
+      ]
+    },
+    {
+      "id": "E7-01120",
+      "branch": "E7",
+      "expression": "add(cs_rank(ts_mean(ts_corr(ret1, intraday_return, 20), 5)), cs_rank(neg(ts_mean(ts_corr(gap, upper_shadow, 5), 2))))",
+      "direction": 1,
+      "discovery_ic": 0.03321510945652915,
+      "metrics": {
+        "abs_ic": 0.03321510945652915,
+        "year1_excess": 0.05022163932423762,
+        "year2_excess": 0.05747107587620115,
+        "year1_sharpe": 0.8528987991542673,
+        "year2_sharpe": 1.0046380326538829,
+        "calmar": 1.098624738705403,
+        "last9m_excess": 0.03883734845460829,
+        "last12m_excess": 0.05747107587620115,
+        "max_correlation": 0.5128879633765675,
+        "coverage": 1.0,
+        "sample_check": 1
+      },
+      "accepted": true,
+      "periods": {
+        "selection": {
+          "annual_excess": 0.05384733015870258,
+          "sharpe": 0.9281842739596778,
+          "max_drawdown": -0.04901339671465543,
+          "calmar": 1.098624738705403
+        },
+        "year2014": {
+          "annual_excess": 0.05022163932423762,
+          "sharpe": 0.8528987991542673,
+          "max_drawdown": -0.03517490010772306,
+          "calmar": 1.427769209590758
+        },
+        "year2015": {
+          "annual_excess": 0.05747107587620115,
+          "sharpe": 1.0046380326538829,
+          "max_drawdown": -0.049013396714655544,
+          "calmar": 1.17255851927146
+        }
+      },
+      "gates": [
+        {
+          "id": "G01",
+          "value": 0.03321510945652915,
+          "operator": ">",
+          "threshold": 0.03,
+          "status": "passed"
+        },
+        {
+          "id": "G02",
+          "value": 0.05022163932423762,
+          "operator": ">",
+          "threshold": 0,
+          "status": "passed"
+        },
+        {
+          "id": "G03",
+          "value": 0.05747107587620115,
+          "operator": ">",
+          "threshold": 0,
+          "status": "passed"
+        },
+        {
+          "id": "G04",
+          "value": 0.8528987991542673,
+          "operator": ">",
+          "threshold": 0.5,
+          "status": "passed"
+        },
+        {
+          "id": "G05",
+          "value": 1.0046380326538829,
+          "operator": ">",
+          "threshold": 0.5,
+          "status": "passed"
+        },
+        {
+          "id": "G06",
+          "value": 1.098624738705403,
+          "operator": ">",
+          "threshold": 1,
+          "status": "passed"
+        },
+        {
+          "id": "G07",
+          "value": 0.03883734845460829,
+          "operator": ">",
+          "threshold": 0,
+          "status": "passed"
+        },
+        {
+          "id": "G08",
+          "value": 0.05747107587620115,
+          "operator": ">",
+          "threshold": 0,
+          "status": "passed"
+        },
+        {
+          "id": "G09",
+          "value": 0.5128879633765675,
+          "operator": "<",
+          "threshold": 0.7,
+          "status": "passed"
+        },
+        {
+          "id": "G10",
+          "value": 1.0,
+          "operator": ">=",
+          "threshold": 0.9,
+          "status": "passed"
+        },
+        {
+          "id": "G11",
+          "value": 1,
+          "operator": "==",
+          "threshold": 1,
+          "status": "passed"
+        }
+      ]
+    },
+    {
+      "id": "E7-00728",
+      "branch": "E7",
+      "expression": "add(cs_rank(neg(ts_mean(ts_corr(gap, upper_shadow, 40), 20))), cs_rank(ts_mean(ts_corr(intraday_range, rel_volume, 10), 20)))",
+      "direction": 1,
+      "discovery_ic": 0.0511213852119904,
+      "metrics": {
+        "abs_ic": 0.0511213852119904,
+        "year1_excess": 0.046996420040584796,
+        "year2_excess": 0.04987092322992592,
+        "year1_sharpe": 0.8369652242004036,
+        "year2_sharpe": 0.8988716718412477,
+        "calmar": 1.400441947502548,
+        "last9m_excess": 0.036717556008963426,
+        "last12m_excess": 0.04987092322992592,
+        "max_correlation": 0.5826391200312939,
+        "coverage": 1.0,
+        "sample_check": 1
+      },
+      "accepted": true,
+      "periods": {
+        "selection": {
+          "annual_excess": 0.04843554386433668,
+          "sharpe": 0.8685636988710209,
+          "max_drawdown": -0.034585899080439075,
+          "calmar": 1.400441947502548
+        },
+        "year2014": {
+          "annual_excess": 0.046996420040584796,
+          "sharpe": 0.8369652242004036,
+          "max_drawdown": -0.030702107738787343,
+          "calmar": 1.5307229210590034
+        },
+        "year2015": {
+          "annual_excess": 0.04987092322992592,
+          "sharpe": 0.8988716718412477,
+          "max_drawdown": -0.034585899080439186,
+          "calmar": 1.4419438139785563
+        }
+      },
+      "gates": [
+        {
+          "id": "G01",
+          "value": 0.0511213852119904,
+          "operator": ">",
+          "threshold": 0.03,
+          "status": "passed"
+        },
+        {
+          "id": "G02",
+          "value": 0.046996420040584796,
+          "operator": ">",
+          "threshold": 0,
+          "status": "passed"
+        },
+        {
+          "id": "G03",
+          "value": 0.04987092322992592,
+          "operator": ">",
+          "threshold": 0,
+          "status": "passed"
+        },
+        {
+          "id": "G04",
+          "value": 0.8369652242004036,
+          "operator": ">",
+          "threshold": 0.5,
+          "status": "passed"
+        },
+        {
+          "id": "G05",
+          "value": 0.8988716718412477,
+          "operator": ">",
+          "threshold": 0.5,
+          "status": "passed"
+        },
+        {
+          "id": "G06",
+          "value": 1.400441947502548,
+          "operator": ">",
+          "threshold": 1,
+          "status": "passed"
+        },
+        {
+          "id": "G07",
+          "value": 0.036717556008963426,
+          "operator": ">",
+          "threshold": 0,
+          "status": "passed"
+        },
+        {
+          "id": "G08",
+          "value": 0.04987092322992592,
+          "operator": ">",
+          "threshold": 0,
+          "status": "passed"
+        },
+        {
+          "id": "G09",
+          "value": 0.5826391200312939,
+          "operator": "<",
+          "threshold": 0.7,
+          "status": "passed"
+        },
+        {
+          "id": "G10",
+          "value": 1.0,
+          "operator": ">=",
+          "threshold": 0.9,
+          "status": "passed"
+        },
+        {
+          "id": "G11",
+          "value": 1,
+          "operator": "==",
+          "threshold": 1,
+          "status": "passed"
+        }
+      ]
+    }
+  ],
+  "sources": {
+    "data": "https://github.com/yumoxu/stocknet-dataset/tree/330708b5ddc359961078bef469f43f48992fd6e4/price/raw",
+    "pricing": "https://api-docs.deepseek.com/zh-cn/quick_start/pricing",
+    "model": "https://api-docs.deepseek.com/quick_start/pricing"
+  },
+  "research_note": "在首轮失败诊断后扩展的探索性实验。原 11 项门槛、股票池、交易成本和时间切分保持一致；先用发现期 IC 筛选，再按开发筛选期夏普排序去相关。各分支共享候选库，不能作等预算优劣比较。全部入库公式冻结后统一检验留出期，不按测试收益删选。",
+  "baselines": [
+    {
+      "id": "E0-00001",
+      "name": "20 日动量",
+      "expression": "sub(safe_div(close, delay(close, 20)), 1)",
+      "direction": 1,
+      "discovery_ic": 0.03245472101884232,
+      "periods": {
+        "selection": {
+          "annual_excess": -0.06257245009606294,
+          "sharpe": -0.8870789512340224,
+          "max_drawdown": -0.16981932605005212,
+          "calmar": -0.36846483584336265
+        },
+        "selection_gross": {
+          "annual_excess": -0.02394421159834237,
+          "sharpe": -0.31370689167693533,
+          "max_drawdown": -0.11225277340278061,
+          "calmar": -0.21330619166465287
+        },
+        "year2014": {
+          "annual_excess": -0.058662487941864794,
+          "sharpe": -0.9434145828181634,
+          "max_drawdown": -0.08308112013881208,
+          "calmar": -0.7060868683986374
+        },
+        "year2015": {
+          "annual_excess": -0.06645075246754406,
+          "sharpe": -0.8501060429654608,
+          "max_drawdown": -0.11523143122740798,
+          "calmar": -0.5766721089873841
+        },
+        "last9m": {
+          "annual_excess": -0.0708267047838953,
+          "sharpe": -0.8860330124624172,
+          "max_drawdown": -0.0944646928850379,
+          "calmar": -0.7497690684295172
+        },
+        "last12m": {
+          "annual_excess": -0.06645075246754406,
+          "sharpe": -0.8501060429654608,
+          "max_drawdown": -0.11523143122740798,
+          "calmar": -0.5766721089873841
+        }
+      },
+      "rejection_codes": [
+        "G02",
+        "G03",
+        "G04",
+        "G05",
+        "G06",
+        "G07",
+        "G08"
+      ],
+      "accepted": false
+    },
+    {
+      "id": "E0-00002",
+      "name": "5 日反转",
+      "expression": "neg(sub(safe_div(close, delay(close, 5)), 1))",
+      "direction": 1,
+      "discovery_ic": 0.015471059045992368,
+      "periods": {
+        "selection": {
+          "annual_excess": -0.09024927239577596,
+          "sharpe": -1.2736922631809666,
+          "max_drawdown": -0.198534261064217,
+          "calmar": -0.4545778240592153
+        },
+        "selection_gross": {
+          "annual_excess": -0.01726146976162124,
+          "sharpe": -0.20815197833074647,
+          "max_drawdown": -0.09487740037058967,
+          "calmar": -0.18193447221570366
+        },
+        "year2014": {
+          "annual_excess": -0.08192375084965808,
+          "sharpe": -1.2054865908470132,
+          "max_drawdown": -0.10506607237851029,
+          "calmar": -0.7797355415982445
+        },
+        "year2015": {
+          "annual_excess": -0.09846670455083517,
+          "sharpe": -1.3358819023716966,
+          "max_drawdown": -0.12392669506524412,
+          "calmar": -0.7945560437885886
+        },
+        "last9m": {
+          "annual_excess": -0.13759582435636508,
+          "sharpe": -1.9630129587298872,
+          "max_drawdown": -0.11542883506488821,
+          "calmar": -1.1920403101964576
+        },
+        "last12m": {
+          "annual_excess": -0.09846670455083517,
+          "sharpe": -1.3358819023716966,
+          "max_drawdown": -0.12392669506524412,
+          "calmar": -0.7945560437885886
+        }
+      },
+      "rejection_codes": [
+        "G01",
+        "G02",
+        "G03",
+        "G04",
+        "G05",
+        "G06",
+        "G07",
+        "G08"
+      ],
+      "accepted": false
+    },
+    {
+      "id": "E0-00003",
+      "name": "低波动",
+      "expression": "neg(ts_std(ret1, 20))",
+      "direction": -1,
+      "discovery_ic": 0.029052084601956723,
+      "periods": {
+        "selection": {
+          "annual_excess": -0.09065348120235117,
+          "sharpe": -1.120906749600107,
+          "max_drawdown": -0.17830614269412792,
+          "calmar": -0.5084147962185523
+        },
+        "selection_gross": {
+          "annual_excess": -0.06859836192078717,
+          "sharpe": -0.828385900881656,
+          "max_drawdown": -0.1513887617545263,
+          "calmar": -0.453127174869281
+        },
+        "year2014": {
+          "annual_excess": -0.08748688595367837,
+          "sharpe": -1.1409915263812134,
+          "max_drawdown": -0.09747401569056047,
+          "calmar": -0.8975405941149784
+        },
+        "year2015": {
+          "annual_excess": -0.09379658717713468,
+          "sharpe": -1.1034697124482102,
+          "max_drawdown": -0.16322063006311582,
+          "calmar": -0.5746613472871932
+        },
+        "last9m": {
+          "annual_excess": -0.18320633658847318,
+          "sharpe": -2.268730646086715,
+          "max_drawdown": -0.16322063006311582,
+          "calmar": -1.1224459586856703
+        },
+        "last12m": {
+          "annual_excess": -0.09379658717713468,
+          "sharpe": -1.1034697124482102,
+          "max_drawdown": -0.16322063006311582,
+          "calmar": -0.5746613472871932
+        }
+      },
+      "rejection_codes": [
+        "G01",
+        "G02",
+        "G03",
+        "G04",
+        "G05",
+        "G06",
+        "G07",
+        "G08"
+      ],
+      "accepted": false
+    },
+    {
+      "id": "E0-00004",
+      "name": "隔夜跳空",
+      "expression": "ts_mean(gap, 5)",
+      "direction": 1,
+      "discovery_ic": 0.0066621431181168094,
+      "periods": {
+        "selection": {
+          "annual_excess": -0.07933054878477375,
+          "sharpe": -1.299187471439576,
+          "max_drawdown": -0.15548721782024932,
+          "calmar": -0.5102062400813143
+        },
+        "selection_gross": {
+          "annual_excess": -0.008548209503697834,
+          "sharpe": -0.10848272188897863,
+          "max_drawdown": -0.05714480647038489,
+          "calmar": -0.14958856336538504
+        },
+        "year2014": {
+          "annual_excess": -0.0784704398926569,
+          "sharpe": -1.4955728457266677,
+          "max_drawdown": -0.0885828883443367,
+          "calmar": -0.8858419651843932
+        },
+        "year2015": {
+          "annual_excess": -0.08018644653556439,
+          "sharpe": -1.1653042458250389,
+          "max_drawdown": -0.11136532369985841,
+          "calmar": -0.7200306511178968
+        },
+        "last9m": {
+          "annual_excess": -0.09586295734908168,
+          "sharpe": -1.3825167139687502,
+          "max_drawdown": -0.08219159906278961,
+          "calmar": -1.1663352269840612
+        },
+        "last12m": {
+          "annual_excess": -0.08018644653556439,
+          "sharpe": -1.1653042458250389,
+          "max_drawdown": -0.11136532369985841,
+          "calmar": -0.7200306511178968
+        }
+      },
+      "rejection_codes": [
+        "G01",
+        "G02",
+        "G03",
+        "G04",
+        "G05",
+        "G06",
+        "G07",
+        "G08"
+      ],
+      "accepted": false
+    },
+    {
+      "id": "E0-00005",
+      "name": "日内压力",
+      "expression": "ts_mean(intraday_return, 5)",
+      "direction": -1,
+      "discovery_ic": 0.02222918152768354,
+      "periods": {
+        "selection": {
+          "annual_excess": -0.05634670616117321,
+          "sharpe": -0.8174935572083268,
+          "max_drawdown": -0.12075330846108712,
+          "calmar": -0.4666266032729944
+        },
+        "selection_gross": {
+          "annual_excess": 0.02048246805742715,
+          "sharpe": 0.3351345812802028,
+          "max_drawdown": -0.05365104111261565,
+          "calmar": 0.3817720519986489
+        },
+        "year2014": {
+          "annual_excess": -0.05459103727098835,
+          "sharpe": -0.7882573504059526,
+          "max_drawdown": -0.07115464339216515,
+          "calmar": -0.7672167924461748
+        },
+        "year2015": {
+          "annual_excess": -0.05809216712491694,
+          "sharpe": -0.8450677311688043,
+          "max_drawdown": -0.09531685617838448,
+          "calmar": -0.6094637344752335
+        },
+        "last9m": {
+          "annual_excess": -0.12103098462394624,
+          "sharpe": -1.9941154052680967,
+          "max_drawdown": -0.0931498686272284,
+          "calmar": -1.2993146035266439
+        },
+        "last12m": {
+          "annual_excess": -0.05809216712491694,
+          "sharpe": -0.8450677311688043,
+          "max_drawdown": -0.09531685617838448,
+          "calmar": -0.6094637344752335
+        }
+      },
+      "rejection_codes": [
+        "G01",
+        "G02",
+        "G03",
+        "G04",
+        "G05",
+        "G06",
+        "G07",
+        "G08"
+      ],
+      "accepted": false
+    },
+    {
+      "id": "E0-00006",
+      "name": "价量关系",
+      "expression": "neg(ts_corr(ret1, rel_volume, 20))",
+      "direction": -1,
+      "discovery_ic": 0.03741531395166762,
+      "periods": {
+        "selection": {
+          "annual_excess": -0.0526780252347544,
+          "sharpe": -0.9270104740474975,
+          "max_drawdown": -0.11602558661263374,
+          "calmar": -0.4540207619085498
+        },
+        "selection_gross": {
+          "annual_excess": -0.014995371730929796,
+          "sharpe": -0.2393211126925735,
+          "max_drawdown": -0.06812939895620251,
+          "calmar": -0.22010133599695605
+        },
+        "year2014": {
+          "annual_excess": -0.0840864883420861,
+          "sharpe": -1.5840423933852035,
+          "max_drawdown": -0.09015449720044721,
+          "calmar": -0.9326932205625897
+        },
+        "year2015": {
+          "annual_excess": -0.020323592073470453,
+          "sharpe": -0.32037490420543024,
+          "max_drawdown": -0.038919147335286564,
+          "calmar": -0.5222003426329898
+        },
+        "last9m": {
+          "annual_excess": -0.009960659775554714,
+          "sharpe": -0.13524881414721152,
+          "max_drawdown": -0.038919147335286564,
+          "calmar": -0.2559321171593024
+        },
+        "last12m": {
+          "annual_excess": -0.020323592073470453,
+          "sharpe": -0.32037490420543024,
+          "max_drawdown": -0.038919147335286564,
+          "calmar": -0.5222003426329898
+        }
+      },
+      "rejection_codes": [
+        "G02",
+        "G03",
+        "G04",
+        "G05",
+        "G06",
+        "G07",
+        "G08"
+      ],
+      "accepted": false
+    }
+  ]
+}

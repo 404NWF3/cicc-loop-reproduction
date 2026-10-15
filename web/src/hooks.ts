@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from 'react';
-import { api, messageOf } from './api';
+import { api, apiUrl, messageOf } from './api';
 import type { Candidate, Run, RunEvent } from './types';
 
 export function useResource<T>(path: string, interval = 0) {
@@ -67,7 +67,7 @@ export function useRun(runId: string) {
       }
     };
     void load();
-    const source = new EventSource(`/api/v1/runs/${runId}/events`);
+    const source = new EventSource(apiUrl(`/runs/${runId}/events`), { withCredentials: true });
     source.onopen = () => {
       if (alive) setConnection('connected');
     };

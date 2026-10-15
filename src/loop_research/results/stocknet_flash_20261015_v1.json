@@ -1,0 +1,619 @@
+{
+  "id": "stocknet_flash_20261015_v1",
+  "status": "completed",
+  "started_at_utc": "2026-10-15T09:52:49.854548+00:00",
+  "protocol_sha256": "fd1b7f0830e6cbc419d9aaac0829ad65b866fed37b796aa1276680b5bf3a360d",
+  "data_commit": "330708b5ddc359961078bef469f43f48992fd6e4",
+  "data_sha256": "f88cea3c3bbd6c2d0aff9e6473f9795350b972d6407baad1cab58a912f6ac61a",
+  "asset_count": 50,
+  "rows": 62900,
+  "limitations": [
+    "Source universe has survivorship/selection bias",
+    "Retrospective Yahoo adjustment factors; not point-in-time corporate actions",
+    "US equities, not the original A-share universe",
+    "LLM pretraining may include the historical period",
+    "Overlapping 5-day labels; no IID significance claims"
+  ],
+  "seconds": 110.28664561400001,
+  "model": {
+    "id": "deepseek-flash",
+    "name": "DeepSeek-V4.1-Flash",
+    "thinking": "disabled"
+  },
+  "seed": 42,
+  "periods": {
+    "discovery": [
+      "2012-09-04",
+      "2013-12-31"
+    ],
+    "selection": [
+      "2014-01-01",
+      "2015-12-31"
+    ],
+    "holdout": [
+      "2016-01-01",
+      "2017-09-01"
+    ]
+  },
+  "budget": {
+    "requests": 40,
+    "tokens_charged_or_reserved": 32316,
+    "cost_upper_bound_cny": 0.258528,
+    "unresolved_requests": 0,
+    "hard_cap_cny": 40.0,
+    "pricing_source": "https://api-docs.deepseek.com/zh-cn/quick_start/pricing",
+    "pricing_basis": "all tokens at peak output price 8 CNY/million; conservative",
+    "run_requests": 40,
+    "run_tokens": 32316,
+    "run_cost_upper_bound_cny": 0.258528,
+    "replayed_responses": 0
+  },
+  "verification": {
+    "status": "passed",
+    "baseline_count": 6,
+    "ic_reference": "scipy.stats.spearmanr, all six discovery IC series",
+    "portfolio_reference": "scalar share accounting + scipy.optimize.brentq, six selection NAVs",
+    "max_ic_absolute_error": 4.994338276276267e-13,
+    "max_nav_absolute_error": 4.99977836909693e-12,
+    "adjusted_close_identity_max_error": 1.4210854715202004e-14,
+    "gate_failures": {
+      "G02": 178,
+      "G03": 184,
+      "G04": 195,
+      "G05": 196,
+      "G06": 217,
+      "G07": 166,
+      "G08": 184,
+      "G01": 170,
+      "G11": 3
+    },
+    "peak_price_usage_estimate_cny": 0.10279904,
+    "archived_calls": 40,
+    "tokens": 32316
+  },
+  "branches": {
+    "E0": {
+      "status": "completed",
+      "attempts": 6,
+      "legal": 6,
+      "backtested": 6,
+      "accepted": 0,
+      "unique_expressions": 6,
+      "unique_skeletons": 6,
+      "mechanisms": {
+        "momentum": 1,
+        "reversal": 1,
+        "volatility": 1,
+        "overnight": 1,
+        "intraday": 1,
+        "volume_price": 1
+      },
+      "strategies": {
+        "baseline": 6
+      },
+      "outcomes": {
+        "gate_rejected": 6
+      },
+      "gate_failures": {
+        "G02": 6,
+        "G03": 6,
+        "G04": 6,
+        "G05": 6,
+        "G06": 6,
+        "G07": 6,
+        "G08": 6,
+        "G01": 4
+      },
+      "llm_reviews": {
+        "not_sampled": 6
+      },
+      "mean_coverage": 1.0
+    },
+    "E1": {
+      "status": "completed",
+      "attempts": 100,
+      "legal": 100,
+      "backtested": 97,
+      "accepted": 0,
+      "unique_expressions": 97,
+      "unique_skeletons": 82,
+      "mechanisms": {
+        "momentum": 8,
+        "range_change": 10,
+        "overnight": 20,
+        "relative_volume": 16,
+        "upper_shadow": 18,
+        "intraday": 16,
+        "lower_shadow": 9
+      },
+      "strategies": {
+        "random": 100
+      },
+      "outcomes": {
+        "gate_rejected": 97,
+        "duplicate": 3
+      },
+      "gate_failures": {
+        "G01": 86,
+        "G02": 80,
+        "G03": 83,
+        "G04": 90,
+        "G05": 91,
+        "G06": 97,
+        "G07": 78,
+        "G08": 83,
+        "G11": 1
+      },
+      "llm_reviews": {
+        "not_sampled": 100
+      },
+      "mean_coverage": 0.9999913729888281
+    },
+    "E2": {
+      "status": "completed",
+      "attempts": 100,
+      "legal": 79,
+      "backtested": 57,
+      "accepted": 0,
+      "unique_expressions": 72,
+      "unique_skeletons": 56,
+      "mechanisms": {
+        "intraday": 7,
+        "upper_shadow": 16,
+        "volume_price": 6,
+        "overnight": 4,
+        "lower_shadow": 5,
+        "momentum": 1,
+        "relative_volume": 9,
+        "gap_range_interaction": 7,
+        "trend_consistency": 2
+      },
+      "strategies": {
+        "mutation": 25,
+        "crossover": 25,
+        "mechanism": 20,
+        "perturbation": 15,
+        "random": 15
+      },
+      "outcomes": {
+        "gate_rejected": 57,
+        "llm_rejected": 8,
+        "dsl_rejected": 21,
+        "duplicate": 7,
+        "fsa_rejected": 7
+      },
+      "gate_failures": {
+        "G01": 44,
+        "G02": 44,
+        "G03": 48,
+        "G04": 50,
+        "G05": 51,
+        "G06": 57,
+        "G07": 42,
+        "G08": 48
+      },
+      "llm_reviews": {
+        "not_sampled": 73,
+        "reject": 3,
+        "approve": 19,
+        "uncertain": 5
+      },
+      "mean_coverage": 0.9999305096772616
+    },
+    "E3": {
+      "status": "completed",
+      "attempts": 100,
+      "legal": 79,
+      "backtested": 57,
+      "accepted": 0,
+      "unique_expressions": 69,
+      "unique_skeletons": 56,
+      "mechanisms": {
+        "intraday": 9,
+        "volume_price": 12,
+        "overnight": 11,
+        "lower_shadow": 7,
+        "momentum": 2,
+        "upper_shadow": 10,
+        "range_change": 4,
+        "relative_volume": 1,
+        "gap_range_interaction": 1
+      },
+      "strategies": {
+        "mutation": 25,
+        "crossover": 25,
+        "mechanism": 20,
+        "perturbation": 15,
+        "random": 15
+      },
+      "outcomes": {
+        "gate_rejected": 57,
+        "llm_rejected": 12,
+        "dsl_rejected": 21,
+        "duplicate": 10
+      },
+      "gate_failures": {
+        "G01": 36,
+        "G02": 48,
+        "G03": 47,
+        "G04": 49,
+        "G05": 48,
+        "G06": 57,
+        "G07": 40,
+        "G08": 47,
+        "G11": 2
+      },
+      "llm_reviews": {
+        "not_sampled": 72,
+        "reject": 4,
+        "approve": 16,
+        "uncertain": 8
+      },
+      "mean_coverage": 0.9998453595634833
+    }
+  },
+  "holdout": {
+    "E0": {
+      "factors": [],
+      "composite": null,
+      "status": "no_accepted_factors"
+    },
+    "E1": {
+      "factors": [],
+      "composite": null,
+      "status": "no_accepted_factors"
+    },
+    "E2": {
+      "factors": [],
+      "composite": null,
+      "status": "no_accepted_factors"
+    },
+    "E3": {
+      "factors": [],
+      "composite": null,
+      "status": "no_accepted_factors"
+    }
+  },
+  "cost_one_side": 0.001,
+  "sources": {
+    "data": "https://github.com/yumoxu/stocknet-dataset/tree/330708b5ddc359961078bef469f43f48992fd6e4/price/raw",
+    "pricing": "https://api-docs.deepseek.com/zh-cn/quick_start/pricing",
+    "model": "https://api-docs.deepseek.com/quick_start/pricing"
+  },
+  "baselines": [
+    {
+      "id": "E0-000",
+      "name": "20 日动量",
+      "expression": "sub(safe_div(close, delay(close, 20)), 1)",
+      "direction": 1,
+      "discovery_ic": 0.03245472101884232,
+      "periods": {
+        "selection": {
+          "annual_excess": -0.06257245009606294,
+          "sharpe": -0.8870789512340224,
+          "max_drawdown": -0.16981932605005212,
+          "calmar": -0.36846483584336265
+        },
+        "selection_gross": {
+          "annual_excess": -0.02394421159834237,
+          "sharpe": -0.31370689167693533,
+          "max_drawdown": -0.11225277340278061,
+          "calmar": -0.21330619166465287
+        },
+        "year2014": {
+          "annual_excess": -0.058662487941864794,
+          "sharpe": -0.9434145828181634,
+          "max_drawdown": -0.08308112013881208,
+          "calmar": -0.7060868683986374
+        },
+        "year2015": {
+          "annual_excess": -0.06645075246754406,
+          "sharpe": -0.8501060429654608,
+          "max_drawdown": -0.11523143122740798,
+          "calmar": -0.5766721089873841
+        },
+        "last9m": {
+          "annual_excess": -0.0708267047838953,
+          "sharpe": -0.8860330124624172,
+          "max_drawdown": -0.0944646928850379,
+          "calmar": -0.7497690684295172
+        },
+        "last12m": {
+          "annual_excess": -0.06645075246754406,
+          "sharpe": -0.8501060429654608,
+          "max_drawdown": -0.11523143122740798,
+          "calmar": -0.5766721089873841
+        }
+      },
+      "rejection_codes": [
+        "G02",
+        "G03",
+        "G04",
+        "G05",
+        "G06",
+        "G07",
+        "G08"
+      ],
+      "accepted": false
+    },
+    {
+      "id": "E0-001",
+      "name": "5 日反转",
+      "expression": "neg(sub(safe_div(close, delay(close, 5)), 1))",
+      "direction": 1,
+      "discovery_ic": 0.015471059045992368,
+      "periods": {
+        "selection": {
+          "annual_excess": -0.09024927239577596,
+          "sharpe": -1.2736922631809666,
+          "max_drawdown": -0.198534261064217,
+          "calmar": -0.4545778240592153
+        },
+        "selection_gross": {
+          "annual_excess": -0.01726146976162124,
+          "sharpe": -0.20815197833074647,
+          "max_drawdown": -0.09487740037058967,
+          "calmar": -0.18193447221570366
+        },
+        "year2014": {
+          "annual_excess": -0.08192375084965808,
+          "sharpe": -1.2054865908470132,
+          "max_drawdown": -0.10506607237851029,
+          "calmar": -0.7797355415982445
+        },
+        "year2015": {
+          "annual_excess": -0.09846670455083517,
+          "sharpe": -1.3358819023716966,
+          "max_drawdown": -0.12392669506524412,
+          "calmar": -0.7945560437885886
+        },
+        "last9m": {
+          "annual_excess": -0.13759582435636508,
+          "sharpe": -1.9630129587298872,
+          "max_drawdown": -0.11542883506488821,
+          "calmar": -1.1920403101964576
+        },
+        "last12m": {
+          "annual_excess": -0.09846670455083517,
+          "sharpe": -1.3358819023716966,
+          "max_drawdown": -0.12392669506524412,
+          "calmar": -0.7945560437885886
+        }
+      },
+      "rejection_codes": [
+        "G01",
+        "G02",
+        "G03",
+        "G04",
+        "G05",
+        "G06",
+        "G07",
+        "G08"
+      ],
+      "accepted": false
+    },
+    {
+      "id": "E0-002",
+      "name": "低波动",
+      "expression": "neg(ts_std(ret1, 20))",
+      "direction": -1,
+      "discovery_ic": 0.029052084601956723,
+      "periods": {
+        "selection": {
+          "annual_excess": -0.09065348120235117,
+          "sharpe": -1.120906749600107,
+          "max_drawdown": -0.17830614269412792,
+          "calmar": -0.5084147962185523
+        },
+        "selection_gross": {
+          "annual_excess": -0.06859836192078717,
+          "sharpe": -0.828385900881656,
+          "max_drawdown": -0.1513887617545263,
+          "calmar": -0.453127174869281
+        },
+        "year2014": {
+          "annual_excess": -0.08748688595367837,
+          "sharpe": -1.1409915263812134,
+          "max_drawdown": -0.09747401569056047,
+          "calmar": -0.8975405941149784
+        },
+        "year2015": {
+          "annual_excess": -0.09379658717713468,
+          "sharpe": -1.1034697124482102,
+          "max_drawdown": -0.16322063006311582,
+          "calmar": -0.5746613472871932
+        },
+        "last9m": {
+          "annual_excess": -0.18320633658847318,
+          "sharpe": -2.268730646086715,
+          "max_drawdown": -0.16322063006311582,
+          "calmar": -1.1224459586856703
+        },
+        "last12m": {
+          "annual_excess": -0.09379658717713468,
+          "sharpe": -1.1034697124482102,
+          "max_drawdown": -0.16322063006311582,
+          "calmar": -0.5746613472871932
+        }
+      },
+      "rejection_codes": [
+        "G01",
+        "G02",
+        "G03",
+        "G04",
+        "G05",
+        "G06",
+        "G07",
+        "G08"
+      ],
+      "accepted": false
+    },
+    {
+      "id": "E0-003",
+      "name": "隔夜跳空",
+      "expression": "ts_mean(gap, 5)",
+      "direction": 1,
+      "discovery_ic": 0.0066621431181168094,
+      "periods": {
+        "selection": {
+          "annual_excess": -0.07933054878477375,
+          "sharpe": -1.299187471439576,
+          "max_drawdown": -0.15548721782024932,
+          "calmar": -0.5102062400813143
+        },
+        "selection_gross": {
+          "annual_excess": -0.008548209503697834,
+          "sharpe": -0.10848272188897863,
+          "max_drawdown": -0.05714480647038489,
+          "calmar": -0.14958856336538504
+        },
+        "year2014": {
+          "annual_excess": -0.0784704398926569,
+          "sharpe": -1.4955728457266677,
+          "max_drawdown": -0.0885828883443367,
+          "calmar": -0.8858419651843932
+        },
+        "year2015": {
+          "annual_excess": -0.08018644653556439,
+          "sharpe": -1.1653042458250389,
+          "max_drawdown": -0.11136532369985841,
+          "calmar": -0.7200306511178968
+        },
+        "last9m": {
+          "annual_excess": -0.09586295734908168,
+          "sharpe": -1.3825167139687502,
+          "max_drawdown": -0.08219159906278961,
+          "calmar": -1.1663352269840612
+        },
+        "last12m": {
+          "annual_excess": -0.08018644653556439,
+          "sharpe": -1.1653042458250389,
+          "max_drawdown": -0.11136532369985841,
+          "calmar": -0.7200306511178968
+        }
+      },
+      "rejection_codes": [
+        "G01",
+        "G02",
+        "G03",
+        "G04",
+        "G05",
+        "G06",
+        "G07",
+        "G08"
+      ],
+      "accepted": false
+    },
+    {
+      "id": "E0-004",
+      "name": "日内压力",
+      "expression": "ts_mean(intraday_return, 5)",
+      "direction": -1,
+      "discovery_ic": 0.02222918152768354,
+      "periods": {
+        "selection": {
+          "annual_excess": -0.05634670616117321,
+          "sharpe": -0.8174935572083268,
+          "max_drawdown": -0.12075330846108712,
+          "calmar": -0.4666266032729944
+        },
+        "selection_gross": {
+          "annual_excess": 0.02048246805742715,
+          "sharpe": 0.3351345812802028,
+          "max_drawdown": -0.05365104111261565,
+          "calmar": 0.3817720519986489
+        },
+        "year2014": {
+          "annual_excess": -0.05459103727098835,
+          "sharpe": -0.7882573504059526,
+          "max_drawdown": -0.07115464339216515,
+          "calmar": -0.7672167924461748
+        },
+        "year2015": {
+          "annual_excess": -0.05809216712491694,
+          "sharpe": -0.8450677311688043,
+          "max_drawdown": -0.09531685617838448,
+          "calmar": -0.6094637344752335
+        },
+        "last9m": {
+          "annual_excess": -0.12103098462394624,
+          "sharpe": -1.9941154052680967,
+          "max_drawdown": -0.0931498686272284,
+          "calmar": -1.2993146035266439
+        },
+        "last12m": {
+          "annual_excess": -0.05809216712491694,
+          "sharpe": -0.8450677311688043,
+          "max_drawdown": -0.09531685617838448,
+          "calmar": -0.6094637344752335
+        }
+      },
+      "rejection_codes": [
+        "G01",
+        "G02",
+        "G03",
+        "G04",
+        "G05",
+        "G06",
+        "G07",
+        "G08"
+      ],
+      "accepted": false
+    },
+    {
+      "id": "E0-005",
+      "name": "价量关系",
+      "expression": "neg(ts_corr(ret1, rel_volume, 20))",
+      "direction": -1,
+      "discovery_ic": 0.03741531395166762,
+      "periods": {
+        "selection": {
+          "annual_excess": -0.0526780252347544,
+          "sharpe": -0.9270104740474975,
+          "max_drawdown": -0.11602558661263374,
+          "calmar": -0.4540207619085498
+        },
+        "selection_gross": {
+          "annual_excess": -0.014995371730929796,
+          "sharpe": -0.2393211126925735,
+          "max_drawdown": -0.06812939895620251,
+          "calmar": -0.22010133599695605
+        },
+        "year2014": {
+          "annual_excess": -0.0840864883420861,
+          "sharpe": -1.5840423933852035,
+          "max_drawdown": -0.09015449720044721,
+          "calmar": -0.9326932205625897
+        },
+        "year2015": {
+          "annual_excess": -0.020323592073470453,
+          "sharpe": -0.32037490420543024,
+          "max_drawdown": -0.038919147335286564,
+          "calmar": -0.5222003426329898
+        },
+        "last9m": {
+          "annual_excess": -0.009960659775554714,
+          "sharpe": -0.13524881414721152,
+          "max_drawdown": -0.038919147335286564,
+          "calmar": -0.2559321171593024
+        },
+        "last12m": {
+          "annual_excess": -0.020323592073470453,
+          "sharpe": -0.32037490420543024,
+          "max_drawdown": -0.038919147335286564,
+          "calmar": -0.5222003426329898
+        }
+      },
+      "rejection_codes": [
+        "G02",
+        "G03",
+        "G04",
+        "G05",
+        "G06",
+        "G07",
+        "G08"
+      ],
+      "accepted": false
+    }
+  ]
+}

@@ -59,15 +59,17 @@ def simulate(
                     chosen = ordered[: max(1, math.ceil(len(ordered) * top_fraction))]
                     weights[chosen] = 1 / len(chosen)
             # Solve post_trade_nav + fees(post_trade_nav) = pre_trade_nav.
-            low, high = 0.0, nav_before
-            for _ in range(60):
-                mid = (low + high) / 2
-                amount = np.abs(mid * weights - holdings).sum()
-                if mid + cost * amount > nav_before:
-                    high = mid
-                else:
-                    low = mid
-            nav_after = (low + high) / 2
+            nav_after = nav_before
+            if cost:
+                low, high = 0.0, nav_before
+                for _ in range(60):
+                    mid = (low + high) / 2
+                    amount = np.abs(mid * weights - holdings).sum()
+                    if mid + cost * amount > nav_before:
+                        high = mid
+                    else:
+                        low = mid
+                nav_after = (low + high) / 2
             amount = float(np.abs(nav_after * weights - holdings).sum())
             fee = cost * amount
             turnover = amount / nav_before if nav_before else 0.0

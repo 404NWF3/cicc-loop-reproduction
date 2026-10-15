@@ -6,15 +6,17 @@ import {
   Braces,
   CheckCheck,
   Fingerprint,
-  FlaskConical,
   GitBranch,
   Layers3,
   Play,
   ShieldCheck,
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
-import { CheckItem, EmptyState, LoopDiagram, SectionHeading } from '../components';
+import { CheckItem, LoopDiagram, SectionHeading } from '../components';
 import { stages, strategies } from '../content';
+import { useResource } from '../hooks';
+import { apiUrl } from '../api';
+import type { ExperimentResult } from '../types';
 
 export function HomePage() {
   return (
@@ -34,11 +36,11 @@ export function HomePage() {
             <br />以 Loop Engineering 连接大模型的探索能力与量化研究的验证纪律。
           </p>
           <div className="hero-actions">
-            <Link className="button navy large" to="/console">
-              打开研究控制台 <ArrowUpRight size={18} />
+            <Link className="button navy large" to="/mine">
+              开始实时挖掘 <ArrowUpRight size={18} />
             </Link>
-            <Link className="text-link" to="/research">
-              理解循环原理 <ArrowRight size={16} />
+            <Link className="text-link" to="/presentation">
+              播放研究演示 <ArrowRight size={16} />
             </Link>
           </div>
           <div className="hero-checks">
@@ -122,7 +124,7 @@ export function HomePage() {
           </span>
         </div>
         <p>
-          本项目参考中金公开研报及用户提供的案例分析，复现发现流程与工程机制。研报历史回测、本地演示与后续真实实验将分别标注。
+          本项目参考用户提供的中金案例分析，复现发现流程与工程机制。材料披露的历史回测、本地实验与现场计算均注明来源。
         </p>
         <Link className="text-link" to="/research">
           方法与来源 <ArrowUpRight size={16} />
@@ -279,11 +281,11 @@ export function ResearchPage() {
           <div>
             <h3>当前实现阶段</h3>
             <p>
-              代码框架与本地流程演示。没有市场实验结果；目标模型的官方 ID
-              尚待核实。公开数据实验计划使用美股，不能据此声称复现 A 股收益。
+              已完成 StockNet 美股小规模实验，并记录全部通过与失败结果。
+              这是一项流程复现，不能据此声称复现 A 股收益。
             </p>
             <Link to="/experiments">
-              查看实验准备状态 <ArrowRight size={14} />
+              查看真实实验记录 <ArrowRight size={14} />
             </Link>
           </div>
         </div>
@@ -293,39 +295,324 @@ export function ResearchPage() {
 }
 
 export function ExperimentsPage() {
+  const { data, error, refresh } = useResource<{ items: ExperimentResult[] }>('/experiments');
+  const [selectedId, setSelectedId] = useState('');
+  const experiment = data?.items.find((item) => item.id === selectedId) ?? data?.items[0];
+  const labels: Record<string, string> = {
+    E0: '传统因子基线',
+    E1: '随机搜索',
+    E2: '完整 Loop',
+    E3: '关闭 FSA',
+    E4: '系统枚举与平滑',
+    E5: '多种子组合搜索',
+    E6: '模型机制与局部变体',
+    E7: '开发反馈搜索',
+  };
+  const percent = (value: number | null) =>
+    value === null ? '未定义' : `${(value * 100).toFixed(2)}%`;
+  const branches = experiment ? Object.entries(experiment.branches) : [];
+  const attempts = branches.reduce((total, [, branch]) => total + branch.attempts, 0);
+  const accepted = branches.reduce((total, [, branch]) => total + branch.accepted, 0);
+  const expanded = experiment?.experiment_version === 'expanded_search_v2';
+  const holdout = experiment?.holdout?.LIBRARY;
+  const composite = experiment?.holdout?.TOP5?.composite;
   return (
     <main className="page-width experiments-page">
       <div className="page-intro">
         <span className="eyebrow">EXPERIMENT REGISTRY</span>
         <h1>让结果来自真实运行。</h1>
-        <p>记录配置、数据与完整过程，让每一个结果都可以追溯。</p>
+        <p>固定数据与门槛，记录每一次尝试，也保留没有通过筛选的结果。</p>
       </div>
-      <div className="panel experiment-empty">
-        <EmptyState
-          icon={<FlaskConical size={34} strokeWidth={1.2} />}
-          title="实验尚未开始"
-          action={
-            <Link className="button navy" to="/console">
-              先了解运行控制台 <ArrowUpRight size={16} />
-            </Link>
-          }
-        >
-          当前按计划搭建前后端框架，未下载实验数据，也未调用付费模型。
-          <br />
-          演示任务仅验证程序流程，不会出现在真实实验结果中。
-        </EmptyState>
-      </div>
+      {error && (
+        <div role="alert" className="error-notice">
+          {error}{' '}
+          <button className="text-link" onClick={refresh}>
+            重试
+          </button>
+        </div>
+      )}
+      {!experiment && !error && (
+        <p role="status">{data ? '尚无已归档的真实实验。' : '正在读取实验记录…'}</p>
+      )}
+      {data && data.items.length > 1 && (
+        <label className="experiment-selector">
+          实验版本
+          <select value={experiment?.id} onChange={(event) => setSelectedId(event.target.value)}>
+            {data.items.map((item) => (
+              <option key={item.id} value={item.id}>
+                {item.experiment_version === 'expanded_search_v2' ? '扩大实验' : '首轮对照'} ·{' '}
+                {item.id}
+              </option>
+            ))}
+          </select>
+        </label>
+      )}
+      {experiment && (
+        <>
+          <section className="panel experiment-result-intro">
+            <span className="eyebrow">
+              COMPLETED ·{' '}
+              {new Date(experiment.started_at_utc).toLocaleDateString('zh-CN', {
+                timeZone: 'Asia/Shanghai',
+              })}
+            </span>
+            <h2>
+              {attempts} 次尝试，{accepted} 个因子{expanded ? '通过开发筛选入库' : '通过全部门槛'}。
+            </h2>
+            <p>
+              {experiment.research_note ??
+                '首轮四组均未达到固定的 11 项联合条件；所有 217 个实际回测候选的筛选期 Calmar 均未超过 1。未形成测试期复合组合。'}
+            </p>
+            <div className="experiment-facts">
+              <div>
+                <strong>{experiment.asset_count}</strong>
+                <span>股票 · {experiment.rows.toLocaleString()} 行数据</span>
+              </div>
+              <div>
+                <strong>{experiment.budget.run_requests}</strong>
+                <span>官方 API 请求</span>
+              </div>
+              <div>
+                <strong>¥{experiment.budget.run_cost_upper_bound_cny.toFixed(3)}</strong>
+                <span>本轮费用保守上界 · 总预算 ¥{experiment.budget.hard_cap_cny}</span>
+              </div>
+              <div>
+                <strong>{(experiment.seconds / 60).toFixed(1)} 分钟</strong>
+                <span>实验墙钟时间</span>
+              </div>
+            </div>
+            <p className="source-note">
+              {experiment.model.name}（{experiment.model.id}）·{' '}
+              {experiment.budget.run_tokens.toLocaleString()} tokens · 按官方高峰价及缓存用量估算约
+              ¥{experiment.verification.peak_price_usage_estimate_cny.toFixed(3)}
+              。运行于本地，网站读取已归档结果。
+              {experiment.budget.cost_upper_bound_cny !== undefined &&
+                ` 共享账本累计保守费用 ¥${experiment.budget.cost_upper_bound_cny.toFixed(3)}。`}
+            </p>
+            <a
+              className="button navy"
+              href={apiUrl(`/experiments/${experiment.id}/report`)}
+              download
+            >
+              下载实验 JSON <ArrowUpRight size={15} />
+            </a>
+          </section>
+          <section className="experiment-section">
+            <h2>{expanded ? '扩大搜索与全部尝试' : '四组对照与全部尝试'}</h2>
+            <div className="panel table-wrap">
+              <table className="experiment-table">
+                <caption>
+                  统一股票池、时间切分、单边 0.1% 成本；
+                  {expanded
+                    ? `随机搜索种子 ${(experiment.random_seeds ?? []).join(' / ')}；E7 固定 3 轮。`
+                    : `seed ${experiment.seed}；E2/E3 各 10 轮。`}
+                </caption>
+                <thead>
+                  <tr>
+                    <th scope="col">组别</th>
+                    <th scope="col">尝试</th>
+                    <th scope="col">DSL 合法</th>
+                    <th scope="col">回测</th>
+                    <th scope="col">入库</th>
+                    <th scope="col">独立公式 / 骨架</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {branches.map(([id, branch]) => (
+                    <tr key={id}>
+                      <th scope="row">
+                        {id} · {labels[id]}
+                      </th>
+                      <td>{branch.attempts}</td>
+                      <td>{branch.legal}</td>
+                      <td>{branch.backtested}</td>
+                      <td>{branch.accepted}</td>
+                      <td>
+                        {branch.unique_expressions} / {branch.unique_skeletons}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+            <div className="experiment-progress" aria-label="各组实际回测比例">
+              {branches.map(([id, branch]) => (
+                <div key={id}>
+                  <label htmlFor={`progress-${id}`}>{id} · 实际回测</label>
+                  <progress id={`progress-${id}`} value={branch.backtested} max={branch.attempts} />
+                  <span>
+                    {branch.backtested} / {branch.attempts}
+                  </span>
+                </div>
+              ))}
+            </div>
+            <p className="source-note">
+              {expanded
+                ? '无效、重复、退化及发现期 IC 不合格的候选也计入尝试总数。回测列只统计完整开发筛选期回测，入库列统计统一去相关后的最终结果；各分支规模不同。'
+                : 'E2 因 FSA 拒绝 7 次；E3 未启用 FSA。两个分支的模型输出和后续父代轨迹不同，单次结果只作描述性比较。'}
+            </p>
+          </section>
+          {!!experiment.accepted_factors?.length && (
+            <section className="experiment-section">
+              <h2>入库因子与冻结后的留出检验</h2>
+              <div className="panel table-wrap">
+                <table className="experiment-table">
+                  <caption>
+                    开发筛选期为 2014–2015 年；留出期为 2016–2017 年。收益均为扣费后年化超额。
+                  </caption>
+                  <thead>
+                    <tr>
+                      <th scope="col">因子 / 公式</th>
+                      <th scope="col">发现期 IC</th>
+                      <th scope="col">筛选期 Calmar</th>
+                      <th scope="col">筛选期超额</th>
+                      <th scope="col">留出期超额</th>
+                      <th scope="col">留出期夏普</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {experiment.accepted_factors.map((factor) => {
+                      const test = holdout?.factors.find((item) => item.id === factor.id);
+                      return (
+                        <tr key={factor.id}>
+                          <th scope="row">
+                            <details>
+                              <summary>
+                                {factor.id} · 方向 {factor.direction > 0 ? '+1' : '−1'}
+                              </summary>
+                              <code>{factor.expression}</code>
+                            </details>
+                          </th>
+                          <td>{factor.discovery_ic.toFixed(4)}</td>
+                          <td>{factor.metrics.calmar.toFixed(2)}</td>
+                          <td>{percent(factor.periods.selection.annual_excess)}</td>
+                          <td>{percent(test?.annual_excess ?? null)}</td>
+                          <td>{test?.sharpe?.toFixed(2) ?? '未定义'}</td>
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                </table>
+              </div>
+              {composite && (
+                <p>
+                  按开发筛选期排序预先选定的前 {composite.factor_count}{' '}
+                  个因子，等权排名组合：留出期年化超额 {percent(composite.annual_excess)}， 夏普{' '}
+                  {composite.sharpe?.toFixed(2) ?? '未定义'}，相对最大回撤{' '}
+                  {percent(composite.max_drawdown)}。
+                </p>
+              )}
+              <p className="source-note">
+                全部入库因子均展示，留出期表现不用于重新筛选。扩大搜索会增加过拟合风险，入库数量不等于稳定
+                Alpha 的数量。
+              </p>
+            </section>
+          )}
+          <section className="experiment-section">
+            <h2>交易成本前后的传统基线</h2>
+            <div className="panel table-wrap">
+              <table className="experiment-table">
+                <caption>
+                  2014–2015 年筛选期，相对同股票池等权基准的年化超额；这是开发结果。
+                </caption>
+                <thead>
+                  <tr>
+                    <th scope="col">固定公式</th>
+                    <th scope="col">冻结方向</th>
+                    <th scope="col">搜索期 IC</th>
+                    <th scope="col">成本前超额</th>
+                    <th scope="col">成本后超额</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {experiment.baselines.map((factor) => (
+                    <tr key={factor.id}>
+                      <th scope="row">
+                        <details>
+                          <summary>{factor.name}</summary>
+                          <code>{factor.expression}</code>
+                        </details>
+                      </th>
+                      <td>{factor.direction === 1 ? '+1' : '−1'}</td>
+                      <td>{factor.discovery_ic?.toFixed(4) ?? '未定义'}</td>
+                      <td>{percent(factor.periods.selection_gross.annual_excess)}</td>
+                      <td>{percent(factor.periods.selection.annual_excess)}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+            <p className="source-note">
+              方向只按搜索期 IC 确定。信号在收盘后生成，下一交易日开盘成交，每 5
+              个交易日调仓；策略与基准分别扣除买入、卖出及期末平仓费用。
+            </p>
+          </section>
+          <section className="panel experiment-provenance">
+            <h2>边界与复现证据</h2>
+            <dl>
+              {Object.entries(experiment.periods).map(([key, dates]) => (
+                <div key={key}>
+                  <dt>
+                    {{ discovery: '搜索期', selection: '筛选期', holdout: '封存测试期' }[key]}
+                  </dt>
+                  <dd>{dates.join(' → ')}</dd>
+                </div>
+              ))}
+            </dl>
+            <p>
+              已用独立 SciPy IC 与标量持仓账本核对{expanded ? '基线及全部入库因子' : '六个基线'}
+              ：最大 IC 误差 {experiment.verification.max_ic_absolute_error.toExponential(1)}
+              ，最大净值误差 {experiment.verification.max_nav_absolute_error.toExponential(1)}。
+              {accepted === 0
+                ? '没有因子入库，测试期没有可评估的因子组合。'
+                : '已核对全部入库因子的开发及留出期净值和冻结记录。'}
+            </p>
+            <p>
+              股票池存在事后选样风险；历史复权数据不是当时可获得的数据快照。模型可能在预训练中接触过历史行情。反复使用开发集、美股小股票池和重叠标签不支持可交易
+              Alpha 或显著性结论。
+            </p>
+            <details>
+              <summary>版本与校验和</summary>
+              <p className="mono">
+                {experiment.id}
+                <br />
+                StockNet commit: {experiment.data_commit}
+                <br />
+                Data SHA-256: {experiment.data_sha256}
+                <br />
+                Protocol SHA-256: {experiment.protocol_sha256}
+              </p>
+            </details>
+            <div className="experiment-source-links">
+              <a href={experiment.sources.data} target="_blank" rel="noreferrer">
+                固定数据版本 ↗
+              </a>
+              <a href={experiment.sources.pricing} target="_blank" rel="noreferrer">
+                官方模型与定价 ↗
+              </a>
+            </div>
+          </section>
+        </>
+      )}
       <div className="section-heading small-heading">
-        <span className="eyebrow">PLANNED COMPARISONS</span>
-        <h2>后续实验，已经有清晰的对照。</h2>
+        <span className="eyebrow">EXPERIMENT DESIGN</span>
+        <h2>{expanded ? '固定规模，保留每次尝试。' : '每组对照回答一个问题。'}</h2>
       </div>
       <div className="comparison-grid">
-        {[
-          ['E0', '传统因子基线', '6 个固定价量因子', Braces],
-          ['E1', '随机搜索', '受限 DSL 的随机候选', GitBranch],
-          ['E2', '完整 Loop', '五种策略、审查与 FSA', Layers3],
-          ['E3', '关闭 FSA', '观察结构重复与覆盖差异', CheckCheck],
-        ].map(([id, name, description, Icon]) => {
+        {(expanded
+          ? [
+              ['E4', '系统枚举与平滑', '覆盖不同周期与价量机制', Braces],
+              ['E5', '多种子组合搜索', '三个固定种子，各 1,000 次', GitBranch],
+              ['E6', '模型机制与局部变体', '先独立逻辑审查，再生成窗口变体', Layers3],
+              ['E7', '开发反馈搜索', '固定三轮，每轮 800 次尝试', CheckCheck],
+            ]
+          : [
+              ['E0', '传统因子基线', '6 个固定价量因子', Braces],
+              ['E1', '随机搜索', '受限 DSL 的随机候选', GitBranch],
+              ['E2', '完整 Loop', '五种策略、审查与 FSA', Layers3],
+              ['E3', '关闭 FSA', '观察结构重复与覆盖差异', CheckCheck],
+            ]
+        ).map(([id, name, description, Icon]) => {
           const Glyph = Icon as typeof Braces;
           return (
             <article className="panel comparison" key={id as string}>
@@ -335,14 +622,14 @@ export function ExperimentsPage() {
               </div>
               <h3>{name as string}</h3>
               <p>{description as string}</p>
-              <span className="planned">待实施</span>
+              <span className="planned">{experiment ? '已完成本地实验' : '实验方案'}</span>
             </article>
           );
         })}
       </div>
       <p className="source-note experiment-note">
-        计划使用最多 50 只股票与 300
-        次候选尝试。真实运行前冻结数据、时间切分和预算；没有因子通过筛选也是可报告的结果。
+        本页展示已归档实验。实时挖掘页可以在固定历史快照上启动新的计算；浏览记录与本地搜索免费，DeepSeek
+        模式需要演示口令。
       </p>
     </main>
   );

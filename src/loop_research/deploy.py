@@ -28,9 +28,11 @@ def validate_deployment(settings: Settings) -> int:
         volume = Path(mount).resolve()
         if not volume.is_dir() or not all(
             path.resolve().is_relative_to(volume)
-            for path in (settings.state_dir, settings.data_dir)
+            for path in (settings.state_dir, settings.data_dir, settings.budget_path)
         ):
-            raise ValueError("LOOP_STATE_DIR 和 LOOP_DATA_DIR 必须位于已挂载的持久卷内。")
+            raise ValueError(
+                "LOOP_STATE_DIR、LOOP_DATA_DIR 和 LOOP_BUDGET_PATH 必须位于已挂载的持久卷内。"
+            )
     return port
 
 
@@ -49,6 +51,9 @@ def main():
         host="0.0.0.0",
         port=port,
         workers=1,
+        limit_concurrency=24,
+        timeout_keep_alive=5,
+        access_log=False,
         proxy_headers=True,
         forwarded_allow_ips="*",  # Railway terminates HTTPS at its ingress proxy.
         timeout_graceful_shutdown=10,

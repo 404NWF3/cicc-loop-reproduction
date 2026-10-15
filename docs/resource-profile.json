@@ -1,0 +1,30 @@
+{
+  "status": "passed",
+  "image": "loop-research:railway",
+  "image_id": "sha256:ddf11cd26faaddcaf26a1903b52be965f3b8997cdb215d9fb70e2ffd2bf8b92f",
+  "image_uncompressed_bytes": 248004547,
+  "memory_limit_bytes": 1073741824,
+  "cpu_limit": 1.0,
+  "sampled_memory_peak_bytes": 213868544,
+  "memory_sample_count": 77,
+  "container_writable_layer_bytes": 4587520,
+  "fixture_attempts": 1000,
+  "concurrent_readers": 4,
+  "http_requests": 1944,
+  "http_errors": [],
+  "p95_response_seconds": 0.7706700429998818,
+  "database_bytes": 4587520,
+  "database_limit_mb": 64,
+  "api_and_worker_seconds": 153.73770375000004,
+  "cgroup": {
+    "memory.max": "1073741824",
+    "memory.peak": "219193344",
+    "memory.events": "low 0\nhigh 0\nmax 0\noom 0\noom_kill 0\noom_group_kill 0"
+  },
+  "scipy_installed": false,
+  "venv_bytes": 116734604,
+  "app_bytes": 4943870,
+  "storage_limit_enforced": false,
+  "storage_note": "Image/layer/application bytes measured; Railway 500 MB filesystem quota not emulated.",
+  "scope": "One API + one fixture worker, prebuilt frontend, no market data, no API key, no model calls"
+}

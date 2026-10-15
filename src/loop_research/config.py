@@ -12,6 +12,7 @@ class Settings(BaseSettings):
     state_dir: Path = Field(Path("artifacts/runtime"), validation_alias="LOOP_STATE_DIR")
     data_dir: Path = Field(Path("data"), validation_alias="LOOP_DATA_DIR")
     web_dist: Path = Field(Path("web/dist"), validation_alias="LOOP_WEB_DIST")
+    state_max_mb: int = Field(64, ge=8, le=256, validation_alias="LOOP_STATE_MAX_MB")
     worker_autostart: bool = Field(True, validation_alias="LOOP_WORKER_AUTOSTART")
     fixture_step_seconds: float = Field(
         0.3, ge=0.01, le=5, validation_alias="LOOP_FIXTURE_STEP_SECONDS"
@@ -22,8 +23,14 @@ class Settings(BaseSettings):
         default=SecretStr(""), validation_alias="LOOP_AUTH_PASSWORD", repr=False
     )
     deepseek_api_key: str = Field("", repr=False)
-    deepseek_model: str = ""
+    deepseek_model: str = "deepseek-flash"
     deepseek_base_url: str = "https://api.deepseek.com"
+    live_enabled: bool = Field(True, validation_alias="LOOP_LIVE_ENABLED")
+    cors_origins: str = Field("", validation_alias="LOOP_CORS_ORIGINS")
+    research_token: str = Field("", repr=False, validation_alias="LOOP_RESEARCH_TOKEN")
+    budget_path: Path = Field(
+        Path("artifacts/budgets/deepseek.sqlite3"), validation_alias="LOOP_BUDGET_PATH"
+    )
 
     @model_validator(mode="after")
     def validate_auth(self):

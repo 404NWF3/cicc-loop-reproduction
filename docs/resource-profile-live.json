@@ -1,0 +1,40 @@
+{
+  "status": "passed",
+  "image": "loop-research:pr",
+  "image_id": "sha256:b0c97ddb34d43fe3d0c12bd1b6172ee4c240df28d3537cebeb086969d02704f5",
+  "image_uncompressed_bytes": 252110550,
+  "memory_limit_bytes": 1073741824,
+  "cpu_limit": 1.0,
+  "sampled_memory_peak_bytes": 195289088,
+  "memory_sample_count": 39,
+  "container_writable_layer_bytes": 1626144,
+  "mode": "live",
+  "attempts": 120,
+  "counts": {
+    "generated": 120,
+    "validated": 97,
+    "rejected": 114,
+    "backtested": 70,
+    "accepted": 6,
+    "model_calls": 0,
+    "tokens": 0
+  },
+  "concurrent_readers": 4,
+  "http_requests": 2328,
+  "http_errors": [],
+  "p95_response_seconds": 0.2986845479990734,
+  "database_bytes": 1576960,
+  "database_limit_mb": 64,
+  "api_and_worker_seconds": 77.68683671299914,
+  "cgroup": {
+    "memory.max": "1073741824",
+    "memory.peak": "204541952",
+    "memory.events": "low 0\nhigh 0\nmax 0\noom 0\noom_kill 0\noom_group_kill 0"
+  },
+  "scipy_installed": false,
+  "venv_bytes": 118149371,
+  "app_bytes": 121196957,
+  "storage_limit_enforced": false,
+  "storage_note": "Image/layer/application bytes measured; Railway 500 MB filesystem quota not emulated.",
+  "scope": "One API + one live worker, prebuilt frontend, packaged development snapshot, no API key, no model calls"
+}

@@ -15,6 +15,7 @@ def deployment(tmp_path, monkeypatch):
         _env_file=None,
         state_dir=tmp_path / "volume" / "runtime",
         data_dir=tmp_path / "volume" / "datasets",
+        budget_path=tmp_path / "volume" / "deepseek.sqlite3",
         web_dist=dist,
         auth_required=True,
         auth_username="research",
@@ -40,7 +41,10 @@ def test_missing_frontend_fails_before_startup(deployment):
         validate_deployment(deployment)
 
 
-def test_railway_requires_volume_and_contained_data_directories(deployment, monkeypatch, tmp_path):
+@pytest.mark.parametrize("path_setting", ["state_dir", "data_dir", "budget_path"])
+def test_railway_requires_volume_and_contained_data_directories(
+    deployment, monkeypatch, tmp_path, path_setting
+):
     monkeypatch.setenv("RAILWAY_SERVICE_ID", "test-service")
     with pytest.raises(ValueError, match="持久卷"):
         validate_deployment(deployment)
@@ -48,7 +52,7 @@ def test_railway_requires_volume_and_contained_data_directories(deployment, monk
     volume.mkdir()
     monkeypatch.setenv("RAILWAY_VOLUME_MOUNT_PATH", str(volume))
     assert validate_deployment(deployment) == 8000
-    deployment.data_dir = tmp_path / "ephemeral-data"
+    setattr(deployment, path_setting, tmp_path / "ephemeral-data")
     with pytest.raises(ValueError, match="持久卷内"):
         validate_deployment(deployment)
 

@@ -4,6 +4,7 @@ import asyncio
 import json
 import time
 from dataclasses import dataclass
+from typing import Callable
 
 import httpx
 from pydantic import BaseModel, ValidationError
@@ -36,6 +37,9 @@ class DeepSeekClient:
         settings: Settings,
         budget: CallBudget | None = None,
         transport: httpx.AsyncBaseTransport | None = None,
+        *,
+        thinking_enabled: bool | None = None,
+        recorder: Callable[[dict], None] | None = None,
     ):
         if not settings.deepseek_api_key or not settings.deepseek_model:
             raise ResearchError(
@@ -44,6 +48,8 @@ class DeepSeekClient:
         self.settings = settings
         self.budget = budget or CallBudget()
         self.transport = transport
+        self.thinking_enabled = thinking_enabled
+        self.recorder = recorder
 
     async def list_models(self) -> list[str]:
         async with httpx.AsyncClient(transport=self.transport, timeout=15) as client:
@@ -116,6 +122,17 @@ class DeepSeekClient:
                                 "messages": messages,
                                 "max_tokens": max_tokens,
                                 "response_format": {"type": "json_object"},
+                                **(
+                                    {
+                                        "thinking": {
+                                            "type": "enabled"
+                                            if self.thinking_enabled
+                                            else "disabled"
+                                        }
+                                    }
+                                    if self.thinking_enabled is not None
+                                    else {}
+                                ),
                             },
                             timeout=httpx.Timeout(min(60, remaining), connect=min(10, remaining)),
                         )
@@ -140,6 +157,19 @@ class DeepSeekClient:
                     body = response.json()
                     usage = body.get("usage", {})
                     self.budget.settle(reserve, usage.get("total_tokens"))
+                    if self.recorder:
+                        self.recorder(
+                            {
+                                "messages": messages,
+                                "model": body.get("model", self.settings.deepseek_model),
+                                "request_id": body.get("id"),
+                                "usage": usage,
+                                "seconds": time.monotonic() - started,
+                                "attempt": attempt,
+                                "content": body["choices"][0]["message"].get("content"),
+                                "finish_reason": body["choices"][0].get("finish_reason"),
+                            }
+                        )
                     parsed = schema.model_validate_json(body["choices"][0]["message"]["content"])
                     return {
                         "output": parsed.model_dump(),
