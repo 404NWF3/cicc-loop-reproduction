@@ -48,6 +48,37 @@ class Store:
                     type TEXT NOT NULL, payload TEXT NOT NULL, created_at TEXT NOT NULL
                 );
                 CREATE INDEX IF NOT EXISTS event_run ON events(run_id,id);
+                CREATE TABLE IF NOT EXISTS model_records (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    run_id TEXT NOT NULL REFERENCES runs(id), payload TEXT NOT NULL
+                );
+                CREATE INDEX IF NOT EXISTS model_record_run ON model_records(run_id,id);
+                CREATE TABLE IF NOT EXISTS run_counts (
+                    run_id TEXT PRIMARY KEY REFERENCES runs(id), generated INTEGER NOT NULL,
+                    validated INTEGER NOT NULL, backtested INTEGER NOT NULL,
+                    accepted INTEGER NOT NULL, novel INTEGER NOT NULL, awaiting INTEGER NOT NULL
+                );
+                INSERT OR IGNORE INTO run_counts
+                    SELECT r.id, count(c.id),
+                        coalesce(sum(json_type(c.payload,'$.validation')='object'),0),
+                        coalesce(sum(json_type(c.payload,'$.metrics')='object'),0),
+                        coalesce(sum(json_extract(c.payload,'$.accepted')=1),0),
+                        coalesce(sum(json_extract(c.payload,'$.accepted')=1 AND
+                            json_extract(c.payload,'$.origin')!='archive_seed'),0),
+                        coalesce(sum(json_extract(c.payload,'$.status')='awaiting_data'),0)
+                    FROM runs r LEFT JOIN candidates c ON r.id=c.run_id
+                    WHERE r.id NOT IN (SELECT run_id FROM run_counts) GROUP BY r.id;
+                CREATE TRIGGER IF NOT EXISTS count_candidate AFTER INSERT ON candidates BEGIN
+                    INSERT OR IGNORE INTO run_counts VALUES(NEW.run_id,0,0,0,0,0,0);
+                    UPDATE run_counts SET generated=generated+1,
+                        validated=validated+coalesce(json_type(NEW.payload,'$.validation')='object',0),
+                        backtested=backtested+coalesce(json_type(NEW.payload,'$.metrics')='object',0),
+                        accepted=accepted+coalesce(json_extract(NEW.payload,'$.accepted')=1,0),
+                        novel=novel+coalesce(json_extract(NEW.payload,'$.accepted')=1 AND
+                            json_extract(NEW.payload,'$.origin')!='archive_seed',0),
+                        awaiting=awaiting+coalesce(json_extract(NEW.payload,'$.status')='awaiting_data',0)
+                    WHERE run_id=NEW.run_id;
+                END;
                 CREATE TABLE IF NOT EXISTS worker_lease (
                     id INTEGER PRIMARY KEY CHECK(id=1), token TEXT NOT NULL,
                     expires REAL NOT NULL
@@ -129,16 +160,22 @@ class Store:
                 )
         return self.get(run_id)
 
-    def get(self, run_id: str) -> dict:
+    def get(self, run_id: str, *, internal: bool = False) -> dict:
         with self.connection() as db:
             row = self._require(db, run_id)
-            counts = db.execute(
-                "SELECT payload FROM candidates WHERE run_id=?", (run_id,)
-            ).fetchall()
+            counts = db.execute("SELECT * FROM run_counts WHERE run_id=?", (run_id,)).fetchone()
+            if counts is None:
+                counts = dict.fromkeys(
+                    ["generated", "validated", "backtested", "accepted", "novel", "awaiting"], 0
+                )
         config = json.loads(row["config"])
-        candidates = [json.loads(r[0]) for r in counts]
         live = config["mode"] == "live"
         checkpoint = json.loads(row["checkpoint"])
+        if not internal:
+            checkpoint = {
+                key: value for key, value in checkpoint.items()
+                if key not in {"fsa", "model_records", "model_candidates"}
+            }
         return {
             "id": row["id"],
             "config": config,
@@ -152,15 +189,12 @@ class Store:
             if live
             else config["rounds"] * config["batch_size"],
             "counts": {
-                "generated": len(candidates),
-                "validated": sum(bool(c.get("validation")) for c in candidates)
-                if live
-                else sum(c["status"] == "awaiting_data" for c in candidates),
-                "rejected": sum(not c.get("accepted", False) for c in candidates)
-                if live
-                else sum(c["status"] != "awaiting_data" for c in candidates),
-                "backtested": sum(c.get("metrics") is not None for c in candidates),
-                "accepted": sum(c.get("accepted", False) for c in candidates),
+                "generated": counts["generated"],
+                "validated": counts["validated"] if live else counts["awaiting"],
+                "rejected": counts["generated"] - (counts["accepted"] if live else counts["awaiting"]),
+                "backtested": counts["backtested"],
+                "accepted": counts["accepted"],
+                "novel": counts["novel"],
                 "model_calls": checkpoint.get("model_requests", 0),
                 "tokens": checkpoint.get("model_tokens", 0),
             },
@@ -277,7 +311,10 @@ class Store:
                 (time.time() + 10, token, time.time()),
             )
 
-    def checkpoint(self, run: dict, checkpoint: dict, token: str, message: str) -> bool:
+    def checkpoint(
+        self, run: dict, checkpoint: dict, token: str, message: str,
+        *, model_record: dict | None = None,
+    ) -> bool:
         with self.connection(write=True) as db:
             if not self._has_lease(db, token):
                 return False
@@ -295,6 +332,11 @@ class Store:
                 "UPDATE runs SET checkpoint=?,updated_at=? WHERE id=?",
                 (encode(checkpoint), now(), run["id"]),
             )
+            if model_record is not None:
+                db.execute(
+                    "INSERT INTO model_records(run_id,payload) VALUES(?,?)",
+                    (run["id"], encode(model_record)),
+                )
             self._event(
                 db, run["id"], "run.stage", {"message": message, "stage": checkpoint.get("stage")}
             )
@@ -348,7 +390,7 @@ class Store:
                 db.execute(
                     "UPDATE runs SET started_at=COALESCE(started_at,?) WHERE id=?", (now(), run_id)
                 )
-        return self.get(run_id)
+        return self.get(run_id, internal=True)
 
     def finish(self, run_id: str, state: str, token: str, message: str):
         with self.connection(write=True) as db:
@@ -406,13 +448,37 @@ class Store:
             )
         return True
 
-    def candidates(self, run_id: str) -> list[dict]:
+    def candidates(
+        self, run_id: str, *, after: int = 0, limit: int | None = None, compact: bool = False,
+        status: str | None = None, strategy: str | None = None,
+    ) -> list[dict]:
         with self.connection() as db:
             self._require(db, run_id)
-            rows = db.execute(
-                "SELECT payload FROM candidates WHERE run_id=? ORDER BY ordinal", (run_id,)
-            ).fetchall()
+            # Stored ordinals are zero based; the API cursor is the last one-based ordinal.
+            query = "SELECT " + (
+                "json_remove(payload,'$.series','$.gates','$.validation.tree')"
+                if compact else "payload"
+            ) + " FROM candidates WHERE run_id=? AND ordinal>=?"
+            values = [run_id, after]
+            for field, value in [("status", status), ("strategy", strategy)]:
+                if value is not None:
+                    query += f" AND json_extract(payload,'$.{field}')=?"
+                    values.append(value)
+            query += " ORDER BY ordinal"
+            if limit is not None:
+                query += " LIMIT ?"
+                values.append(limit)
+            rows = db.execute(query, values).fetchall()
         return [json.loads(row[0]) for row in rows]
+
+    def model_records(self, run_id: str) -> list[dict]:
+        with self.connection() as db:
+            run = self._require(db, run_id)
+            legacy = json.loads(run["checkpoint"]).get("model_records", [])
+            rows = db.execute(
+                "SELECT payload FROM model_records WHERE run_id=? ORDER BY id", (run_id,)
+            ).fetchall()
+        return legacy + [json.loads(row[0]) for row in rows]
 
     def candidate(self, candidate_id: str) -> dict:
         with self.connection() as db:

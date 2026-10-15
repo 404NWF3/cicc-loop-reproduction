@@ -43,22 +43,31 @@ export function useRun(runId: string) {
   useEffect(() => {
     let alive = true;
     let refreshing = false;
+    let lastRefresh = 0;
+    let candidateCursor = 0;
+    let loaded: Candidate[] = [];
     setRun(undefined);
     setCandidates([]);
     setEvents([]);
     setError('');
     const load = async () => {
-      if (refreshing) return;
+      if (refreshing || !alive || Date.now() - lastRefresh < 750) return;
       refreshing = true;
+      lastRefresh = Date.now();
       try {
-        const [r, c] = await Promise.all([
-          api<Run>(`/runs/${runId}`),
-          api<{ items: Candidate[] }>(`/runs/${runId}/factors`),
-        ]);
+        const r = await api<Run>(`/runs/${runId}`);
         if (alive) {
           setRun(r);
-          setCandidates(c.items);
           setError('');
+        }
+        while (alive && candidateCursor < r.cursor) {
+          const c = await api<{ items: Candidate[]; next_after: number }>(
+            `/runs/${runId}/factors?after=${candidateCursor}&limit=100`,
+          );
+          if (!c.items.length || c.next_after <= candidateCursor) break;
+          candidateCursor = c.next_after;
+          loaded = [...loaded, ...c.items];
+          if (alive) setCandidates(loaded);
         }
       } catch (e) {
         if (alive) setError(messageOf(e));

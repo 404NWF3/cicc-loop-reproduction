@@ -4,16 +4,17 @@
 
 | 项目 | 最终镜像实测 |
 | --- | ---: |
-| cgroup 内存峰值 | **195.1MiB**（204,541,952 字节） |
-| 未压缩最终镜像 | **252.11MB** |
-| 生产 Python 环境 | 118.15MB |
-| 完成任务后的数据库 / 可写层 | 1.58MB / 1.63MB |
-| 候选处理 / 实际回测 | 120 / 70 |
+| cgroup 内存峰值 | **264.7MiB**（277,557,248 字节） |
+| 未压缩最终镜像 | **252.12MB** |
+| 生产 Python 环境 | 118.16MB |
+| 完成任务后的数据库 / 可写层 | 10.72MB / 10.74MB |
+| 候选处理 / 实际回测 | 1,200 / 366 |
 | 本次入库 | 6 个归档种子复算，0 个新候选 |
 | 并发读取客户端 | 4 |
-| HTTP 读取次数 / 错误 | 2,328 / 0 |
-| HTTP 响应 P95 | 0.299 秒 |
-| 任务与并发读取总耗时 | 77.7 秒 |
+| HTTP 读取次数 / 错误 | 27,144 / 0 |
+| HTTP 响应 P95 | 0.051 秒 |
+| 任务与并发读取总耗时 | 232.2 秒 |
+| 分页核对 / 完整 JSON 导出 | 1,200 条无重复、无遗漏 / 8.73MB |
 | OOM / OOM kill | 0 / 0 |
 | DeepSeek 调用 | 0 |
 
@@ -42,8 +43,8 @@ docker build -t loop-research:live .
 uv run python scripts/profile_demo.py --image loop-research:live --mode live
 ```
 
-生产 Dockerfile 使用普通依赖安装命令，保留 Railway 不支持 secret mount 的兼容修复。当前工作区通过临时构建文件将公开代理 CA 仅加入构建阶段，保持 TLS 校验；该临时文件和 CA 不提交，也不进入运行镜像。GitHub CI 直接构建仓库中的 Dockerfile。
+生产 Dockerfile 使用普通依赖安装命令，保留 Railway 不支持 secret mount 的兼容修复。当前工作区在临时构建文件中通过 secret mount 为依赖安装挂载公开代理 CA，保持 TLS 校验；该临时文件和 CA 不提交，也不进入镜像层。GitHub CI 直接构建仓库中的 Dockerfile。
 
-脚本不向容器传递 DeepSeek 凭据，真实执行 120 个候选的历史计算；并行运行四个读取客户端。完成后删除测试容器，保留统计 JSON。`--mode fixture` 仍可运行旧 1,000 候选的流程测试。
+脚本不向容器传递 DeepSeek 凭据，真实执行 1,200 个候选的历史计算；并行运行四个读取客户端，结束后核对游标分页与完整 JSON 导出。完成后删除测试容器，保留统计 JSON。`--mode fixture` 仍可运行旧 1,000 候选的流程测试。
 
 此前纯 fixture 版本的 209MiB 峰值与 248MB 镜像测量仍保存在 [resource-profile.json](resource-profile.json)，不作为当前真实计算版本的资源结论。

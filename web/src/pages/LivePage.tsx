@@ -27,6 +27,7 @@ export interface LiveStatus {
     hard_cap_cny: number;
     requests: number;
     unresolved_requests: number;
+    remaining_upper_bound_cny: number;
   };
 }
 const number = (v: number | null | undefined, digits = 3) => (v == null ? '—' : v.toFixed(digits));
@@ -175,7 +176,15 @@ export function LiveRun({ id }: { id: string }) {
   const [selected, setSelected] = useState('');
   const [actionError, setActionError] = useState('');
   const [busy, setBusy] = useState(false);
+  const [candidatePage, setCandidatePage] = useState<number | null>(null);
+  const pageCount = Math.max(1, Math.ceil(candidates.length / 60));
+  const pageIndex = candidatePage === null ? pageCount - 1 : Math.min(candidatePage, pageCount - 1);
+  const visibleCandidates = candidates.slice(pageIndex * 60, (pageIndex + 1) * 60);
   const candidate = candidates.find((c) => c.id === selected) ?? candidates.at(-1);
+  const browsePage = (page: number | null) => {
+    setCandidatePage(page);
+    setSelected(page === null ? '' : (candidates[page * 60]?.id ?? ''));
+  };
   const action = async (name: string) => {
     setBusy(true);
     setActionError('');
@@ -209,7 +218,7 @@ export function LiveRun({ id }: { id: string }) {
         <Loading />
       </>
     );
-  const novel = candidates.filter((c) => c.accepted && c.origin !== 'archive_seed').length;
+  const novel = run.counts.novel;
   return (
     <div className="live-workspace">
       <section className="panel live-progress">
@@ -244,6 +253,18 @@ export function LiveRun({ id }: { id: string }) {
           </div>
         </div>
         <progress value={run.cursor} max={run.target} aria-label="实时挖掘进度" />
+        <div className="live-run-budget">
+          <span>
+            本次模型费用上界 <b>¥{number(Number(run.checkpoint.model_cost_upper_cny ?? 0))}</b> / ¥
+            {run.config.max_model_cny ?? 0.5}
+          </span>
+          <span>
+            {run.config.generator === 'deepseek'
+              ? `模型批次 ${run.checkpoint.model_batch ?? 0} · `
+              : ''}
+            时间上限 {Math.round(run.config.max_seconds / 60)} 分钟
+          </span>
+        </div>
         <div className="live-section-title">
           <p role="status">
             <Radio size={13} />{' '}
@@ -301,7 +322,7 @@ export function LiveRun({ id }: { id: string }) {
             </div>
             <div className="live-candidate-list">
               {candidates.length ? (
-                candidates.map((c) => (
+                visibleCandidates.map((c) => (
                   <button
                     key={c.id}
                     className={`live-candidate ${candidate?.id === c.id ? 'active' : ''}`}
@@ -326,6 +347,30 @@ export function LiveRun({ id }: { id: string }) {
                 <p className="live-empty-list">候选正在准备，事件流会显示当前步骤。</p>
               )}
             </div>
+            {pageCount > 1 && (
+              <nav className="live-pagination" aria-label="候选分页">
+                <button
+                  type="button"
+                  disabled={pageIndex === 0}
+                  onClick={() => browsePage(pageIndex - 1)}
+                >
+                  上一页
+                </button>
+                <span>
+                  {pageIndex + 1} / {pageCount} 页
+                </span>
+                <button
+                  type="button"
+                  disabled={pageIndex === pageCount - 1}
+                  onClick={() => browsePage(pageIndex + 1)}
+                >
+                  下一页
+                </button>
+                <button type="button" onClick={() => browsePage(null)}>
+                  跟随最新
+                </button>
+              </nav>
+            )}
           </section>
           <section className="panel live-events">
             <div className="live-section-title">
@@ -361,7 +406,9 @@ export function LivePage() {
   const status = useResource<LiveStatus>('/live/status', 3000);
   const history = useResource<{ items: Run[] }>('/runs', 4000);
   const [generator, setGenerator] = useState<'local' | 'deepseek'>('local');
-  const [count, setCount] = useState(36);
+  const [count, setCount] = useState(1200);
+  const [modelBudget, setModelBudget] = useState(5);
+  const [minutes, setMinutes] = useState(60);
   const [seed, setSeed] = useState(42);
   const [token, setToken] = useState(sessionStorage.getItem('loop-research-token') ?? '');
   const [error, setError] = useState('');
@@ -378,13 +425,13 @@ export function LivePage() {
           name: `现场研究 · ${generator === 'local' ? '本地搜索' : 'DeepSeek'}`,
           mode: 'live',
           generator,
-          rounds: Math.ceil(count / 6),
-          batch_size: 6,
+          rounds: Math.ceil(count / 12),
+          batch_size: 12,
           max_candidates: count,
-          max_seconds: 300,
+          max_seconds: minutes * 60,
           seed,
           fsa_enabled: true,
-          max_model_cny: 0.5,
+          max_model_cny: modelBudget,
         },
         { 'Idempotency-Key': crypto.randomUUID() },
       );
@@ -443,7 +490,7 @@ export function LivePage() {
             <ShieldCheck size={18} />
             <span>
               <strong>DeepSeek 引导</strong>
-              <small>生成与审查 · 单次上限 ¥0.50</small>
+              <small>逐批生成 · 独立审查 · 结果反馈</small>
             </span>
           </button>
         </div>
@@ -454,8 +501,24 @@ export function LivePage() {
             value={count}
             onChange={(e) => setCount(Number(e.target.value))}
           >
-            {[12, 24, 36, 60, 120].map((n) => (
-              <option key={n}>{n}</option>
+            {[24, 36, 120, 300, 600, 1200].map((n) => (
+              <option key={n} value={n}>
+                {n.toLocaleString()}
+              </option>
+            ))}
+          </select>
+        </label>
+        <label className="field">
+          时间上限
+          <select
+            aria-label="时间上限"
+            value={minutes}
+            onChange={(e) => setMinutes(Number(e.target.value))}
+          >
+            {[15, 30, 60].map((n) => (
+              <option key={n} value={n}>
+                {n} 分钟
+              </option>
             ))}
           </select>
         </label>
@@ -469,6 +532,22 @@ export function LivePage() {
             onChange={(e) => setSeed(Number(e.target.value))}
           />
         </label>
+        {generator === 'deepseek' && (
+          <label className="field">
+            单次模型预算
+            <select
+              aria-label="单次模型预算"
+              value={modelBudget}
+              onChange={(e) => setModelBudget(Number(e.target.value))}
+            >
+              {[1, 3, 5, 10].map((n) => (
+                <option key={n} value={n}>
+                  ¥{n.toFixed(2)}
+                </option>
+              ))}
+            </select>
+          </label>
+        )}
         {generator === 'deepseek' && (
           <label className="field live-password">
             演示口令
@@ -494,6 +573,11 @@ export function LivePage() {
           <Play size={16} />
           {busy ? '正在启动…' : '开始现场挖掘'}
         </button>
+        <p className="live-launch-note">
+          {generator === 'deepseek'
+            ? `计划处理 ${count.toLocaleString()} 个候选，每批最多 12 个。每批重新生成、独立审查，并反馈开发期结果。单次预算 ¥${modelBudget}，达到候选、时间或费用上限即停止，按实际调用计费。`
+            : `计划处理 ${count.toLocaleString()} 个候选，本地计算免费。大任务可保持运行、暂停或刷新后继续查看。`}
+        </p>
         {generator === 'deepseek' && !status.data?.model_ready && (
           <p className="live-launch-note">
             模型模式需在服务端配置 DeepSeek 密钥和演示口令。本地搜索现在即可运行。
@@ -503,9 +587,11 @@ export function LivePage() {
       </form>
       <div className="live-budget-line">
         <span>
-          共享账本累计保守费用 <b>¥{number(status.data?.budget.cost_upper_bound_cny)}</b> / ¥40
+          共享账本累计保守费用 <b>¥{number(status.data?.budget.cost_upper_bound_cny)}</b> / ¥
+          {status.data?.budget.hard_cap_cny ?? 40}
+          {' · '}剩余额度 ¥{number(status.data?.budget.remaining_upper_bound_cny, 2)}
         </span>
-        <span>每次最多 120 个候选 · 单任务顺序计算 · 可暂停与恢复</span>
+        <span>每次最多 1,200 个候选 · 单任务顺序计算 · 可暂停与恢复</span>
       </div>
       {runId ? (
         <LiveRun key={runId} id={runId} />

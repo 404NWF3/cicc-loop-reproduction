@@ -210,8 +210,11 @@ def create_app(settings: Settings | None = None) -> FastAPI:
             "budget": budget_for(settings).summary(),
             "model_ready": bool(settings.deepseek_api_key and settings.research_token),
             "model_id": "deepseek-flash",
-            "max_candidates": 120,
-            "max_seconds": 600,
+            "max_candidates": 1200,
+            "max_seconds": 3600,
+            "default_model_cny": 5,
+            "max_model_cny": 10,
+            "model_batch_size": 12,
             "notice": "现场重算历史数据；2014–2015 为开发筛选期，不使用留出期调参。",
         }
 
@@ -271,15 +274,21 @@ def create_app(settings: Settings | None = None) -> FastAPI:
         return store.control(run_id, action)
 
     @app.get("/api/v1/runs/{run_id}/factors")
-    def list_factors(run_id: str, status: str | None = None, strategy: str | None = None):
-        items = store.candidates(run_id)
+    def list_factors(
+        run_id: str, status: str | None = None, strategy: str | None = None,
+        after: int = Query(0, ge=0), limit: int | None = Query(None, ge=1, le=200),
+    ):
+        items = store.candidates(
+            run_id, after=after, limit=limit + 1 if limit else None,
+            status=status, strategy=strategy,
+        )
+        has_more = limit is not None and len(items) > limit
+        if limit is not None:
+            items = items[:limit]
         return {
-            "items": [
-                c
-                for c in items
-                if (not status or c["status"] == status)
-                and (not strategy or c["strategy"] == strategy)
-            ]
+            "items": items,
+            "next_after": items[-1]["ordinal"] if items else after,
+            "has_more": has_more,
         }
 
     @app.get("/api/v1/factors/{candidate_id}")
@@ -292,8 +301,9 @@ def create_app(settings: Settings | None = None) -> FastAPI:
         return {
             "kind": "live_development_record" if live else "fixture_record",
             "is_experiment": live,
-            "run": store.get(run_id),
+            "run": store.get(run_id, internal=True),
             "candidates": store.candidates(run_id),
+            "model_records": store.model_records(run_id),
             "notice": "历史开发快照上的真实计算；已知研究种子与新候选分别标注，不代表样本外收益。"
             if live
             else "仅为框架演示记录，不包含任何真实市场回测或模型效果。",

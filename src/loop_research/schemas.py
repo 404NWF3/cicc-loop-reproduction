@@ -27,25 +27,27 @@ class RunConfig(BaseModel):
 
     name: str = Field("本地流程演示", min_length=1, max_length=80)
     mode: Literal["fixture", "live"] = "fixture"
-    rounds: int = Field(3, ge=1, le=50)
+    rounds: int = Field(3, ge=1, le=200)
     batch_size: int = Field(6, ge=1, le=20)
     seed: int = Field(42, ge=0, le=2**31 - 1)
     fsa_enabled: bool = True
-    max_candidates: int = Field(100, ge=1, le=1000)
-    max_seconds: int = Field(600, ge=5, le=1800)
+    max_candidates: int = Field(100, ge=1, le=1200)
+    max_seconds: int = Field(600, ge=5, le=3600)
     dataset_id: str | None = Field(None, pattern=r"^[a-zA-Z0-9_-]{1,64}$")
     generator: Literal["local", "deepseek"] = "local"
-    max_model_cny: float = Field(0.5, gt=0, le=1)
+    max_model_cny: float = Field(5, gt=0, le=10)
 
     @model_validator(mode="after")
     def bounded_live_run(self):
         if self.mode == "live" and (
-            self.rounds * self.batch_size > 120
-            or self.max_candidates > 120
-            or self.max_seconds > 600
+            self.rounds * self.batch_size > 1200
             or self.batch_size > 12
         ):
-            raise ValueError("现场挖掘每次最多 120 个候选、600 秒、每批 12 个")
+            raise ValueError("现场挖掘每次最多 1,200 个候选、3,600 秒、每批 12 个")
+        if self.mode == "fixture" and (
+            self.rounds > 50 or self.max_candidates > 1000 or self.max_seconds > 1800
+        ):
+            raise ValueError("流程演示最多 50 轮、1,000 个候选、1,800 秒")
         return self
 
     @field_validator("name")
