@@ -17,8 +17,12 @@
 !web/index.html
 !web/src/
 !web/src/**
+!web/presentation/
+!web/presentation/**
 !web/public/
 !web/public/**
+web/public/presentation/deck.html
+web/public/presentation/source/
 **/__pycache__/
 **/*.py[cod]
 **/.env

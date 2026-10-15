@@ -1,0 +1,100 @@
+[
+  {
+    "title": "因子工厂",
+    "theme": "hero dark",
+    "layout": "A01",
+    "purpose": "建立研究生产方式这一主线，区分自动化流程与有效投资信号。",
+    "transition": "先看研究中真正稀缺的步骤。"
+  },
+  {
+    "title": "搜索悖论",
+    "theme": "light",
+    "layout": "A04",
+    "purpose": "说明候选供给扩大时，多重检验问题也会扩大。",
+    "transition": "要讨论搜索，先明确一个因子究竟是什么。"
+  },
+  {
+    "title": "一个因子",
+    "theme": "light",
+    "layout": "A10",
+    "purpose": "把抽象假设落实到股票排序、信号时点和执行成本。",
+    "transition": "让这样的假设进入一个能够持续运行的循环。"
+  },
+  {
+    "title": "研究闭环",
+    "theme": "hero dark",
+    "layout": "A06",
+    "purpose": "区分模型提出假设、独立审查与确定性程序验证的职责。",
+    "transition": "循环需要决定下一批候选从哪些方向产生。"
+  },
+  {
+    "title": "探索与利用",
+    "theme": "light",
+    "layout": "A09",
+    "purpose": "说明五种初始策略如何分配探索与利用的预算。",
+    "transition": "候选生成之后，需要一组共同满足的入库条件。"
+  },
+  {
+    "title": "入库门槛",
+    "theme": "dark",
+    "layout": "A10",
+    "purpose": "区分材料明确条件与本地补充工程检查，并说明联合筛选。",
+    "transition": "数值条件之外，搜索还要避免结构重复。"
+  },
+  {
+    "title": "拒绝同构",
+    "theme": "hero light",
+    "layout": "A10",
+    "purpose": "解释参数去重与结构去重的区别，以及 FSA 的局限。",
+    "transition": "现在回到材料披露的完整搜索规模。"
+  },
+  {
+    "title": "万中取几",
+    "theme": "dark",
+    "layout": "A03",
+    "purpose": "将搜索吞吐量、入选比例与收益证据分开。",
+    "transition": "留下来的因子在披露的历史回测中表现如何？"
+  },
+  {
+    "title": "收益证据",
+    "theme": "light",
+    "layout": "A09",
+    "purpose": "准确展示材料中的两类统计对象，不补造未披露净值。",
+    "transition": "这些不同的公式，是否仍在使用相似信息？"
+  },
+  {
+    "title": "共同信号",
+    "theme": "light",
+    "layout": "A03",
+    "purpose": "揭示信息来源集中，避免将重叠字段频率误作互斥占比。",
+    "transition": "本地检验把同一批因子带进未参与筛选的下一段时间。"
+  },
+  {
+    "title": "样本外",
+    "theme": "hero dark",
+    "layout": "A10",
+    "purpose": "展示冻结后的退化结果，避免把开发期入库当作稳健性证明。",
+    "transition": "除了时间上的失效，还要考虑共同使用带来的市场风险。"
+  },
+  {
+    "title": "共同拥挤",
+    "theme": "light",
+    "layout": "A06",
+    "purpose": "提出跨机构持仓同质化与流动性反馈的研究问题。",
+    "transition": "回到可操作的研究引擎，检查一条候选的完整证据。"
+  },
+  {
+    "title": "现场检验",
+    "theme": "dark",
+    "layout": "A04",
+    "purpose": "引导观众进入历史快照计算，辨认种子复算与新发现。",
+    "transition": "从一次可运行的演示，回到能够经受反证的研究标准。"
+  },
+  {
+    "title": "证据至上",
+    "theme": "hero light",
+    "layout": "A08",
+    "purpose": "收束为时间检验、可复核性与共同使用的三个后续问题。",
+    "transition": "以公开公式、冻结协议和如实报告失败继续研究。"
+  }
+]
