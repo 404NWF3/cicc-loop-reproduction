@@ -20,3 +20,7 @@ web/playwright-report/
 *.log
 *.tsbuildinfo
 .DS_Store
+
+# Generated from the licensed deck template and research sources.
+web/public/presentation/deck.html
+web/public/presentation/source/

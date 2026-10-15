@@ -11,8 +11,8 @@
     "build": "npm run build --workspace web",
     "typecheck": "npm run typecheck --workspace web",
     "test:e2e": "npm run test:e2e --workspace web",
-    "format": "prettier --write web/src web/e2e web/playwright.config.ts web/vite.config.ts scripts/dev.mjs",
-    "format:check": "prettier --check web/src web/e2e web/playwright.config.ts web/vite.config.ts scripts/dev.mjs"
+    "format": "prettier --write web/src web/presentation web/e2e web/playwright.config.ts web/vite.config.ts scripts/dev.mjs",
+    "format:check": "prettier --check web/src web/presentation web/e2e web/playwright.config.ts web/vite.config.ts scripts/dev.mjs"
   },
   "devDependencies": {
     "prettier": "^3.9.10"

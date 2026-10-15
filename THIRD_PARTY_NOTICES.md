@@ -1,6 +1,6 @@
 # 第三方参考与依赖
 
-本次提交的引擎、后端与页面代码为本项目新写。材料提供研究机制与目标，不构成对原机构内部代码或实际效果的验证。
+引擎、后端与研究图表为本项目编写；网页演示模板来源另列于下。材料提供研究机制与目标，不构成对原机构内部代码或实际效果的验证。
 
 ## 研究参考
 
@@ -31,3 +31,7 @@ SciPy（BSD-3-Clause）仅用于开发环境的独立 IC/费用求解核对，�
 三张照片使用 Commons 提供的缩略文件，原文件不修改；页面通过 CSS 裁切显示。照片及其显示裁切部分遵循原授权，CC BY-SA 4.0 见 https://creativecommons.org/licenses/by-sa/4.0/ 。完整作者、授权、来源与缩略图 URL 在 `web/public/presentation/sources.json`，页面「资料」面板可直接查看。CERN 和 NYSE 图片仅作概念与背景配图，不代表中金内部设备或场景。
 
 [R2D3](https://r2d3.us/visual-intro-to-machine-learning-part-1/) 仅作为用户指定的视觉叙事参考，未复制插图、文案或源代码。图表由本项目按注明来源重绘；本地 23 因子的配对图源于实际归档结果。
+
+## 网页演示模板
+
+研究演示采用 [guizang-ppt-skill](https://github.com/op7418/guizang-ppt-skill) 的 Style A，固定 commit `c91369c449d34755d320a8b81d0734000d99d1ab`，Copyright © 2026 op7418，AGPL-3.0。上游模板原样保存在 `web/presentation/template.html`；适配代码、研究布局与生成演示遵循同一许可。修改包括本地字体与图标、静态背景、研究内容、网站通信、键盘无障碍与手机阅读。完整许可保存在 `web/public/presentation/licenses/AGPL-3.0.txt`；当前部署的对应源码与许可从演示「资料」面板可查看，构建时生成到 `/presentation/source/`。不复制技能赞助信息到演示。

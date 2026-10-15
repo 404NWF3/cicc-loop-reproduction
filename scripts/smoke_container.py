@@ -98,10 +98,29 @@ def main():
         print("PASS: image refuses startup without credentials", flush=True)
         docker("volume", "create", volume)
         name, base = start("-first")
-        for path in ("/", "/console", "/docs", "/openapi.json", "/api/v1/runs"):
+        for path in (
+            "/",
+            "/console",
+            "/docs",
+            "/openapi.json",
+            "/api/v1/runs",
+            "/presentation/deck.html",
+            "/presentation/source/index.html",
+        ):
             assert request(base, path, authorized=False)[0] == 401, path
         status, body = request(base, "/console")
         assert status == 200 and b'<div id="root">' in body
+        status, body = request(base, "/presentation/deck.html")
+        assert status == 200 and body.count(b'aria-roledescription="') == 14
+        assert "因子工厂".encode() in body and b"cdn.jsdelivr.net" not in body
+        for path, marker in (
+            ("/presentation/source/index.html", b"AGPL-3.0"),
+            ("/presentation/source/deck.html.txt", b"SPEAKER_NOTES"),
+            ("/presentation/licenses/AGPL-3.0.txt", b"GNU AFFERO GENERAL PUBLIC LICENSE"),
+        ):
+            status, body = request(base, path)
+            assert status == 200 and marker in body, path
+        print("PASS: built research deck, corresponding source and license are served", flush=True)
         assert request(base, "/api/v1/runs", {}, origin="https://unrelated.example")[0] == 403
         status, body = request(
             base,
