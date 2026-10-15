@@ -15,8 +15,8 @@ node_modules/
 web/dist/
 web/test-results/
 web/playwright-report/
-data/
-artifacts/
+/data/
+/artifacts/
 *.log
 *.tsbuildinfo
 .DS_Store

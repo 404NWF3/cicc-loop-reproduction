@@ -94,7 +94,7 @@ def main():
 
     try:
         result = docker("run", "--rm", args.image, check=False)
-        assert result.returncode != 0 and "LOOP_AUTH_USERNAME" in result.stderr
+        assert result.returncode != 0 and "LOOP_AUTH_USERNAME" in result.stderr, result.stderr
         print("PASS: image refuses startup without credentials", flush=True)
         docker("volume", "create", volume)
         name, base = start("-first")
