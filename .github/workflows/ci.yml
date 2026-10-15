@@ -1,0 +1,32 @@
+name: Code checks
+on: [push, pull_request]
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v6
+        with:
+          python-version: '3.12'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+      - run: uv sync --frozen
+      - run: uv run ruff check src tests scripts/smoke_container.py
+      - run: uv run pytest
+      - run: npm ci
+      - run: npm run format:check
+      - run: npm run build
+      - run: npm exec --workspace web -- playwright install --with-deps chromium
+      - run: npm run test:e2e
+
+  container:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: docker build --tag loop-research:smoke .
+      - run: python3 scripts/smoke_container.py --image loop-research:smoke

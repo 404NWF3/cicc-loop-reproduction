@@ -1,0 +1,7 @@
+node_modules
+web/dist
+web/test-results
+web/playwright-report
+package-lock.json
+SPEC.md
+uv.lock

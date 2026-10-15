@@ -1,0 +1,25 @@
+# Only build inputs are sent to the daemon. No secrets, data, Git or test output.
+**
+!Dockerfile
+!package.json
+!package-lock.json
+!pyproject.toml
+!uv.lock
+!THIRD_PARTY_NOTICES.md
+!configs/
+!configs/**
+!src/
+!src/**
+!web/
+!web/package.json
+!web/tsconfig.json
+!web/vite.config.ts
+!web/index.html
+!web/src/
+!web/src/**
+!web/public/
+!web/public/**
+**/__pycache__/
+**/*.py[cod]
+**/.env
+**/.env.*

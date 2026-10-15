@@ -1,0 +1,9 @@
+# A control-flow fixture. No market data, backtest, or external model request.
+name: 本地流程演示
+mode: fixture
+rounds: 3
+batch_size: 6
+seed: 42
+fsa_enabled: true
+max_candidates: 100
+max_seconds: 600
