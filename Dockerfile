@@ -4,10 +4,7 @@ FROM node:24-bookworm-slim AS frontend
 WORKDIR /app
 COPY package.json package-lock.json ./
 COPY web/package.json ./web/package.json
-# Optional CA is only for builds behind an HTTPS proxy; Railway needs no secret.
-RUN --mount=type=secret,id=proxy_ca \
-    if [ -f /run/secrets/proxy_ca ]; then export NODE_EXTRA_CA_CERTS=/run/secrets/proxy_ca; fi; \
-    npm ci --no-audit --no-fund
+RUN npm ci --no-audit --no-fund
 COPY web/ ./web/
 RUN npm run build
 
@@ -18,9 +15,7 @@ WORKDIR /app
 ENV UV_LINK_MODE=copy UV_PYTHON_DOWNLOADS=never
 COPY pyproject.toml uv.lock ./
 COPY src/ ./src/
-RUN --mount=type=secret,id=proxy_ca \
-    if [ -f /run/secrets/proxy_ca ]; then export SSL_CERT_FILE=/run/secrets/proxy_ca; fi; \
-    uv sync --frozen --no-dev --no-editable
+RUN uv sync --frozen --no-dev --no-editable
 
 FROM python:3.12-slim-bookworm AS runtime
 WORKDIR /app

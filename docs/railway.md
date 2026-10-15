@@ -4,7 +4,7 @@
 
 ## 1. 从 GitHub 创建服务
 
-1. 将本 PR 合并到 `main`，或直接选择已推送的 `codex/railway-deployment` 分支试部署。
+1. 使用 GitHub 仓库的 `main` 分支，并先合并所需的部署修复。
 2. 在 Railway 新建项目，选择 **Deploy from GitHub repo**，授权并选择 `404NWF3/cicc-loop-reproduction`。
 3. 服务的 Root Directory 使用仓库根目录，不要设置为 `web`。Railway 自动识别根目录的 `Dockerfile`；镜像构建包含前后端，不需要另建前端服务。
 4. 保持 Build Command 和 Start Command 为空，使用 Dockerfile。镜像默认启动 `python -m loop_research.deploy`。
@@ -68,6 +68,12 @@ Railway 入口终止 HTTPS；容器只接收代理后的 HTTP，并信任入口�
 
 Railway 的健康检查用于部署阶段，不是持续运行监控。保留持久卷并按需要启用 Railway 卷备份；删除卷会删除研究记录。修改登录密码后，浏览器保存的旧凭据可能需要在新的无痕窗口中重新输入。
 
+## Dockerfile 校验失败排查
+
+若部署显示 **The Dockerfile failed validation**，打开 **View logs** 查看具体错误。Railway 的 Dockerfile 构建不支持 `RUN --mount=type=secret`，即使挂载是可选的也会拒绝；本仓库的生产 Dockerfile 使用普通依赖安装命令。
+
+如果日志仍出现 `--mount=type=secret,id=proxy_ca`，说明部署使用了旧版本 Dockerfile。合并修复后，部署所选分支的最新提交，并检查部署记录中的提交是否已更新；同时确认 Root Directory 为仓库根目录，Build Command 和 Start Command 留空。
+
 ## 本地复现同一个镜像
 
 ```bash
@@ -85,19 +91,12 @@ docker build -t loop-research:smoke .
 python3 scripts/smoke_container.py --image loop-research:smoke
 ```
 
-如构建环境通过企业 HTTPS 代理访问依赖源，可使用可选 BuildKit CA secret：
-
-```bash
-docker build --secret id=proxy_ca,src=/path/to/combined-ca-bundle.pem -t loop-research:smoke .
-```
-
-CA 只挂载到依赖安装步骤，不写入最终镜像；普通 Railway 构建无需提供。
-
 ## 配置依据
 
 本项目使用 Railway 自动识别 Dockerfile 和控制台设置。Railway 当前已将旧 `railway.json` / `railway.toml` 标记为弃用，且新服务不能启用旧配置；因此仓库没有添加这些文件。若将来需要集中管理多个服务，可另行引入 Railway IaC。
 
 - [Dockerfile 构建](https://docs.railway.com/builds/dockerfiles)
+- [Railway 对 Dockerfile secret mount 的支持说明](https://station.railway.com/questions/does-railway-support-run-mount-type-se-aa6a8782)
 - [持久卷与权限](https://docs.railway.com/volumes)
 - [部署健康检查](https://docs.railway.com/deployments/healthchecks)
 - [Infrastructure as Code 与旧配置迁移](https://docs.railway.com/infrastructure-as-code)
